@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="11avatar-csp">
+  
+  <!-- ==========================================
+       11 AVATAR DIGITAL HUB
+       Content Security Policy (CSP)
+       Version: 2.0 Enterprise
+       ========================================== -->
+  
+  <description>
+    Content Security Policy for 11 Avatar Digital Hub CRM.
+    Protects against XSS, clickjacking, and code injection attacks.
+    Allows trusted sources for scripts, styles, images, fonts, and APIs.
+  </description>
+  
+  <!-- ==========================================
+       DEFAULT-SRC (Fallback)
+       ========================================== -->
+  <!-- Deny all by default, then whitelist -->
+  
+  <!-- ==========================================
+       SCRIPT-SRC (JavaScript)
+       ========================================== -->
+  <rule name="script-src">
+    <directive name="script-src">
+      <!-- Self-hosted scripts -->
+      <source>'self'</source>
+      
+      <!-- Firebase SDKs (CDN) -->
+      <source>https://www.gstatic.com</source>
+      
+      <!-- Google APIs -->
+      <source>https://apis.google.com</source>
+      
+      <!-- Inline scripts (needed for dynamic content) -->
+      <source>'unsafe-inline'</source>
+      
+      <!-- eval() for Firebase Auth (limited) -->
+      <source>'unsafe-eval'</source>
+      
+      <!-- Cloudflare Worker API -->
+      <source>https://11avatar-api.11avatardigitalhub.workers.dev</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       STYLE-SRC (CSS)
+       ========================================== -->
+  <rule name="style-src">
+    <directive name="style-src">
+      <!-- Self-hosted styles -->
+      <source>'self'</source>
+      
+      <!-- Google Fonts -->
+      <source>https://fonts.googleapis.com</source>
+      
+      <!-- Inline styles (needed for dynamic styling) -->
+      <source>'unsafe-inline'</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       FONT-SRC (Web Fonts)
+       ========================================== -->
+  <rule name="font-src">
+    <directive name="font-src">
+      <!-- Self-hosted fonts -->
+      <source>'self'</source>
+      
+      <!-- Google Fonts CDN -->
+      <source>https://fonts.gstatic.com</source>
+      
+      <!-- Data URIs (base64 encoded fonts) -->
+      <source>data:</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       IMG-SRC (Images)
+       ========================================== -->
+  <rule name="img-src">
+    <directive name="img-src">
+      <!-- Self-hosted images -->
+      <source>'self'</source>
+      
+      <!-- Data URIs (inline images, icons) -->
+      <source>data:</source>
+      
+      <!-- Firebase Storage -->
+      <source>https://firebasestorage.googleapis.com</source>
+      
+      <!-- Cloudflare R2 Storage -->
+      <source>https://11avatar-files.11avatardigitalhub.workers.dev</source>
+      
+      <!-- Google User Photos -->
+      <source>https://lh3.googleusercontent.com</source>
+      
+      <!-- Gravatar -->
+      <source>https://www.gravatar.com</source>
+      
+      <!-- Blob URLs (for local previews) -->
+      <source>blob:</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       CONNECT-SRC (API Calls, WebSockets)
+       ========================================== -->
+  <rule name="connect-src">
+    <directive name="connect-src">
+      <!-- Self-origin -->
+      <source>'self'</source>
+      
+      <!-- Firebase Auth REST API -->
+      <source>https://identitytoolkit.googleapis.com</source>
+      
+      <!-- Firebase Firestore -->
+      <source>https://firestore.googleapis.com</source>
+      
+      <!-- Firebase Storage -->
+      <source>https://firebasestorage.googleapis.com</source>
+      
+      <!-- Cloudflare Worker API -->
+      <source>https://11avatar-api.11avatardigitalhub.workers.dev</source>
+      
+      <!-- Google Identity -->
+      <source>https://securetoken.googleapis.com</source>
+      
+      <!-- WhatsApp Business API -->
+      <source>https://graph.facebook.com</source>
+      
+      <!-- WebSocket for real-time updates -->
+      <source>wss://*.firebaseio.com</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       FRAME-SRC (iframes)
+       ========================================== -->
+  <rule name="frame-src">
+    <directive name="frame-src">
+      <!-- Self-origin -->
+      <source>'self'</source>
+      
+      <!-- Firebase Auth popup -->
+      <source>https://avatar-wa-dual-crm.firebaseapp.com</source>
+      
+      <!-- Google OAuth -->
+      <source>https://accounts.google.com</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       MEDIA-SRC (Audio/Video)
+       ========================================== -->
+  <rule name="media-src">
+    <directive name="media-src">
+      <source>'self'</source>
+      <source>https://firebasestorage.googleapis.com</source>
+      <source>blob:</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       WORKER-SRC (Service Workers)
+       ========================================== -->
+  <rule name="worker-src">
+    <directive name="worker-src">
+      <source>'self'</source>
+      <source>blob:</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       MANIFEST-SRC (PWA Manifest)
+       ========================================== -->
+  <rule name="manifest-src">
+    <directive name="manifest-src">
+      <source>'self'</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       FORM-ACTION (Form Submissions)
+       ========================================== -->
+  <rule name="form-action">
+    <directive name="form-action">
+      <source>'self'</source>
+      <source>https://avatar-wa-dual-crm.firebaseapp.com</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       BASE-URI (Base URL)
+       ========================================== -->
+  <rule name="base-uri">
+    <directive name="base-uri">
+      <source>'self'</source>
+    </directive>
+  </rule>
+  
+  <!-- ==========================================
+       OBJECT-SRC (Plugins)
+       ========================================== -->
+  <rule name="object-src">
+    <directive name="object-src">
+      <source>'none'</source>
+    </directive>
+  </rule>
+  
+</ruleset>
+
+<!-- ==========================================
+     FULL CSP HEADER VALUE (Copy-Paste Ready)
+     ==========================================
+     
+     default-src 'self';
+     script-src 'self' https://www.gstatic.com https://apis.google.com 'unsafe-inline' 'unsafe-eval' https://11avatar-api.11avatardigitalhub.workers.dev;
+     style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+     font-src 'self' https://fonts.gstatic.com data:;
+     img-src 'self' data: https://firebasestorage.googleapis.com https://lh3.googleusercontent.com https://www.gravatar.com blob:;
+     connect-src 'self' https://identitytoolkit.googleapis.com https://firestore.googleapis.com https://firebasestorage.googleapis.com https://11avatar-api.11avatardigitalhub.workers.dev https://securetoken.googleapis.com https://graph.facebook.com wss://*.firebaseio.com;
+     frame-src 'self' https://avatar-wa-dual-crm.firebaseapp.com https://accounts.google.com;
+     media-src 'self' https://firebasestorage.googleapis.com blob:;
+     worker-src 'self' blob:;
+     manifest-src 'self';
+     form-action 'self' https://avatar-wa-dual-crm.firebaseapp.com;
+     base-uri 'self';
+     object-src 'none';
+     
+     ========================================== -->
+
+<!-- ==========================================
+     SECURITY HEADERS CONFIGURATION
+     ========================================== -->
+
+<security-headers>
+  
+  <!-- Content Security Policy -->
+  <header name="Content-Security-Policy">
+    <value>
+      default-src 'self';
+      script-src 'self' https://www.gstatic.com https://apis.google.com 'unsafe-inline' 'unsafe-eval' https://11avatar-api.11avatardigitalhub.workers.dev;
+      style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+      font-src 'self' https://fonts.gstatic.com data:;
+      img-src 'self' data: https://firebasestorage.googleapis.com https://lh3.googleusercontent.com https://www.gravatar.com blob:;
+      connect-src 'self' https://identitytoolkit.googleapis.com https://firestore.googleapis.com https://firebasestorage.googleapis.com https://11avatar-api.11avatardigitalhub.workers.dev https://securetoken.googleapis.com https://graph.facebook.com wss://*.firebaseio.com;
+      frame-src 'self' https://avatar-wa-dual-crm.firebaseapp.com https://accounts.google.com;
+      media-src 'self' https://firebasestorage.googleapis.com blob:;
+      worker-src 'self' blob:;
+      manifest-src 'self';
+      form-action 'self' https://avatar-wa-dual-crm.firebaseapp.com;
+      base-uri 'self';
+      object-src 'none';
+    </value>
+  </header>
+  
+  <!-- X-Frame-Options (Clickjacking Protection) -->
+  <header name="X-Frame-Options">
+    <value>DENY</value>
+  </header>
+  
+  <!-- X-Content-Type-Options (MIME Sniffing Protection) -->
+  <header name="X-Content-Type-Options">
+    <value>nosniff</value>
+  </header>
+  
+  <!-- Referrer-Policy -->
+  <header name="Referrer-Policy">
+    <value>strict-origin-when-cross-origin</value>
+  </header>
+  
+  <!-- Permissions-Policy (Feature Restrictions) -->
+  <header name="Permissions-Policy">
+    <value>
+      camera=(),
+      microphone=(),
+      geolocation=(self),
+      notifications=(self),
+      push=(self),
+      sync-xhr=(self)
+    </value>
+  </header>
+  
+  <!-- Strict-Transport-Security (HSTS) -->
+  <header name="Strict-Transport-Security">
+    <value>max-age=31536000; includeSubDomains; preload</value>
+  </header>
+  
+  <!-- Cross-Origin-Embedder-Policy -->
+  <header name="Cross-Origin-Embedder-Policy">
+    <value>require-corp</value>
+  </header>
+  
+  <!-- Cross-Origin-Opener-Policy -->
+  <header name="Cross-Origin-Opener-Policy">
+    <value>same-origin</value>
+  </header>
+  
+  <!-- Cross-Origin-Resource-Policy -->
+  <header name="Cross-Origin-Resource-Policy">
+    <value>same-origin</value>
+  </header>
+  
+</security-headers>
+
+<!-- ==========================================
+     CLOUDFLARE WORKER HEADER CONFIGURATION
+     ==========================================
+     
+     Add to Cloudflare Worker or _headers file:
+     
+     /*
+       Content-Security-Policy: default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com 'unsafe-inline' 'unsafe-eval'; ...
+       X-Frame-Options: DENY
+       X-Content-Type-Options: nosniff
+       Referrer-Policy: strict-origin-when-cross-origin
+       Permissions-Policy: camera=(), microphone=(), geolocation=(self)
+       Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+     
+     ========================================== -->
+
+<!-- ==========================================
+     FIREBASE HOSTING HEADERS
+     ==========================================
+     
+     Add to firebase.json:
+     
+     "headers": [
+       {
+         "source": "**",
+         "headers": [
+           { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' https://www.gstatic.com ..." },
+           { "key": "X-Frame-Options", "value": "DENY" },
+           { "key": "X-Content-Type-Options", "value": "nosniff" },
+           { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+         ]
+       }
+     ]
+     
+     ========================================== -->
+
+<!-- ==========================================
+     END OF SECURITY CONFIGURATION
+     ========================================== -->

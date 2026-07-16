@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="internal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="Settings - 11 Avatar Digital Hub. Configure your CRM, manage backup, users, and business preferences." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <title>Settings - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../src/css/main.css" />
+    
+    <style>
+        :root {
+            --card-3d-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 20px rgba(0,0,0,0.04);
+            --card-3d-hover: 0 12px 30px rgba(0,0,0,0.07), 0 20px 50px rgba(0,0,0,0.05);
+            --transition-3d: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F0 0%, #F3F1EB 30%, #F0EDE5 60%, #F5F3ED 100%);
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed; top: -300px; right: -200px;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        
+        .settings-container {
+            position: relative; z-index: 1;
+            padding: 32px 24px; max-width: 1000px; margin: 0 auto;
+        }
+        
+        .page-header-3d {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px; margin-bottom: 28px;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 50%, #FFFAEE 100%);
+            border: 1px solid rgba(212,175,55,0.12);
+            border-radius: 20px;
+            box-shadow: var(--card-3d-shadow);
+            transition: var(--transition-3d);
+        }
+        .page-header-3d:hover { box-shadow: var(--card-3d-hover); transform: translateY(-2px); }
+        .page-title-wrap h1 { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; color: #0A0A0A; margin-bottom: 4px; }
+        .page-title-wrap p { color: #888; font-size: 0.9rem; margin: 0; }
+        
+        /* Settings Panel */
+        .settings-panel-3d {
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 20px; padding: 28px; margin-bottom: 24px;
+            box-shadow: var(--card-3d-shadow);
+            transition: var(--transition-3d);
+        }
+        .settings-panel-3d:hover { box-shadow: var(--card-3d-hover); }
+        
+        .panel-title-3d {
+            font-size: 1.1rem; font-weight: 700; color: #333;
+            margin-bottom: 20px; padding-bottom: 16px;
+            border-bottom: 2px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .panel-title-3d .icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            background: rgba(212,175,55,0.1);
+        }
+        
+        /* Setting Row */
+        .setting-row-3d {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,0.03);
+            flex-wrap: wrap; gap: 12px;
+            transition: var(--transition-3d);
+        }
+        .setting-row-3d:last-child { border-bottom: none; }
+        .setting-row-3d:hover { background: rgba(212,175,55,0.01); margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: 10px; }
+        
+        .setting-label-3d { flex: 1; min-width: 200px; }
+        .setting-label-3d .title { font-weight: 600; font-size: 0.95rem; color: #333; }
+        .setting-label-3d .desc { font-size: 0.8rem; color: #999; margin-top: 2px; }
+        
+        .setting-control-3d { flex-shrink: 0; }
+        .setting-control-3d input, .setting-control-3d select {
+            padding: 10px 16px; border-radius: 10px;
+            border: 1.5px solid rgba(0,0,0,0.1); font-size: 0.9rem;
+            min-height: 44px; min-width: 120px;
+            background: #FAFAFA; transition: var(--transition-3d);
+        }
+        .setting-control-3d input:focus, .setting-control-3d select:focus {
+            border-color: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+            background: #FFFDF7; outline: none;
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch-3d {
+            position: relative; display: inline-block;
+            width: 52px; height: 28px;
+        }
+        .toggle-switch-3d input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider-3d {
+            position: absolute; inset: 0;
+            background: #E5E7EB; border-radius: 28px;
+            cursor: pointer; transition: var(--transition-3d);
+        }
+        .toggle-slider-3d::before {
+            content: ''; position: absolute;
+            height: 22px; width: 22px; left: 3px; bottom: 3px;
+            background: #fff; border-radius: 50%;
+            transition: var(--transition-bounce);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .toggle-switch-3d input:checked + .toggle-slider-3d { background: #D4AF37; }
+        .toggle-switch-3d input:checked + .toggle-slider-3d::before { transform: translateX(24px); }
+        
+        /* Backup Section */
+        .backup-section-3d {
+            background: linear-gradient(135deg, rgba(212,175,55,0.04), rgba(212,175,55,0.01));
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 16px; padding: 20px 24px; margin-top: 16px;
+        }
+        
+        .backup-actions-3d { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        
+        /* Danger Zone */
+        .danger-zone-3d {
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 16px; padding: 20px 24px; margin-top: 16px;
+            background: rgba(239,68,68,0.02);
+        }
+        .danger-zone-3d .panel-title-3d { color: #DC2626; border-bottom-color: rgba(239,68,68,0.1); }
+        
+        @media(max-width: 768px) {
+            .settings-container { padding: 16px 12px; }
+            .page-header-3d { padding: 20px; flex-direction: column; }
+            .settings-panel-3d { padding: 20px; }
+            .setting-row-3d { flex-direction: column; align-items: flex-start; }
+            .setting-control-3d { width: 100%; }
+            .setting-control-3d input, .setting-control-3d select { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+        <a href="/" class="header-brand">
+            <svg width="36" height="36" viewBox="0 0 36 36"><rect width="36" height="36" rx="10" fill="#D4AF37"/><text x="18" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter">11A</text></svg>
+            <span style="color:#B8960F">11 Avatar Hub</span>
+        </a>
+        <nav class="header-nav">
+            <a href="#/dashboard" class="header-link">Dashboard</a>
+            <a href="#/leads" class="header-link">Leads</a>
+            <a href="#/pipeline" class="header-link">Pipeline</a>
+            <a href="#/clients" class="header-link">Clients</a>
+            <a href="#/revenue" class="header-link">Revenue</a>
+            <a href="#/settings" class="header-link active">Settings</a>
+        </nav>
+        <div class="header-actions">
+            <button class="header-btn">🔔</button><button class="header-btn">👤</button>
+            <button class="header-btn header-toggle">☰</button>
+        </div>
+    </header>
+    
+    <nav class="submenu" id="submenu-nav">
+        <a href="#business" class="submenu-btn active">Business</a>
+        <a href="#preferences" class="submenu-btn">Preferences</a>
+        <a href="#backup" class="submenu-btn">Backup</a>
+        <a href="#danger" class="submenu-btn">Danger Zone</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="settings-container">
+            
+            <div class="page-header-3d">
+                <div class="page-title-wrap">
+                    <h1>⚙️ Settings</h1>
+                    <p>Configure your CRM, backup data, and manage preferences</p>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveAllSettings()">💾 Save All</button>
+            </div>
+            
+            <!-- Business Settings -->
+            <div class="settings-panel-3d" id="business">
+                <div class="panel-title-3d"><span class="icon">🏢</span> Business Settings</div>
+                
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Monthly Revenue Goal (₹)</div><div class="desc">Your target revenue per month</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-goal" value="70000" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Currency Symbol</div><div class="desc">Display symbol for amounts</div></div>
+                    <div class="setting-control-3d"><input type="text" id="set-currency" value="₹" maxlength="3" style="max-width:80px" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Default GST Rate (%)</div><div class="desc">Applied to new invoices</div></div>
+                    <div class="setting-control-3d"><select id="set-tax"><option value="18">18%</option><option value="12">12%</option><option value="5">5%</option><option value="28">28%</option><option value="0">0%</option></select></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Service Fee (₹)</div><div class="desc">Additional service charge</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-service-fee" value="20" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Discount (%)</div><div class="desc">Default discount on invoices</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-discount" value="0" step="0.5" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Round Up Amounts</div><div class="desc">Round to nearest integer</div></div>
+                    <div class="setting-control-3d">
+                        <label class="toggle-switch-3d"><input type="checkbox" id="set-roundup" checked /><span class="toggle-slider-3d"></span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preferences -->
+            <div class="settings-panel-3d" id="preferences">
+                <div class="panel-title-3d"><span class="icon">🎯</span> Targets & Preferences</div>
+                
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Daily Call Target</div><div class="desc">Number of calls per day</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-call-target" value="30" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Daily Follow-up Target</div><div class="desc">Follow-ups per day</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-followup-target" value="10" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Daily Meeting Target</div><div class="desc">Meetings per day</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-meeting-target" value="2" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Auto Follow-up Days</div><div class="desc">Days after lead creation</div></div>
+                    <div class="setting-control-3d"><input type="number" id="set-followup-days" value="2" min="1" /></div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Auto Backup</div><div class="desc">Daily automatic backup</div></div>
+                    <div class="setting-control-3d">
+                        <label class="toggle-switch-3d"><input type="checkbox" id="set-autobackup" checked /><span class="toggle-slider-3d"></span></label>
+                    </div>
+                </div>
+                <div class="setting-row-3d">
+                    <div class="setting-label-3d"><div class="title">Email Notifications</div><div class="desc">Receive email updates</div></div>
+                    <div class="setting-control-3d">
+                        <label class="toggle-switch-3d"><input type="checkbox" id="set-email-notify" checked /><span class="toggle-slider-3d"></span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backup & Restore -->
+            <div class="settings-panel-3d" id="backup">
+                <div class="panel-title-3d"><span class="icon">💾</span> Backup & Restore</div>
+                
+                <div class="backup-section-3d">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+                        <span style="font-weight:600;color:#333">📦 Last Backup</span>
+                        <span style="color:#999" id="last-backup-time">Never</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+                        <span style="font-weight:600;color:#333">📊 Data Size</span>
+                        <span style="color:#999" id="data-size">0 KB</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+                        <span style="font-weight:600;color:#333">🔄 Status</span>
+                        <span style="color:#10B981" id="backup-status">✅ Active</span>
+                    </div>
+                    
+                    <div class="backup-actions-3d">
+                        <button class="btn btn-primary btn-sm" onclick="backupNow()">💾 Backup Now</button>
+                        <button class="btn btn-outline btn-sm" onclick="exportFullBackup()">📤 Export Backup</button>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-backup-file').click()">📥 Restore Backup</button>
+                        <input type="file" id="import-backup-file" accept=".json" style="display:none" onchange="importBackup(event)" />
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Danger Zone -->
+            <div class="settings-panel-3d danger-zone-3d" id="danger">
+                <div class="panel-title-3d"><span class="icon">⚠️</span> Danger Zone</div>
+                <p style="color:#999;font-size:0.9rem;margin-bottom:16px">These actions are irreversible. Please proceed with caution.</p>
+                <div style="display:flex;gap:12px;flex-wrap:wrap">
+                    <button class="btn btn-danger btn-sm" onclick="resetAllData()">🗑️ Reset All Data</button>
+                    <button class="btn btn-outline btn-sm" onclick="clearCache()">🧹 Clear Cache</button>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    
+    <footer class="footer"><div class="container"><div class="footer-bottom"><span>© 2026 11 Avatar Digital Hub</span><span>🇮🇳 Made with ❤️ in India</span></div></div></footer>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="../../src/js/config/constants.js"></script>
+    <script src="../../src/js/config/firebase.js"></script>
+    <script src="../../src/js/core/state.js"></script>
+    
+    <script>
+        let settings = {
+            goal: 70000, currency: '₹', tax: 18, serviceFee: 20, discount: 0,
+            roundUp: true, callTarget: 30, followupTarget: 10, meetingTarget: 2,
+            followupDays: 2, autoBackup: true, emailNotifications: true
+        };
+        
+        function loadSettings() {
+            const saved = window.StateManager?.get('settings') || 
+                          JSON.parse(localStorage.getItem('mrcrm_state')||'{}')?.settings || {};
+            settings = { ...settings, ...saved };
+            applySettingsToUI();
+        }
+        
+        function applySettingsToUI() {
+            document.getElementById('set-goal').value = settings.goal;
+            document.getElementById('set-currency').value = settings.currency;
+            document.getElementById('set-tax').value = settings.tax;
+            document.getElementById('set-service-fee').value = settings.serviceFee;
+            document.getElementById('set-discount').value = settings.discount;
+            document.getElementById('set-roundup').checked = settings.roundUp;
+            document.getElementById('set-call-target').value = settings.callTarget;
+            document.getElementById('set-followup-target').value = settings.followupTarget;
+            document.getElementById('set-meeting-target').value = settings.meetingTarget;
+            document.getElementById('set-followup-days').value = settings.followupDays;
+            document.getElementById('set-autobackup').checked = settings.autoBackup;
+            document.getElementById('set-email-notify').checked = settings.emailNotifications;
+            updateBackupInfo();
+        }
+        
+        function collectSettingsFromUI() {
+            settings.goal = parseInt(document.getElementById('set-goal').value) || 70000;
+            settings.currency = document.getElementById('set-currency').value || '₹';
+            settings.tax = parseInt(document.getElementById('set-tax').value) || 18;
+            settings.serviceFee = parseFloat(document.getElementById('set-service-fee').value) || 0;
+            settings.discount = parseFloat(document.getElementById('set-discount').value) || 0;
+            settings.roundUp = document.getElementById('set-roundup').checked;
+            settings.callTarget = parseInt(document.getElementById('set-call-target').value) || 30;
+            settings.followupTarget = parseInt(document.getElementById('set-followup-target').value) || 10;
+            settings.meetingTarget = parseInt(document.getElementById('set-meeting-target').value) || 2;
+            settings.followupDays = parseInt(document.getElementById('set-followup-days').value) || 2;
+            settings.autoBackup = document.getElementById('set-autobackup').checked;
+            settings.emailNotifications = document.getElementById('set-email-notify').checked;
+        }
+        
+        function saveAllSettings() {
+            collectSettingsFromUI();
+            window.StateManager?.set('settings', settings);
+            try {
+                const s = JSON.parse(localStorage.getItem('mrcrm_state') || '{}');
+                s.settings = settings;
+                localStorage.setItem('mrcrm_state', JSON.stringify(s));
+            } catch(e) {}
+            updateBackupInfo();
+            alert('✅ Settings saved successfully!');
+        }
+        
+        function updateBackupInfo() {
+            const lastBackup = localStorage.getItem('mrcrm_backup_time');
+            document.getElementById('last-backup-time').textContent = lastBackup ? new Date(parseInt(lastBackup)).toLocaleString('en-IN') : 'Never';
+            try {
+                const size = new Blob([JSON.stringify(localStorage)]).size;
+                document.getElementById('data-size').textContent = (size / 1024).toFixed(1) + ' KB';
+            } catch(e) { document.getElementById('data-size').textContent = '0 KB'; }
+            document.getElementById('backup-status').textContent = settings.autoBackup ? '✅ Active' : '⏸️ Paused';
+            document.getElementById('backup-status').style.color = settings.autoBackup ? '#10B981' : '#F59E0B';
+        }
+        
+        function backupNow() {
+            collectSettingsFromUI();
+            const state = window.StateManager?._state || {};
+            const backup = JSON.stringify({ ...state, settings, timestamp: Date.now() }, null, 2);
+            localStorage.setItem('mrcrm_backup', backup);
+            localStorage.setItem('mrcrm_backup_time', Date.now().toString());
+            updateBackupInfo();
+            alert('✅ Backup completed!');
+        }
+        
+        function exportFullBackup() {
+            collectSettingsFromUI();
+            const data = { ...window.StateManager?._state, settings, exportDate: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = '11avatar_backup_' + new Date().toISOString().slice(0, 10) + '.json';
+            a.click();
+            alert('✅ Backup exported!');
+        }
+        
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!confirm('⚠️ This will replace ALL current data. Continue?')) { event.target.value = ''; return; }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.leads || data.clients) {
+                        window.StateManager?._state && Object.assign(window.StateManager._state, data);
+                        localStorage.setItem('mrcrm_state', JSON.stringify(data));
+                        loadSettings();
+                        alert('✅ Backup restored! Refreshing...');
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                } catch(err) { alert('❌ Invalid backup file'); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        function resetAllData() {
+            if (!confirm('⚠️ DELETE ALL DATA? This cannot be undone!\n\nType "DELETE" to confirm:') ) return;
+            const confirmInput = prompt('Type DELETE to confirm:');
+            if (confirmInput !== 'DELETE') { alert('Cancelled'); return; }
+            localStorage.removeItem('mrcrm_state');
+            localStorage.removeItem('mrcrm_backup');
+            localStorage.removeItem('mrcrm_backup_time');
+            alert('🗑️ All data reset. Refreshing...');
+            setTimeout(() => location.reload(), 1000);
+        }
+        
+        function clearCache() {
+            if (!confirm('Clear all cached data?')) return;
+            localStorage.removeItem('11avatar_cache_');
+            if (window.cache) window.cache.clear();
+            alert('🧹 Cache cleared!');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            loadSettings();
+            
+            document.querySelectorAll('.setting-row-3d input, .setting-row-3d select').forEach(el => {
+                el.addEventListener('change', function() { /* Auto-save hint */ });
+            });
+            
+            console.log('✅ Settings page ready');
+        });
+    </script>
+</body>
+</html>

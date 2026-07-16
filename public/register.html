@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="public">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Create your free 11 Avatar Digital Hub account. Start managing leads, pipeline, revenue, and more - all from ₹0." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <meta property="og:title" content="Register - 11 Avatar Digital Hub" />
+    <meta property="og:description" content="Create your free CRM account. No credit card required." />
+    
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/lead2revenue/register" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="assets/images/logo-icon.svg" />
+    <link rel="apple-touch-icon" href="assets/images/icons/icon-192.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://avatar-wa-dual-crm.firebaseapp.com" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/main.css" />
+    
+    <title>Create Free Account - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <style>
+        body{opacity:0;transition:opacity 0.3s ease}
+        body.loaded{opacity:1}
+        .register-container{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%)}
+        .register-card{width:100%;max-width:500px;background:rgba(26,26,26,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px 32px;box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.05)}
+        .register-card:hover{border-color:rgba(212,175,55,0.2);transition:border-color 0.3s ease}
+        .input-group{position:relative;margin-bottom:20px}
+        .input-group input,.input-group select{width:100%;background:#1E1E1E;border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 16px;padding-left:48px;font-size:1rem;color:#FFFFFF;transition:all 0.3s ease;min-height:52px;outline:none}
+        .input-group input:focus,.input-group select:focus{border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,0.1);background:#242424}
+        .input-group input.input-error,.input-group select.input-error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+        .input-group .input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#888;pointer-events:none;transition:color 0.3s ease;z-index:1}
+        .input-group input:focus~.input-icon,.input-group select:focus~.input-icon{color:#D4AF37}
+        .input-group .toggle-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1.2rem;padding:8px;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center;z-index:1}
+        .input-group .toggle-password:hover{color:#D4AF37}
+        .field-error{color:#EF4444;font-size:0.8rem;margin-top:6px;display:flex;align-items:center;gap:6px;animation:fadeUp 0.2s ease}
+        .step-indicators{display:flex;justify-content:center;gap:8px;margin-bottom:32px}
+        .step-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s ease}
+        .step-dot.active{background:#D4AF37;box-shadow:0 0 12px rgba(212,175,55,0.4);width:32px;border-radius:20px}
+        .step-dot.completed{background:#10B981}
+        .password-strength-bar{height:4px;border-radius:2px;transition:all 0.3s ease;margin-top:8px;width:0%}
+        .strength-weak{background:#EF4444;width:33%}.strength-medium{background:#F59E0B;width:66%}.strength-strong{background:#10B981;width:100%}
+        .requirement-item{display:flex;align-items:center;gap:8px;font-size:0.8rem;padding:4px 0;transition:all 0.3s ease}
+        .requirement-item.met{color:#10B981}.requirement-item.unmet{color:#888}
+        .divider{display:flex;align-items:center;gap:16px;margin:24px 0;color:#666;font-size:0.85rem}
+        .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-6px)}20%,40%,60%,80%{transform:translateX(6px)}}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.2);border-top-color:#D4AF37;border-radius:50%;animation:spin 0.6s linear infinite;display:inline-block}
+        @media(max-width:480px){.register-card{padding:28px 20px}}
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card" role="main" aria-label="Registration form">
+            
+            <!-- Logo & Brand -->
+            <div style="text-align:center;margin-bottom:32px">
+                <a href="/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:8px">
+                    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+                        <rect width="44" height="44" rx="12" fill="#D4AF37"/>
+                        <text x="22" y="29" text-anchor="middle" fill="#0A0A0A" font-size="17" font-weight="800" font-family="Inter, sans-serif">11A</text>
+                    </svg>
+                    <span style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;color:#D4AF37">11 Avatar Hub</span>
+                </a>
+                <h1 style="font-size:1.6rem;font-weight:700;color:#FFFFFF;margin-bottom:4px">Create Your Free Account 🚀</h1>
+                <p style="color:#888;font-size:0.95rem">No credit card required. Start in 30 seconds.</p>
+            </div>
+            
+            <!-- Step Indicators -->
+            <div class="step-indicators" aria-label="Form steps">
+                <div class="step-dot active" id="step-dot-0" aria-label="Step 1: Account"></div>
+                <div class="step-dot" id="step-dot-1" aria-label="Step 2: Profile"></div>
+                <div class="step-dot" id="step-dot-2" aria-label="Step 3: Complete"></div>
+            </div>
+            
+            <!-- Error Container -->
+            <div id="register-error" role="alert" aria-live="polite" style="display:none;background:rgba(239,68,68,0.08);border-left:3px solid #EF4444;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#EF4444;font-size:0.9rem"></div>
+            
+            <!-- Success Container -->
+            <div id="register-success" role="status" style="display:none;background:rgba(16,185,129,0.08);border-left:3px solid #10B981;border-radius:8px;padding:16px 20px;margin-bottom:20px;color:#10B981;font-size:0.95rem;line-height:1.7"></div>
+            
+            <!-- Registration Form -->
+            <form id="register-form" novalidate autocomplete="on">
+                
+                <!-- STEP 1: Account -->
+                <div id="step-1" style="display:block">
+                    <div class="input-group">
+                        <span class="input-icon" aria-hidden="true">📧</span>
+                        <input type="email" id="register-email" name="email" placeholder="Email address" autocomplete="email" required aria-required="true" aria-label="Email address" />
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-icon" aria-hidden="true">🔒</span>
+                        <input type="password" id="register-password" name="password" placeholder="Create password" autocomplete="new-password" required aria-required="true" aria-label="Password" minlength="8" />
+                        <button type="button" class="toggle-password" data-target="register-password" aria-label="Toggle password visibility">👁️</button>
+                    </div>
+                    <div id="password-strength-container" style="margin-top:-12px;margin-bottom:16px">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                        <div id="password-strength-text" style="font-size:0.8rem;margin-top:4px;color:#888"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-icon" aria-hidden="true">🔒</span>
+                        <input type="password" id="register-confirm-password" name="confirmPassword" placeholder="Confirm password" autocomplete="new-password" required aria-required="true" aria-label="Confirm password" />
+                        <button type="button" class="toggle-password" data-target="register-confirm-password" aria-label="Toggle password visibility">👁️</button>
+                    </div>
+                    
+                    <div id="password-requirements" style="margin-top:-8px;margin-bottom:16px;background:#1A1A1A;border-radius:12px;padding:12px 16px">
+                        <div class="requirement-item unmet" data-req="length"><span>🔲</span> At least 8 characters</div>
+                        <div class="requirement-item unmet" data-req="uppercase"><span>🔲</span> One uppercase letter</div>
+                        <div class="requirement-item unmet" data-req="lowercase"><span>🔲</span> One lowercase letter</div>
+                        <div class="requirement-item unmet" data-req="number"><span>🔲</span> One number</div>
+                        <div class="requirement-item unmet" data-req="special"><span>🔲</span> One special character</div>
+                    </div>
+                    
+                    <button type="button" id="step-1-next" class="btn btn-primary btn-block btn-lg" style="width:100%;font-size:1rem;min-height:52px">
+                        Continue → Step 2
+                    </button>
+                </div>
+                
+                <!-- STEP 2: Profile -->
+                <div id="step-2" style="display:none">
+                    <div class="input-group">
+                        <span class="input-icon" aria-hidden="true">👤</span>
+                        <input type="text" id="register-display-name" name="displayName" placeholder="Full name" autocomplete="name" required aria-required="true" aria-label="Full name" />
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-icon" aria-hidden="true">📱</span>
+                        <input type="tel" id="register-phone" name="phone" placeholder="Phone number (optional)" autocomplete="tel" aria-label="Phone number" maxlength="10" />
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-icon" aria-hidden="true">🏢</span>
+                        <input type="text" id="register-company" name="company" placeholder="Company name (optional)" autocomplete="organization" aria-label="Company name" />
+                    </div>
+                    
+                    <div style="display:flex;gap:12px;margin-top:24px">
+                        <button type="button" id="step-2-prev" class="btn btn-outline" style="flex:1;min-height:52px">← Back</button>
+                        <button type="button" id="step-2-next" class="btn btn-primary" style="flex:1;min-height:52px">Continue →</button>
+                    </div>
+                </div>
+                
+                <!-- STEP 3: Agreements & Submit -->
+                <div id="step-3" style="display:none">
+                    <div style="background:#1A1A1A;border-radius:16px;padding:20px;margin-bottom:24px">
+                        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+                            <span style="font-size:1.5rem">📋</span>
+                            <div>
+                                <h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Account Summary</h3>
+                                <p style="color:#888;font-size:0.85rem" id="summary-email"></p>
+                                <p style="color:#888;font-size:0.85rem" id="summary-name"></p>
+                            </div>
+                        </div>
+                        <hr style="border-color:rgba(255,255,255,0.06);margin:12px 0" />
+                        <div style="display:flex;gap:8px;align-items:start;margin-top:12px">
+                            <span>🎉</span>
+                            <p style="color:#AAA;font-size:0.85rem;margin:0">Free Forever Plan — Unlimited leads, pipeline, GST invoices, WhatsApp integration, 5 team members</p>
+                        </div>
+                    </div>
+                    
+                    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:16px;min-height:44px">
+                        <input type="checkbox" id="register-accept-terms" style="margin-top:4px;width:18px;height:18px;accent-color:#D4AF37;min-height:auto;flex-shrink:0" required />
+                        <span style="color:#CCC;font-size:0.9rem;line-height:1.5">
+                            I agree to the <a href="#" style="color:#D4AF37">Terms of Service</a> and <a href="#" style="color:#D4AF37">Privacy Policy</a>
+                        </span>
+                    </label>
+                    
+                    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:24px;min-height:44px">
+                        <input type="checkbox" id="register-accept-marketing" style="margin-top:4px;width:18px;height:18px;accent-color:#D4AF37;min-height:auto;flex-shrink:0" />
+                        <span style="color:#888;font-size:0.85rem">Send me product updates and tips (optional)</span>
+                    </label>
+                    
+                    <div style="display:flex;gap:12px">
+                        <button type="button" id="step-3-prev" class="btn btn-outline" style="flex:1;min-height:52px">← Back</button>
+                        <button type="submit" id="register-submit" class="btn btn-primary btn-lg" style="flex:1;min-height:52px;font-size:1rem" aria-busy="false">
+                            <span id="register-submit-text">Create Account 🚀</span>
+                            <span id="register-spinner" class="spinner" style="display:none" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                
+            </form>
+            
+            <!-- Divider -->
+            <div class="divider" style="margin-top:24px">or sign up with</div>
+            
+            <!-- Google Register -->
+            <button type="button" id="register-google" class="btn btn-outline btn-block" style="min-height:52px;width:100%;font-size:0.95rem;gap:10px;border-color:rgba(255,255,255,0.12)">
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Sign up with Google
+            </button>
+            
+            <!-- Login Link -->
+            <p style="text-align:center;margin-top:24px;color:#888;font-size:0.9rem">
+                Already have an account? 
+                <a href="#/login" style="color:#D4AF37;font-weight:600;text-decoration:none;padding:8px 0">Sign in →</a>
+            </p>
+            
+            <p style="text-align:center;margin-top:8px">
+                <a href="/" style="color:#666;font-size:0.85rem;text-decoration:none;padding:8px 0">← Back to Home</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="src/js/config/constants.js"></script>
+    <script src="src/js/config/firebase.js"></script>
+    <script src="src/js/auth/auth.js"></script>
+    
+    <script>
+        // ==========================================
+        // REGISTRATION PAGE LOGIC
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            
+            // State
+            let currentStep = 1;
+            const totalSteps = 3;
+            let isSubmitting = false;
+            
+            // DOM Elements
+            const form = document.getElementById('register-form');
+            const errorContainer = document.getElementById('register-error');
+            const successContainer = document.getElementById('register-success');
+            const googleBtn = document.getElementById('register-google');
+            const submitBtn = document.getElementById('register-submit');
+            const submitText = document.getElementById('register-submit-text');
+            const submitSpinner = document.getElementById('register-spinner');
+            
+            // Show step
+            function showStep(step) {
+                document.getElementById('step-1').style.display = step === 1 ? 'block' : 'none';
+                document.getElementById('step-2').style.display = step === 2 ? 'block' : 'none';
+                document.getElementById('step-3').style.display = step === 3 ? 'block' : 'none';
+                
+                document.querySelectorAll('.step-dot').forEach((dot, i) => {
+                    dot.classList.remove('active', 'completed');
+                    if (i + 1 < step) dot.classList.add('completed');
+                    if (i + 1 === step) dot.classList.add('active');
+                });
+                
+                if (step === 3) {
+                    document.getElementById('summary-email').textContent = '📧 ' + (document.getElementById('register-email').value || '-');
+                    document.getElementById('summary-name').textContent = '👤 ' + (document.getElementById('register-display-name').value || '-');
+                }
+                
+                currentStep = step;
+                document.querySelector('.register-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            // Toggle password
+            document.querySelectorAll('.toggle-password').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    if (input) {
+                        const type = input.type === 'password' ? 'text' : 'password';
+                        input.type = type;
+                        this.textContent = type === 'password' ? '👁️' : '🙈';
+                    }
+                });
+            });
+            
+            // Password strength
+            const passwordInput = document.getElementById('register-password');
+            passwordInput?.addEventListener('input', function() {
+                const val = this.value;
+                const bar = document.getElementById('password-strength-bar');
+                const text = document.getElementById('password-strength-text');
+                
+                if (!val) { bar.className = 'password-strength-bar'; bar.style.width = '0%'; text.textContent = ''; return; }
+                
+                let score = 0;
+                if (val.length >= 8) score++;
+                if (val.length >= 12) score++;
+                if (/[A-Z]/.test(val)) score++;
+                if (/[a-z]/.test(val)) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+                
+                if (score <= 2) { bar.className = 'password-strength-bar strength-weak'; text.textContent = 'Weak password'; text.style.color = '#EF4444'; }
+                else if (score <= 4) { bar.className = 'password-strength-bar strength-medium'; text.textContent = 'Medium password'; text.style.color = '#F59E0B'; }
+                else { bar.className = 'password-strength-bar strength-strong'; text.textContent = 'Strong password'; text.style.color = '#10B981'; }
+                
+                // Update requirements
+                document.querySelector('[data-req="length"]')?.classList.toggle('met', val.length >= 8);
+                document.querySelector('[data-req="length"]')?.classList.toggle('unmet', val.length < 8);
+                document.querySelector('[data-req="length"] span')?.textContent = val.length >= 8 ? '✅' : '🔲';
+                document.querySelector('[data-req="uppercase"]')?.classList.toggle('met', /[A-Z]/.test(val));
+                document.querySelector('[data-req="uppercase"]')?.classList.toggle('unmet', !/[A-Z]/.test(val));
+                document.querySelector('[data-req="uppercase"] span')?.textContent = /[A-Z]/.test(val) ? '✅' : '🔲';
+                document.querySelector('[data-req="lowercase"]')?.classList.toggle('met', /[a-z]/.test(val));
+                document.querySelector('[data-req="lowercase"]')?.classList.toggle('unmet', !/[a-z]/.test(val));
+                document.querySelector('[data-req="lowercase"] span')?.textContent = /[a-z]/.test(val) ? '✅' : '🔲';
+                document.querySelector('[data-req="number"]')?.classList.toggle('met', /[0-9]/.test(val));
+                document.querySelector('[data-req="number"]')?.classList.toggle('unmet', !/[0-9]/.test(val));
+                document.querySelector('[data-req="number"] span')?.textContent = /[0-9]/.test(val) ? '✅' : '🔲';
+                document.querySelector('[data-req="special"]')?.classList.toggle('met', /[^A-Za-z0-9]/.test(val));
+                document.querySelector('[data-req="special"]')?.classList.toggle('unmet', !/[^A-Za-z0-9]/.test(val));
+                document.querySelector('[data-req="special"] span')?.textContent = /[^A-Za-z0-9]/.test(val) ? '✅' : '🔲';
+            });
+            
+            function showError(msg) { if(errorContainer){errorContainer.textContent=msg;errorContainer.style.display='block';errorContainer.style.animation='fadeUp 0.3s ease'} if(successContainer)successContainer.style.display='none' }
+            function showSuccess(msg) { if(successContainer){successContainer.innerHTML=msg;successContainer.style.display='block'} if(errorContainer)errorContainer.style.display='none' }
+            function hideMessages() { if(errorContainer)errorContainer.style.display='none'; if(successContainer)successContainer.style.display='none' }
+            function setLoading(on) { isSubmitting=on; if(submitBtn){submitBtn.disabled=on;submitBtn.setAttribute('aria-busy',on);submitText.style.display=on?'none':'';submitSpinner.style.display=on?'inline-block':'none'} if(googleBtn)googleBtn.disabled=on }
+            
+            // Step navigation
+            document.getElementById('step-1-next')?.addEventListener('click', () => {
+                const email = document.getElementById('register-email').value.trim();
+                const pass = document.getElementById('register-password').value;
+                const confirm = document.getElementById('register-confirm-password').value;
+                if(!email){showError('Email is required');return}
+                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('Invalid email format');return}
+                if(!pass||pass.length<8){showError('Password must be at least 8 characters');return}
+                if(pass!==confirm){showError('Passwords do not match');return}
+                hideMessages();showStep(2);
+            });
+            
+            document.getElementById('step-2-prev')?.addEventListener('click', () => { hideMessages();showStep(1) });
+            document.getElementById('step-2-next')?.addEventListener('click', () => {
+                const name = document.getElementById('register-display-name').value.trim();
+                if(!name||name.length<2){showError('Full name is required (min 2 characters)');return}
+                hideMessages();showStep(3);
+            });
+            
+            document.getElementById('step-3-prev')?.addEventListener('click', () => { hideMessages();showStep(2) });
+            
+            // Submit
+            form?.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                if(isSubmitting)return;
+                if(!document.getElementById('register-accept-terms').checked){showError('Please accept the Terms of Service');return}
+                hideMessages();setLoading(true);
+                
+                try {
+                    const email = document.getElementById('register-email').value.trim();
+                    const password = document.getElementById('register-password').value;
+                    const displayName = document.getElementById('register-display-name').value.trim();
+                    const phone = document.getElementById('register-phone').value.trim();
+                    const company = document.getElementById('register-company').value.trim();
+                    
+                    if(window.auth&&window.auth.register){
+                        await window.auth.register({email,password,confirmPassword:password,displayName,phone,role:'client_owner',acceptTerms:true});
+                    } else {
+                        const cred = await firebase.auth().createUserWithEmailAndPassword(email,password);
+                        await cred.user.updateProfile({displayName});
+                        if(window.FirebaseService){
+                            await FirebaseService.createDocument('users',{uid:cred.user.uid,email,displayName,phone,company,role:'client_owner',clientId:null,createdAt:new Date().toISOString(),status:'active'});
+                        }
+                    }
+                    
+                    showSuccess('🎉 <strong>Account created!</strong><br>Check your email for verification link.<br>Redirecting to dashboard...');
+                    setTimeout(()=>{window.location.href='#/dashboard'},2000);
+                } catch(err) {
+                    const map={'auth/email-already-in-use':'Email already registered','auth/weak-password':'Password too weak','auth/invalid-email':'Invalid email'};
+                    showError(map[err.code]||err.message||'Registration failed');
+                    document.querySelector('.register-card').style.animation='shake 0.5s ease';
+                    setTimeout(()=>document.querySelector('.register-card').style.animation='',500);
+                } finally { setLoading(false) }
+            });
+            
+            // Google
+            googleBtn?.addEventListener('click', async () => {
+                if(isSubmitting)return;hideMessages();setLoading(true);
+                try {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    const result = await firebase.auth().signInWithPopup(provider);
+                    if(result.additionalUserInfo?.isNewUser&&window.FirebaseService){
+                        await FirebaseService.createDocument('users',{uid:result.user.uid,email:result.user.email,displayName:result.user.displayName,role:'client_owner',createdAt:new Date().toISOString(),status:'active'});
+                    }
+                    window.location.href='#/dashboard';
+                } catch(err) {
+                    if(err.code!=='auth/popup-closed-by-user')showError('Google sign up failed');
+                } finally { setLoading(false) }
+            });
+            
+            setTimeout(()=>document.getElementById('register-email')?.focus(),600);
+            console.log('✅ Register page ready');
+        });
+    </script>
+</body>
+</html>

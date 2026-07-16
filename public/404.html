@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="public">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Page not found - 11 Avatar Digital Hub. The page you are looking for does not exist or has been moved." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <meta property="og:title" content="Page Not Found - 11 Avatar Digital Hub" />
+    <meta property="og:description" content="The page you are looking for does not exist." />
+    
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/lead2revenue/404" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="assets/images/logo-icon.svg" />
+    <link rel="apple-touch-icon" href="assets/images/icons/icon-192.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/main.css" />
+    
+    <title>404 - Page Not Found | 11 Avatar Digital Hub</title>
+    
+    <style>
+        body{opacity:0;transition:opacity 0.3s ease}
+        body.loaded{opacity:1}
+        
+        .error-container{
+            min-height:100vh;
+            min-height:100dvh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            background:linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%);
+            position:relative;
+            overflow:hidden;
+        }
+        
+        .error-container::before{
+            content:'';
+            position:absolute;
+            top:-300px;
+            right:-300px;
+            width:800px;
+            height:800px;
+            background:radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        
+        .error-container::after{
+            content:'';
+            position:absolute;
+            bottom:-200px;
+            left:-200px;
+            width:600px;
+            height:600px;
+            background:radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        
+        .error-content{
+            text-align:center;
+            position:relative;
+            z-index:1;
+            max-width:600px;
+            width:100%;
+            animation:fadeUp 0.6s ease;
+        }
+        
+        .error-code{
+            font-size:clamp(6rem, 15vw, 12rem);
+            font-weight:900;
+            line-height:1;
+            background:linear-gradient(135deg, #D4AF37 0%, #E8C95A 50%, #B8960F 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+            margin-bottom:8px;
+            letter-spacing:-4px;
+            text-shadow:0 0 80px rgba(212,175,55,0.15);
+        }
+        
+        .error-icon{
+            font-size:clamp(3rem, 8vw, 5rem);
+            margin-bottom:24px;
+            animation:pulse 2s ease-in-out infinite;
+        }
+        
+        .error-title{
+            font-size:clamp(1.5rem, 3vw, 2rem);
+            font-weight:800;
+            color:#FFFFFF;
+            margin-bottom:12px;
+            font-family:'Poppins', sans-serif;
+        }
+        
+        .error-message{
+            font-size:1.05rem;
+            color:#AAAAAA;
+            line-height:1.7;
+            margin-bottom:32px;
+            max-width:450px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        
+        .error-actions{
+            display:flex;
+            gap:16px;
+            justify-content:center;
+            flex-wrap:wrap;
+            margin-bottom:40px;
+        }
+        
+        .error-suggestions{
+            background:rgba(26,26,26,0.7);
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:16px;
+            padding:24px;
+            text-align:left;
+            margin-top:24px;
+        }
+        
+        .error-suggestions h3{
+            font-size:0.95rem;
+            color:#D4AF37;
+            margin-bottom:16px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        
+        .suggestion-list{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+        
+        .suggestion-link{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 14px;
+            border-radius:10px;
+            color:#CCCCCC;
+            text-decoration:none;
+            font-size:0.95rem;
+            transition:all 0.2s ease;
+            min-height:44px;
+        }
+        
+        .suggestion-link:hover{
+            background:rgba(212,175,55,0.08);
+            color:#D4AF37;
+        }
+        
+        .suggestion-link .icon{
+            font-size:1.3rem;
+            width:28px;
+            text-align:center;
+            flex-shrink:0;
+        }
+        
+        .search-box{
+            display:flex;
+            gap:8px;
+            max-width:400px;
+            margin:0 auto 24px;
+        }
+        
+        .search-box input{
+            flex:1;
+            background:#1E1E1E;
+            border:1.5px solid rgba(255,255,255,0.08);
+            border-radius:12px;
+            padding:12px 16px;
+            font-size:0.95rem;
+            color:#FFFFFF;
+            outline:none;
+            min-height:48px;
+            transition:all 0.3s ease;
+        }
+        
+        .search-box input:focus{
+            border-color:#D4AF37;
+            box-shadow:0 0 0 3px rgba(212,175,55,0.1);
+        }
+        
+        .search-box button{
+            min-width:48px;
+            height:48px;
+            border-radius:12px;
+            background:linear-gradient(135deg, #D4AF37, #E8C95A);
+            border:none;
+            color:#0A0A0A;
+            font-size:1.2rem;
+            cursor:pointer;
+            transition:all 0.3s ease;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        
+        .search-box button:hover{
+            transform:translateY(-1px);
+            box-shadow:0 4px 16px rgba(212,175,55,0.3);
+        }
+        
+        @keyframes fadeUp{
+            from{opacity:0;transform:translateY(20px)}
+            to{opacity:1;transform:translateY(0)}
+        }
+        
+        @keyframes pulse{
+            0%,100%{opacity:1;transform:scale(1)}
+            50%{opacity:0.7;transform:scale(1.05)}
+        }
+        
+        @keyframes float{
+            0%,100%{transform:translateY(0)}
+            50%{transform:translateY(-10px)}
+        }
+        
+        @media(max-width:480px){
+            .error-content{padding:0 10px}
+            .error-suggestions{padding:16px}
+            .error-actions{flex-direction:column;align-items:stretch}
+            .error-actions .btn{width:100%;justify-content:center}
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container" role="main" aria-label="Page not found">
+        <div class="error-content">
+            
+            <!-- Animated Icon -->
+            <div class="error-icon" aria-hidden="true" style="animation:float 3s ease-in-out infinite">🔍</div>
+            
+            <!-- Error Code -->
+            <div class="error-code" aria-hidden="true">404</div>
+            
+            <!-- Title -->
+            <h1 class="error-title">Page Not Found</h1>
+            
+            <!-- Message -->
+            <p class="error-message">
+                Oops! The page you're looking for doesn't exist or has been moved. 
+                It might have been removed, renamed, or is temporarily unavailable.
+            </p>
+            
+            <!-- Search Box -->
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search for pages..." 
+                    aria-label="Search pages"
+                    onkeydown="if(event.key==='Enter')searchPages()"
+                />
+                <button onclick="searchPages()" aria-label="Search" title="Search">
+                    🔍
+                </button>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
+                    🏠 Back to Home
+                </a>
+                <a href="#/dashboard" class="btn btn-outline btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
+                    📊 Go to Dashboard
+                </a>
+                <button class="btn btn-ghost btn-lg" onclick="history.back()" style="min-height:52px;padding:14px 28px;font-size:1rem">
+                    ← Go Back
+                </button>
+            </div>
+            
+            <!-- Suggestions -->
+            <div class="error-suggestions">
+                <h3>💡 You might be looking for:</h3>
+                <div class="suggestion-list">
+                    <a href="/" class="suggestion-link">
+                        <span class="icon">🏠</span>
+                        <span>Home Page — Learn about 11 Avatar Digital Hub</span>
+                    </a>
+                    <a href="#/login" class="suggestion-link">
+                        <span class="icon">🔐</span>
+                        <span>Login — Access your CRM dashboard</span>
+                    </a>
+                    <a href="#/register" class="suggestion-link">
+                        <span class="icon">🚀</span>
+                        <span>Register — Create your free account</span>
+                    </a>
+                    <a href="#/dashboard" class="suggestion-link">
+                        <span class="icon">📊</span>
+                        <span>Dashboard — View your business overview</span>
+                    </a>
+                    <a href="#/leads" class="suggestion-link">
+                        <span class="icon">📋</span>
+                        <span>Leads — Manage your leads pipeline</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Help Text -->
+            <p style="color:#666;font-size:0.85rem;margin-top:24px">
+                If you believe this is an error, please contact us at 
+                <a href="mailto:11avatardigitalhub@gmail.com" style="color:#D4AF37;text-decoration:none">11avatardigitalhub@gmail.com</a>
+            </p>
+            
+            <!-- Auto-redirect info -->
+            <p style="color:#555;font-size:0.8rem;margin-top:16px" id="redirect-timer">
+                Redirecting to home page in <span id="countdown">15</span> seconds...
+            </p>
+        </div>
+    </div>
+    
+    <script src="src/js/config/constants.js"></script>
+    
+    <script>
+        // ==========================================
+        // 404 PAGE LOGIC
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            
+            // Auto-redirect countdown
+            let secondsLeft = 15;
+            const countdownEl = document.getElementById('countdown');
+            const timerEl = document.getElementById('redirect-timer');
+            
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                
+                if (countdownEl) {
+                    countdownEl.textContent = secondsLeft;
+                }
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    
+                    if (timerEl) {
+                        timerEl.textContent = 'Redirecting now...';
+                        timerEl.style.color = '#D4AF37';
+                    }
+                    
+                    // Redirect to home
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 500);
+                }
+            }, 1000);
+            
+            // Cancel redirect if user interacts
+            const cancelRedirect = () => {
+                clearInterval(countdownInterval);
+                
+                if (timerEl) {
+                    timerEl.textContent = 'Auto-redirect cancelled';
+                    timerEl.style.color = '#888';
+                }
+            };
+            
+            // Watch for user interaction
+            ['click', 'keydown', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, cancelRedirect, { once: true });
+            });
+            
+            // Search functionality
+            window.searchPages = function() {
+                const query = document.getElementById('search-input')?.value?.trim()?.toLowerCase();
+                
+                if (!query) return;
+                
+                // Common page mappings
+                const pageMap = {
+                    'home': '/',
+                    'login': '/#/login',
+                    'register': '/#/register',
+                    'signin': '/#/login',
+                    'signup': '/#/register',
+                    'dashboard': '/#/dashboard',
+                    'leads': '/#/leads',
+                    'pipeline': '/#/pipeline',
+                    'clients': '/#/clients',
+                    'revenue': '/#/revenue',
+                    'projects': '/#/projects',
+                    'whatsapp': '/#/whatsapp',
+                    'reports': '/#/reports',
+                    'settings': '/#/settings',
+                    'invoices': '/#/invoices',
+                    'tasks': '/#/tasks',
+                    'profile': '/#/profile',
+                    'admin': '/#/admin',
+                    'pricing': '/#pricing',
+                    'features': '/#features',
+                    'faq': '/#faq',
+                    'contact': '/#contact',
+                    'forgot': '/#/forgot-password',
+                    'password': '/#/forgot-password',
+                    'reset': '/#/forgot-password'
+                };
+                
+                // Check for exact match
+                if (pageMap[query]) {
+                    window.location.href = pageMap[query];
+                    return;
+                }
+                
+                // Check for partial match
+                for (const [key, url] of Object.entries(pageMap)) {
+                    if (key.includes(query) || query.includes(key)) {
+                        window.location.href = url;
+                        return;
+                    }
+                }
+                
+                // No match found - show feedback
+                const input = document.getElementById('search-input');
+                if (input) {
+                    input.style.borderColor = '#EF4444';
+                    input.placeholder = 'No matching page found. Try: home, login, dashboard...';
+                    input.value = '';
+                    
+                    setTimeout(() => {
+                        input.style.borderColor = 'rgba(255,255,255,0.08)';
+                        input.placeholder = 'Search for pages...';
+                    }, 3000);
+                }
+            };
+            
+            // Log 404 error
+            console.warn('404 - Page Not Found:', window.location.href);
+            
+            // Track in analytics if available
+            if (window.FirebaseService && window.FirebaseService.createDocument) {
+                try {
+                    FirebaseService.createDocument('activityLogs', {
+                        type: '404_error',
+                        url: window.location.href,
+                        referrer: document.referrer || 'direct',
+                        userAgent: navigator.userAgent,
+                        timestamp: new Date().toISOString()
+                    }).catch(() => {});
+                } catch(e) {}
+            }
+            
+            console.log('✅ 404 page ready');
+        });
+    </script>
+</body>
+</html>

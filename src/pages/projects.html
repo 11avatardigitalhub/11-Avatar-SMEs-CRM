@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="internal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="Projects Management - 11 Avatar Digital Hub. Track client projects from planning to completion." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <title>Projects - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../src/css/main.css" />
+    
+    <style>
+        :root {
+            --card-3d-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 20px rgba(0,0,0,0.04);
+            --card-3d-hover: 0 12px 30px rgba(0,0,0,0.07), 0 20px 50px rgba(0,0,0,0.05);
+            --transition-3d: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F0 0%, #F3F1EB 30%, #F0EDE5 60%, #F5F3ED 100%);
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed; top: -300px; right: -200px;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(16,185,129,0.03) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        
+        .projects-container {
+            position: relative; z-index: 1;
+            padding: 32px 24px; max-width: 1440px; margin: 0 auto;
+        }
+        
+        .page-header-3d {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px; margin-bottom: 28px;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 50%, #ECFDF5 100%);
+            border: 1px solid rgba(16,185,129,0.12);
+            border-radius: 20px;
+            box-shadow: var(--card-3d-shadow);
+            transition: var(--transition-3d);
+        }
+        .page-header-3d:hover { box-shadow: var(--card-3d-hover); transform: translateY(-2px); }
+        .page-title-wrap h1 { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; color: #0A0A0A; margin-bottom: 4px; }
+        .page-title-wrap p { color: #888; font-size: 0.9rem; margin: 0; }
+        
+        .stats-row-3d {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px;
+        }
+        @media(min-width: 768px) { .stats-row-3d { grid-template-columns: repeat(4, 1fr); } }
+        
+        .stat-mini-3d {
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px; padding: 18px 20px;
+            cursor: pointer; transition: var(--transition-3d);
+            transform-style: preserve-3d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .stat-mini-3d:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: rgba(16,185,129,0.2); }
+        .stat-mini-value { font-size: 1.5rem; font-weight: 800; color: #0A0A0A; font-family: 'Poppins', sans-serif; }
+        .stat-mini-label { font-size: 0.75rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+        
+        .filter-bar-3d {
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px; padding: 16px 20px; margin-bottom: 24px;
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+            box-shadow: var(--card-3d-shadow);
+        }
+        .filter-bar-3d input, .filter-bar-3d select {
+            padding: 10px 14px; border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.08); font-size: 0.9rem;
+            min-height: 44px; background: #FAFAFA; transition: var(--transition-3d);
+        }
+        .filter-bar-3d input:focus, .filter-bar-3d select:focus {
+            border-color: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
+            background: #FFF; outline: none;
+        }
+        
+        .projects-grid-3d {
+            display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 32px;
+        }
+        @media(min-width: 768px) { .projects-grid-3d { grid-template-columns: repeat(2, 1fr); } }
+        @media(min-width: 1200px) { .projects-grid-3d { grid-template-columns: repeat(3, 1fr); } }
+        
+        .project-card-3d {
+            background: linear-gradient(145deg, #FFFFFF 0%, #FAFAFA 100%);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 20px; padding: 24px;
+            cursor: pointer; position: relative;
+            transition: var(--transition-3d);
+            transform-style: preserve-3d;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+        
+        .project-card-3d::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 5px; height: 100%;
+            border-radius: 20px 0 0 20px;
+            transition: var(--transition-3d);
+        }
+        .project-card-3d.status-planning::before { background: #3B82F6; }
+        .project-card-3d.status-progress::before { background: #F59E0B; }
+        .project-card-3d.status-review::before { background: #8B5CF6; }
+        .project-card-3d.status-completed::before { background: #10B981; }
+        .project-card-3d.status-hold::before { background: #EF4444; }
+        
+        .project-card-3d:hover {
+            transform: translateY(-5px) rotateX(1deg);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.06), 0 20px 50px rgba(16,185,129,0.05);
+            border-color: rgba(16,185,129,0.2);
+        }
+        .project-card-3d:active { transform: scale(0.97); }
+        
+        .project-header-3d {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .project-id { font-weight: 700; font-size: 0.85rem; color: #10B981; font-family: 'Poppins', sans-serif; }
+        
+        .project-name-3d {
+            font-size: 1.15rem; font-weight: 700; color: #0A0A0A;
+            font-family: 'Poppins', sans-serif; margin-bottom: 6px;
+        }
+        .project-client { font-size: 0.85rem; color: #888; margin-bottom: 14px; }
+        
+        .project-progress-wrap { margin-bottom: 14px; }
+        .project-progress-header {
+            display: flex; justify-content: space-between;
+            font-size: 0.78rem; color: #888; margin-bottom: 6px;
+        }
+        .project-progress-bar {
+            height: 8px; background: #F0EDE5; border-radius: 20px; overflow: hidden;
+        }
+        .project-progress-fill {
+            height: 100%; border-radius: 20px;
+            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .progress-planning { background: #3B82F6; }
+        .progress-progress { background: #F59E0B; }
+        .progress-review { background: #8B5CF6; }
+        .progress-completed { background: #10B981; }
+        
+        .project-info-3d {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
+        }
+        .project-info-item { font-size: 0.8rem; color: #666; display: flex; align-items: center; gap: 6px; }
+        
+        .project-status-badge {
+            display: inline-flex; padding: 5px 14px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600; margin-bottom: 12px;
+        }
+        .badge-planning { background: rgba(59,130,246,0.1); color: #2563EB; }
+        .badge-progress { background: rgba(245,158,11,0.1); color: #D97706; }
+        .badge-review { background: rgba(139,92,246,0.1); color: #7C3AED; }
+        .badge-completed { background: rgba(16,185,129,0.1); color: #059669; }
+        .badge-hold { background: rgba(239,68,68,0.1); color: #DC2626; }
+        
+        .project-actions-3d {
+            display: flex; gap: 8px; padding-top: 14px;
+            border-top: 1px solid rgba(0,0,0,0.04); flex-wrap: wrap;
+        }
+        .action-btn-3d {
+            width: 38px; height: 38px; border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.08); background: #FAFAFA;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+        .action-btn-3d:hover { transform: translateY(-2px) scale(1.05); border-color: #10B981; background: #F0FDF4; }
+        
+        @media(max-width: 768px) {
+            .projects-container { padding: 16px 12px; }
+            .page-header-3d { padding: 20px; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+        <a href="/" class="header-brand">
+            <svg width="36" height="36" viewBox="0 0 36 36"><rect width="36" height="36" rx="10" fill="#D4AF37"/><text x="18" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter">11A</text></svg>
+            <span style="color:#B8960F">11 Avatar Hub</span>
+        </a>
+        <nav class="header-nav">
+            <a href="#/dashboard" class="header-link">Dashboard</a>
+            <a href="#/leads" class="header-link">Leads</a>
+            <a href="#/pipeline" class="header-link">Pipeline</a>
+            <a href="#/clients" class="header-link">Clients</a>
+            <a href="#/projects" class="header-link active">Projects</a>
+        </nav>
+        <div class="header-actions">
+            <button class="header-btn">🔔</button><button class="header-btn">👤</button>
+            <button class="header-btn header-toggle">☰</button>
+        </div>
+    </header>
+    
+    <nav class="submenu" id="submenu-nav">
+        <a href="#all" class="submenu-btn active">All Projects</a>
+        <a href="#planning" class="submenu-btn">Planning</a>
+        <a href="#progress" class="submenu-btn">In Progress</a>
+        <a href="#review" class="submenu-btn">Review</a>
+        <a href="#completed" class="submenu-btn">Completed</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="projects-container">
+            
+            <div class="page-header-3d">
+                <div class="page-title-wrap">
+                    <h1>🚀 Projects</h1>
+                    <p>Track client projects from planning to completion</p>
+                </div>
+                <button class="btn btn-primary" onclick="openProjectModal()">+ New Project</button>
+            </div>
+            
+            <div class="stats-row-3d" id="project-stats">
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-total">0</div><div class="stat-mini-label">Total Projects</div></div>
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-active">0</div><div class="stat-mini-label">Active</div></div>
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-completed">0</div><div class="stat-mini-label">Completed</div></div>
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-onhold">0</div><div class="stat-mini-label">On Hold</div></div>
+            </div>
+            
+            <div class="filter-bar-3d">
+                <input type="text" id="filter-search" placeholder="🔍 Search projects..." oninput="filterProjects()" />
+                <select id="filter-status" onchange="filterProjects()">
+                    <option value="">All Statuses</option>
+                    <option value="Planning">Planning</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Review">Review</option>
+                    <option value="Completed">Completed</option>
+                    <option value="On Hold">On Hold</option>
+                </select>
+            </div>
+            
+            <div class="projects-grid-3d" id="projects-grid"></div>
+            
+        </div>
+    </main>
+    
+    <footer class="footer"><div class="container"><div class="footer-bottom"><span>© 2026 11 Avatar Digital Hub</span><span>🇮🇳 Made with ❤️ in India</span></div></div></footer>
+    
+    <script src="../../src/js/config/constants.js"></script>
+    <script src="../../src/js/config/firebase.js"></script>
+    <script src="../../src/js/core/state.js"></script>
+    
+    <script>
+        let projects = [];
+        function loadProjects() {
+            projects = window.StateManager?.get('data.projects') || [];
+            if(!projects.length){ try{ projects=JSON.parse(localStorage.getItem('mrcrm_state')||'{}')?.projects||[] }catch(e){} }
+            renderProjects(); updateStats();
+        }
+        function updateStats() {
+            document.getElementById('stat-total').textContent=projects.length;
+            document.getElementById('stat-active').textContent=projects.filter(p=>p.status!=='Completed'&&p.status!=='On Hold').length;
+            document.getElementById('stat-completed').textContent=projects.filter(p=>p.status==='Completed').length;
+            document.getElementById('stat-onhold').textContent=projects.filter(p=>p.status==='On Hold').length;
+        }
+        function renderProjects(filtered=null) {
+            const data=filtered||projects; const grid=document.getElementById('projects-grid');
+            if(!data.length){ grid.innerHTML=`<div style="text-align:center;padding:60px;color:#999;grid-column:1/-1"><div style="font-size:5rem">🚀</div><h3>No projects yet</h3></div>`; return; }
+            const sc={'Planning':'status-planning','In Progress':'status-progress',Review:'status-review',Completed:'status-completed','On Hold':'status-hold'};
+            const bc={'Planning':'badge-planning','In Progress':'badge-progress',Review:'badge-review',Completed:'badge-completed','On Hold':'badge-hold'};
+            grid.innerHTML=data.map(p=>`<div class="project-card-3d ${sc[p.status]||''}" onclick="editProject('${p.id}')">
+                <div class="project-header-3d"><span class="project-id">${p.id||'PRJ-XXX'}</span><span class="project-status-badge ${bc[p.status]||'badge-planning'}">${p.status||'Planning'}</span></div>
+                <div class="project-name-3d">${p.name||'Untitled'}</div><div class="project-client">👤 ${p.client||'No client'}</div>
+                <div class="project-progress-wrap"><div class="project-progress-header"><span>Progress</span><span>${p.progress||0}%</span></div><div class="project-progress-bar"><div class="project-progress-fill ${p.status==='Completed'?'progress-completed':p.status==='Review'?'progress-review':p.status==='In Progress'?'progress-progress':'progress-planning'}" style="width:${p.progress||0}%"></div></div></div>
+                <div class="project-info-3d"><div class="project-info-item">📅 ${p.startDate||'-'}</div><div class="project-info-item">⏳ ${p.dueDate||'-'}</div></div>
+                <div class="project-actions-3d"><button class="action-btn-3d" onclick="event.stopPropagation();editProject('${p.id}')">✏️</button><button class="action-btn-3d" onclick="event.stopPropagation();deleteProject('${p.id}')" style="color:#EF4444">🗑️</button></div>
+            </div>`).join('');
+        }
+        function filterProjects(){const s=document.getElementById('filter-search').value.toLowerCase();const st=document.getElementById('filter-status').value;let f=projects;if(s)f=f.filter(p=>(p.name||'').toLowerCase().includes(s)||(p.client||'').toLowerCase().includes(s));if(st)f=f.filter(p=>p.status===st);renderProjects(f)}
+        function openProjectModal(id){const p=id?projects.find(x=>x.id===id):null;const n=prompt('Project name:',p?.name||'');if(!n)return;const c=prompt('Client name:',p?.client||'');const s=prompt('Status (Planning/In Progress/Review/Completed/On Hold):',p?.status||'Planning');if(p){p.name=n;p.client=c;p.status=s}else{projects.push({id:'PRJ'+Date.now().toString(36).toUpperCase(),name:n,client:c,status:s,progress:0,startDate:new Date().toISOString().slice(0,10),dueDate:'',createdAt:new Date().toISOString()})}saveProjects();renderProjects();updateStats()}
+        function editProject(id){openProjectModal(id)}
+        function deleteProject(id){if(!confirm('Delete?'))return;projects=projects.filter(p=>p.id!==id);saveProjects();renderProjects();updateStats()}
+        function saveProjects(){window.StateManager?.set('data.projects',projects);try{const s=JSON.parse(localStorage.getItem('mrcrm_state')||'{}');s.projects=projects;localStorage.setItem('mrcrm_state',JSON.stringify(s))}catch(e){}}
+        document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('loaded');loadProjects();console.log('✅ Projects ready')});
+    </script>
+</body>
+</html>

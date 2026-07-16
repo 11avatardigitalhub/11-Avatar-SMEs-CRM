@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="internal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="Lead Management - 11 Avatar Digital Hub. Capture, track, and convert leads with full timeline tracking." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <title>Leads Management - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../src/css/main.css" />
+    
+    <style>
+        :root {
+            --card-3d-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 15px rgba(0,0,0,0.04), 0 20px 40px rgba(0,0,0,0.03);
+            --card-3d-hover: 0 10px 25px rgba(0,0,0,0.07), 0 20px 40px rgba(0,0,0,0.05), 0 30px 60px rgba(212,175,55,0.04);
+            --transition-3d: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F0 0%, #F3F1EB 30%, #F0EDE5 60%, #F5F3ED 100%);
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -300px;
+            right: -200px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, rgba(212,175,55,0.01) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .leads-container {
+            position: relative;
+            z-index: 1;
+            padding: 32px 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        
+        /* Page Header */
+        .page-header-3d {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 32px;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 50%, #FFFAEE 100%);
+            border: 1px solid rgba(212,175,55,0.12);
+            border-radius: 20px;
+            box-shadow: var(--card-3d-shadow);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: var(--transition-3d);
+        }
+        
+        .page-header-3d:hover {
+            box-shadow: var(--card-3d-hover);
+            transform: translateY(-2px);
+        }
+        
+        .page-title-wrap h1 {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 800;
+            color: #0A0A0A;
+            margin-bottom: 4px;
+        }
+        
+        .page-title-wrap p {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .header-actions-3d {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        /* Stats Row */
+        .leads-stats-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        
+        @media(min-width: 600px) { .leads-stats-row { grid-template-columns: repeat(4, 1fr); } }
+        
+        .mini-stat-3d {
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: var(--transition-3d);
+            transform-style: preserve-3d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .mini-stat-3d:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-color: rgba(212,175,55,0.2);
+        }
+        
+        .mini-stat-3d:active { transform: scale(0.97); }
+        
+        .mini-stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0A0A0A;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .mini-stat-label {
+            font-size: 0.78rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .mini-stat-icon {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        
+        /* Filter Bar */
+        .filter-bar-3d {
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: var(--card-3d-shadow);
+        }
+        
+        .filter-bar-3d input,
+        .filter-bar-3d select {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.08);
+            font-size: 0.9rem;
+            min-width: 140px;
+            min-height: 44px;
+            background: #FAFAFA;
+            transition: var(--transition-3d);
+        }
+        
+        .filter-bar-3d input:focus,
+        .filter-bar-3d select:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+            background: #FFFDF7;
+        }
+        
+        /* Lead Cards Grid */
+        .leads-grid-3d {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        @media(min-width: 768px) { .leads-grid-3d { grid-template-columns: repeat(2, 1fr); } }
+        @media(min-width: 1200px) { .leads-grid-3d { grid-template-columns: repeat(3, 1fr); } }
+        
+        .lead-card-3d {
+            background: linear-gradient(145deg, #FFFFFF 0%, #FAFAFA 100%);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 18px;
+            padding: 22px 20px;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition-3d);
+            transform-style: preserve-3d;
+            perspective: 800px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+        
+        .lead-card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 18px 0 0 18px;
+            transition: var(--transition-3d);
+        }
+        
+        .lead-card-3d.status-new::before { background: #3B82F6; }
+        .lead-card-3d.status-contacted::before { background: #8B5CF6; }
+        .lead-card-3d.status-qualified::before { background: #10B981; }
+        .lead-card-3d.status-proposal::before { background: #D4AF37; }
+        .lead-card-3d.status-negotiation::before { background: #F59E0B; }
+        .lead-card-3d.status-won::before { background: #059669; }
+        .lead-card-3d.status-lost::before { background: #EF4444; }
+        
+        .lead-card-3d:hover {
+            transform: translateY(-4px) rotateX(1deg);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.06), 0 20px 50px rgba(0,0,0,0.04);
+            border-color: rgba(212,175,55,0.2);
+        }
+        
+        .lead-card-3d:active { transform: scale(0.98); }
+        
+        .lead-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .lead-name-3d {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .lead-company {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .lead-status-badge {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            transform: translateZ(5px);
+        }
+        
+        .badge-new { background: rgba(59,130,246,0.1); color: #3B82F6; }
+        .badge-contacted { background: rgba(139,92,246,0.1); color: #8B5CF6; }
+        .badge-qualified { background: rgba(16,185,129,0.1); color: #10B981; }
+        .badge-proposal { background: rgba(212,175,55,0.1); color: #B8960F; }
+        .badge-negotiation { background: rgba(245,158,11,0.1); color: #D97706; }
+        .badge-won { background: rgba(5,150,105,0.1); color: #059669; }
+        .badge-lost { background: rgba(239,68,68,0.1); color: #DC2626; }
+        
+        .lead-info-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        
+        .lead-info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .lead-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(0,0,0,0.04);
+            flex-wrap: wrap;
+        }
+        
+        .action-btn-3d {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #FAFAFA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+        
+        .action-btn-3d:hover {
+            transform: translateY(-2px) scale(1.05);
+            border-color: #D4AF37;
+            background: #FFFDF7;
+            box-shadow: 0 4px 12px rgba(212,175,55,0.1);
+        }
+        
+        /* Empty State */
+        .empty-state-3d {
+            text-align: center;
+            padding: 60px 20px;
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .empty-icon-3d {
+            font-size: 5rem;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-3d {
+            background: #FFFFFF;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .form-group-3d { margin-bottom: 20px; }
+        .form-group-3d label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: #333; }
+        .form-group-3d input, .form-group-3d select, .form-group-3d textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            min-height: 48px;
+            background: #FAFAFA;
+            transition: var(--transition-3d);
+        }
+        .form-group-3d input:focus, .form-group-3d select:focus, .form-group-3d textarea:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+            background: #FFFDF7;
+            outline: none;
+        }
+        
+        .form-row-3d {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media(min-width: 500px) { .form-row-3d { grid-template-columns: 1fr 1fr; } }
+        
+        @media(max-width: 768px) {
+            .leads-container { padding: 16px 12px; }
+            .page-header-3d { padding: 20px; flex-direction: column; }
+            .header-actions-3d { width: 100%; }
+            .header-actions-3d .btn { flex: 1; }
+            .filter-bar-3d { flex-direction: column; }
+            .filter-bar-3d input, .filter-bar-3d select { width: 100%; min-width: auto; }
+            .modal-3d { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="header">
+        <a href="/" class="header-brand">
+            <svg width="36" height="36" viewBox="0 0 36 36"><rect width="36" height="36" rx="10" fill="#D4AF37"/><text x="18" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter">11A</text></svg>
+            <span style="color:#B8960F">11 Avatar Hub</span>
+        </a>
+        <nav class="header-nav">
+            <a href="#/dashboard" class="header-link">Dashboard</a>
+            <a href="#/leads" class="header-link active">Leads</a>
+            <a href="#/pipeline" class="header-link">Pipeline</a>
+            <a href="#/clients" class="header-link">Clients</a>
+            <a href="#/revenue" class="header-link">Revenue</a>
+        </nav>
+        <div class="header-actions">
+            <button class="header-btn">🔔</button>
+            <button class="header-btn">👤</button>
+            <button class="header-btn header-toggle">☰</button>
+        </div>
+    </header>
+    
+    <!-- Sub Menu -->
+    <nav class="submenu" id="submenu-nav">
+        <a href="#all-leads" class="submenu-btn active">All Leads</a>
+        <a href="#new-lead" class="submenu-btn">New Lead</a>
+        <a href="#import-export" class="submenu-btn">Import/Export</a>
+        <a href="#lead-stats" class="submenu-btn">Stats</a>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="leads-container">
+            
+            <!-- Page Header -->
+            <div class="page-header-3d">
+                <div class="page-title-wrap">
+                    <h1>📋 Leads Management</h1>
+                    <p>Capture, track, and convert leads with full timeline</p>
+                </div>
+                <div class="header-actions-3d">
+                    <button class="btn btn-primary" onclick="openLeadModal()">+ New Lead</button>
+                    <button class="btn btn-outline" onclick="exportLeads()">📤 Export</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">📥 Import</button>
+                    <input type="file" id="import-file" accept=".json,.csv" style="display:none" onchange="importLeads(event)" />
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="leads-stats-row" id="leads-stats">
+                <div class="mini-stat-3d"><div class="mini-stat-icon">📋</div><div class="mini-stat-value" id="stat-total">0</div><div class="mini-stat-label">Total Leads</div></div>
+                <div class="mini-stat-3d"><div class="mini-stat-icon">🆕</div><div class="mini-stat-value" id="stat-new">0</div><div class="mini-stat-label">New</div></div>
+                <div class="mini-stat-3d"><div class="mini-stat-icon">🏆</div><div class="mini-stat-value" id="stat-won">0</div><div class="mini-stat-label">Won</div></div>
+                <div class="mini-stat-3d"><div class="mini-stat-icon">💰</div><div class="mini-stat-value" id="stat-value">₹0</div><div class="mini-stat-label">Pipeline Value</div></div>
+            </div>
+            
+            <!-- Filter Bar -->
+            <div class="filter-bar-3d">
+                <input type="text" id="filter-search" placeholder="🔍 Search leads..." oninput="filterLeads()" />
+                <select id="filter-status" onchange="filterLeads()">
+                    <option value="">All Statuses</option>
+                    <option value="New">New</option>
+                    <option value="Attempting Contact">Attempting Contact</option>
+                    <option value="Connected">Connected</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Proposal Sent">Proposal Sent</option>
+                    <option value="Negotiation">Negotiation</option>
+                    <option value="Won">Won</option>
+                    <option value="Lost">Lost</option>
+                </select>
+                <select id="filter-source" onchange="filterLeads()">
+                    <option value="">All Sources</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Website">Website</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Cold Calling">Cold Calling</option>
+                </select>
+                <button class="btn btn-ghost btn-sm" onclick="clearFilters()">✕ Clear</button>
+            </div>
+            
+            <!-- Leads Grid -->
+            <div class="leads-grid-3d" id="leads-grid">
+                <div class="empty-state-3d">
+                    <div class="empty-icon-3d">📭</div>
+                    <h3 style="margin-bottom:8px;color:#333">No leads yet</h3>
+                    <p style="color:#999;margin-bottom:20px">Click "New Lead" to add your first lead</p>
+                    <button class="btn btn-primary" onclick="openLeadModal()">+ Create First Lead</button>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- Lead Modal -->
+    <div class="modal-overlay" id="lead-modal" style="display:none" onclick="if(event.target===this)closeLeadModal()">
+        <div class="modal-3d">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+                <h2 style="font-size:1.3rem;font-weight:700" id="modal-title">New Lead</h2>
+                <button onclick="closeLeadModal()" style="width:36px;height:36px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:1.2rem;cursor:pointer">✕</button>
+            </div>
+            <form id="lead-form" onsubmit="saveLead(event)">
+                <input type="hidden" id="lead-edit-id" />
+                <div class="form-row-3d">
+                    <div class="form-group-3d"><label>Full Name *</label><input id="lead-name" required placeholder="e.g. Rakesh Sharma" /></div>
+                    <div class="form-group-3d"><label>Mobile * (10 digits)</label><input id="lead-mobile" required placeholder="9876543210" maxlength="10" pattern="[0-9]{10}" /></div>
+                </div>
+                <div class="form-row-3d">
+                    <div class="form-group-3d"><label>Email</label><input id="lead-email" type="email" placeholder="email@example.com" /></div>
+                    <div class="form-group-3d"><label>Business</label><input id="lead-business" placeholder="Company name" /></div>
+                </div>
+                <div class="form-row-3d">
+                    <div class="form-group-3d"><label>Source</label><select id="lead-source"><option>Cold Calling</option><option>WhatsApp</option><option>Website</option><option>Referral</option><option>Facebook Ads</option><option>Google Ads</option></select></div>
+                    <div class="form-group-3d"><label>Service Interest</label><select id="lead-service"><option>SEO</option><option>Google Ads</option><option>Social Media</option><option>Website</option><option>Video Editing</option><option>CRO</option></select></div>
+                </div>
+                <div class="form-row-3d">
+                    <div class="form-group-3d"><label>Deal Value (₹)</label><input id="lead-deal" type="number" placeholder="50000" /></div>
+                    <div class="form-group-3d"><label>Status</label><select id="lead-status"><option>New</option><option>Attempting Contact</option><option>Connected</option><option>Qualified</option><option>Proposal Sent</option><option>Negotiation</option><option>Won</option><option>Lost</option></select></div>
+                </div>
+                <div class="form-group-3d"><label>Notes</label><textarea id="lead-notes" rows="2" placeholder="Any notes..."></textarea></div>
+                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+                    <button type="button" class="btn btn-outline" onclick="closeLeadModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">💾 Save Lead</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer"><div class="container"><div class="footer-bottom"><span>© 2026 11 Avatar Digital Hub</span><span>🇮🇳 Made with ❤️ in India</span></div></div></footer>
+    
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="../../src/js/config/constants.js"></script>
+    <script src="../../src/js/config/firebase.js"></script>
+    <script src="../../src/js/core/state.js"></script>
+    <script src="../../src/js/core/eventBus.js"></script>
+    
+    <script>
+        // ==========================================
+        // LEADS PAGE LOGIC
+        // ==========================================
+        let leads = [];
+        
+        function loadLeads() {
+            leads = window.StateManager?.get('data.leads') || [];
+            if(leads.length===0){leads=JSON.parse(localStorage.getItem('mrcrm_state')||'{}')?.leads||[]}
+            renderLeads();
+            updateStats();
+        }
+        
+        function updateStats() {
+            document.getElementById('stat-total').textContent=leads.length;
+            document.getElementById('stat-new').textContent=leads.filter(l=>l.status==='New').length;
+            document.getElementById('stat-won').textContent=leads.filter(l=>l.status==='Won').length;
+            const val=leads.filter(l=>l.status!=='Won'&&l.status!=='Lost').reduce((s,l)=>s+(parseFloat(l.dealValue)||0),0);
+            document.getElementById('stat-value').textContent='₹'+val.toLocaleString('en-IN');
+        }
+        
+        function renderLeads(filtered=null) {
+            const data=filtered||leads;
+            const grid=document.getElementById('leads-grid');
+            if(data.length===0){grid.innerHTML=`<div class="empty-state-3d"><div class="empty-icon-3d">📭</div><h3>No leads found</h3><p style="color:#999">Try adjusting your filters</p></div>`;return}
+            
+            grid.innerHTML=data.map((l,i)=>{
+                const statusClass=l.status?.toLowerCase().replace(/\s+/g,'-')||'new';
+                const badgeMap={New:'badge-new','Attempting Contact':'badge-contacted',Connected:'badge-contacted',Qualified:'badge-qualified','Proposal Sent':'badge-proposal',Negotiation:'badge-negotiation',Won:'badge-won',Lost:'badge-lost'};
+                return`<div class="lead-card-3d status-${statusClass}" onclick="editLead('${l.id}')">
+                    <div class="lead-card-header"><div><div class="lead-name-3d">${l.name||'Unknown'}</div><div class="lead-company">${l.business||'No company'}</div></div><span class="lead-status-badge ${badgeMap[l.status]||'badge-new'}">${l.status||'New'}</span></div>
+                    <div class="lead-info-row"><span class="lead-info-item">📱 ${l.mobile||'-'}</span><span class="lead-info-item">📧 ${l.email||'-'}</span></div>
+                    <div class="lead-info-row"><span class="lead-info-item">📌 ${l.source||'-'}</span><span class="lead-info-item">💰 ${l.dealValue?('₹'+Number(l.dealValue).toLocaleString('en-IN')):'-'}</span></div>
+                    <div class="lead-card-actions">
+                        <button class="action-btn-3d" title="Call" onclick="event.stopPropagation();window.location.href='tel:${l.mobile}'">📞</button>
+                        <button class="action-btn-3d" title="WhatsApp" onclick="event.stopPropagation();openWhatsApp('${l.mobile}')">💬</button>
+                        <button class="action-btn-3d" title="Edit" onclick="event.stopPropagation();editLead('${l.id}')">✏️</button>
+                        <button class="action-btn-3d" title="Delete" onclick="event.stopPropagation();deleteLead('${l.id}')">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        
+        function filterLeads() {
+            const search=document.getElementById('filter-search').value.toLowerCase();
+            const status=document.getElementById('filter-status').value;
+            const source=document.getElementById('filter-source').value;
+            let filtered=leads;
+            if(search) filtered=filtered.filter(l=>(l.name||'').toLowerCase().includes(search)||(l.mobile||'').includes(search)||(l.business||'').toLowerCase().includes(search));
+            if(status) filtered=filtered.filter(l=>l.status===status);
+            if(source) filtered=filtered.filter(l=>l.source===source);
+            renderLeads(filtered);
+        }
+        
+        function clearFilters() {
+            document.getElementById('filter-search').value='';
+            document.getElementById('filter-status').value='';
+            document.getElementById('filter-source').value='';
+            renderLeads();
+        }
+        
+        function openLeadModal(editId=null) {
+            document.getElementById('lead-modal').style.display='flex';
+            document.getElementById('modal-title').textContent=editId?'Edit Lead':'New Lead';
+            if(editId){
+                const l=leads.find(x=>x.id===editId);
+                if(l){
+                    document.getElementById('lead-edit-id').value=l.id;
+                    document.getElementById('lead-name').value=l.name||'';
+                    document.getElementById('lead-mobile').value=l.mobile||'';
+                    document.getElementById('lead-email').value=l.email||'';
+                    document.getElementById('lead-business').value=l.business||'';
+                    document.getElementById('lead-source').value=l.source||'Cold Calling';
+                    document.getElementById('lead-service').value=l.service||'SEO';
+                    document.getElementById('lead-deal').value=l.dealValue||'';
+                    document.getElementById('lead-status').value=l.status||'New';
+                    document.getElementById('lead-notes').value=l.notes||'';
+                }
+            }else{
+                document.getElementById('lead-form').reset();
+                document.getElementById('lead-edit-id').value='';
+            }
+        }
+        
+        function closeLeadModal() { document.getElementById('lead-modal').style.display='none'; }
+        
+        function editLead(id) { openLeadModal(id); }
+        
+        function saveLead(event) {
+            event.preventDefault();
+            const editId=document.getElementById('lead-edit-id').value;
+            const mobile=document.getElementById('lead-mobile').value.trim();
+            if(!/^\d{10}$/.test(mobile)){alert('Mobile must be 10 digits');return}
+            const data={
+                id:editId||('LD'+Date.now().toString(36).toUpperCase()),
+                name:document.getElementById('lead-name').value.trim(),
+                mobile,email:document.getElementById('lead-email').value.trim(),
+                business:document.getElementById('lead-business').value.trim(),
+                source:document.getElementById('lead-source').value,
+                service:document.getElementById('lead-service').value,
+                dealValue:document.getElementById('lead-deal').value,
+                status:document.getElementById('lead-status').value,
+                notes:document.getElementById('lead-notes').value.trim(),
+                createdDate:editId?(leads.find(l=>l.id===editId)?.createdDate||new Date().toISOString().slice(0,10)):new Date().toISOString().slice(0,10)
+            };
+            if(!data.name||!data.mobile){alert('Name and Mobile required');return}
+            if(editId){const idx=leads.findIndex(l=>l.id===editId);if(idx>-1)leads[idx]=data}
+            else{leads.unshift(data)}
+            saveLeads();closeLeadModal();renderLeads();updateStats();
+            window.EventBus?.emit('lead:created',{lead:data});
+        }
+        
+        function deleteLead(id) {
+            if(!confirm('Delete this lead?'))return;
+            leads=leads.filter(l=>l.id!==id);
+            saveLeads();renderLeads();updateStats();
+        }
+        
+        function openWhatsApp(mobile) {
+            if(!mobile||mobile.length!==10){alert('Invalid mobile');return}
+            window.open('https://wa.me/91'+mobile.replace(/\D/g,''),'_blank');
+        }
+        
+        function saveLeads() {
+            window.StateManager?.set('data.leads',leads);
+            try{const s=JSON.parse(localStorage.getItem('mrcrm_state')||'{}');s.leads=leads;localStorage.setItem('mrcrm_state',JSON.stringify(s))}catch(e){}
+        }
+        
+        function exportLeads() {
+            const blob=new Blob([JSON.stringify(leads,null,2)],{type:'application/json'});
+            const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+            a.download='leads_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+        }
+        
+        function importLeads(event) {
+            const file=event.target.files[0];if(!file)return;
+            const reader=new FileReader();
+            reader.onload=function(e){
+                try{const data=JSON.parse(e.target.result);if(Array.isArray(data)){leads=[...data,...leads];saveLeads();renderLeads();updateStats();alert('Imported '+data.length+' leads')}}catch(err){alert('Invalid file')}
+            };
+            reader.readAsText(file);event.target.value='';
+        }
+        
+        document.addEventListener('DOMContentLoaded',function(){
+            document.body.classList.add('loaded');
+            loadLeads();
+            const btns=document.querySelectorAll('.submenu-btn');
+            btns.forEach(b=>b.addEventListener('click',function(e){e.preventDefault();btns.forEach(x=>x.classList.remove('active'));this.classList.add('active')}));
+            console.log('✅ Leads page ready');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="11 Avatar Digital Hub - Changelog & Release Notes">
+    <meta name="theme-color" content="#D4AF37">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>Changelog - 11 Avatar Digital Hub</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
+            --bg: #F8F6F0; --bg-card: #FFFFFF; --text: #0A0A0A;
+            --text-secondary: #333333; --text-muted: #666666;
+            --border: rgba(0,0,0,0.06); --shadow: 0 2px 12px rgba(0,0,0,0.05);
+            --radius: 14px; --radius-sm: 8px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
+        .skip-link:focus { top: 0; }
+
+        .header { background: var(--bg-card); border-bottom: 2px solid var(--gold); padding: 0 24px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+        .header-logo img { height: 36px; }
+        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 18px; color: var(--gold-dark); }
+        .header-nav { display: flex; gap: 8px; }
+        .header-nav a { padding: 8px 16px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 14px; transition: var(--transition); }
+        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+        .page-title { font-family: 'Poppins', sans-serif; font-size: 34px; font-weight: 700; margin-bottom: 4px; }
+        .page-subtitle { color: var(--text-muted); font-size: 16px; margin-bottom: 32px; }
+
+        .version-filter { display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap; }
+        .version-filter-btn { padding: 8px 18px; border: 2px solid var(--border); border-radius: 24px; background: var(--bg-card); cursor: pointer; font-weight: 500; font-size: 14px; transition: var(--transition); color: var(--text-secondary); }
+        .version-filter-btn:hover, .version-filter-btn.active { border-color: var(--gold); background: var(--gold); color: #000; }
+
+        .release-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 24px; box-shadow: var(--shadow); position: relative; overflow: hidden; transition: var(--transition); }
+        .release-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.10); transform: translateY(-2px); }
+        .release-card.major { border-left: 4px solid var(--gold); }
+        .release-card.minor { border-left: 4px solid #3B82F6; }
+        .release-card.patch { border-left: 4px solid #10B981; }
+
+        .release-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+        .release-version { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; }
+        .release-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-major { background: #D4AF3720; color: #B8960F; }
+        .badge-minor { background: #3B82F620; color: #2563EB; }
+        .badge-patch { background: #10B98120; color: #059669; }
+        .release-date { color: var(--text-muted); font-size: 14px; margin-left: auto; }
+        .release-date i { margin-right: 4px; }
+
+        .release-subtitle { color: var(--text-secondary); font-size: 16px; font-weight: 500; margin-bottom: 16px; }
+
+        .changes-section { margin-top: 16px; }
+        .changes-section h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px; }
+        .change-list { list-style: none; padding: 0; }
+        .change-list li { padding: 6px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text-secondary); }
+        .change-list li i { margin-top: 4px; font-size: 12px; width: 16px; text-align: center; }
+        .change-added i { color: #10B981; }
+        .change-changed i { color: #3B82F6; }
+        .change-fixed i { color: #F59E0B; }
+        .change-removed i { color: #DC2626; }
+        .change-security i { color: #8B5CF6; }
+        .tag-new { background: #10B981; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; font-weight: 600; }
+
+        .timeline { position: relative; padding-left: 40px; }
+        .timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+        .timeline-dot { position: absolute; left: -33px; top: 32px; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg); z-index: 1; }
+
+        .subscribe-box { background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.03)); border: 1px solid var(--gold); border-radius: var(--radius); padding: 24px; margin-top: 40px; text-align: center; }
+        .subscribe-box h3 { font-family: 'Poppins', sans-serif; margin-bottom: 8px; }
+        .subscribe-box p { color: var(--text-muted); margin-bottom: 16px; font-size: 14px; }
+        .subscribe-input { display: flex; gap: 8px; max-width: 420px; margin: 0 auto; }
+        .subscribe-input input { flex: 1; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; }
+        .subscribe-input input:focus { outline: none; border-color: var(--gold); }
+        .subscribe-input button { padding: 12px 24px; background: var(--gold); border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .subscribe-input button:hover { background: var(--gold-dark); color: #fff; }
+
+        .back-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; background: var(--gold); border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: var(--transition); opacity: 0; visibility: hidden; z-index: 99; }
+        .back-top.visible { opacity: 1; visibility: visible; }
+        .back-top:hover { background: var(--gold-dark); transform: translateY(-2px); }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px 16px; }
+            .page-title { font-size: 26px; }
+            .release-card { padding: 20px; }
+            .release-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .release-date { margin-left: 0; }
+            .timeline { padding-left: 28px; }
+            .timeline-dot { left: -21px; }
+            .subscribe-input { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .header { padding: 0 12px; }
+            .version-filter { gap: 6px; }
+            .version-filter-btn { padding: 6px 12px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to Changelog</a>
+
+    <header class="header" role="banner">
+        <a href="/" class="header-logo" aria-label="Home">
+            <img src="/assets/logo.png" alt="" width="36" height="36" loading="lazy">
+            <span>11 Avatar Changelog</span>
+        </a>
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/api-docs.html">API Docs</a>
+            <a href="/changelog.html" class="active">Changelog</a>
+            <a href="/support.html">Support</a>
+        </nav>
+    </header>
+
+    <main class="container" id="main-content" role="main">
+        <h1 class="page-title">📋 Changelog</h1>
+        <p class="page-subtitle">Track every update, feature, and improvement across all releases.</p>
+
+        <div class="version-filter" role="tablist" aria-label="Filter releases by type">
+            <button class="version-filter-btn active" onclick="filterReleases('all')" role="tab" aria-selected="true">All Releases</button>
+            <button class="version-filter-btn" onclick="filterReleases('major')" role="tab" aria-selected="false">Major</button>
+            <button class="version-filter-btn" onclick="filterReleases('minor')" role="tab" aria-selected="false">Minor</button>
+            <button class="version-filter-btn" onclick="filterReleases('patch')" role="tab" aria-selected="false">Patches</button>
+        </div>
+
+        <div class="timeline" id="changelog-list">
+            <!-- v2.0.0 -->
+            <article class="release-card major" data-type="major" id="v2.0.0">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v2.0.0</span>
+                    <span class="release-badge badge-major">Major Release</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> July 16, 2026</span>
+                </div>
+                <p class="release-subtitle">🎉 Enterprise CRM 2.0 - Complete Platform Rewrite</p>
+                <div class="changes-section">
+                    <h4>✨ New Features</h4>
+                    <ul class="change-list">
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Complete Kanban pipeline with drag-drop, WIP limits, and keyboard navigation</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> GST-compliant invoicing with E-Invoice IRP integration, E-Way Bill generation</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Multi-gateway payment processing (Razorpay, Stripe, PayPal, UPI, Bank Transfer)</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> WhatsApp Cloud API integration via CloudWA with template management</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Task management with Kanban board, time tracking, subtasks, dependencies</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Project management with Gantt charts, milestones, budgets, health scoring</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Retainer management with MRR/ARR tracking, auto-invoicing, utilization</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Training LMS with courses, quizzes, assessments, certificates</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Multi-level referral engine with partner tiers, commissions, payout management</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Advanced reports & analytics with 12 chart types, scheduled delivery</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Multi-channel notifications (In-App, Email, SMS, Push, WhatsApp, Desktop)</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Calendar integration (Google, Outlook, Apple) with meeting scheduler</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Google Maps integration with geocoding, route optimization, territory management</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> DLT-compliant SMS with OTP verification, bulk sending</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Reusable component library (Kanban, Charts, DataTable, FileUpload, DatePicker, SearchBar, RichTextEditor)</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Automated backup system with scheduling, encryption, retention policies</li>
+                    </ul>
+                </div>
+                <div class="changes-section">
+                    <h4>🔧 Improvements</h4>
+                    <ul class="change-list">
+                        <li class="change-changed"><i class="fas fa-sync"></i> Complete UI redesign with glass morphism, 3D effects, dark/light themes</li>
+                        <li class="change-changed"><i class="fas fa-sync"></i> Firebase Functions for webhook processing, email/SMS delivery, backups, data cleanup</li>
+                        <li class="change-changed"><i class="fas fa-sync"></i> PostgreSQL migration scripts with partitioning, full-text search, performance indexes</li>
+                        <li class="change-changed"><i class="fas fa-sync"></i> API documentation portal with interactive endpoint explorer</li>
+                    </ul>
+                </div>
+                <div class="changes-section">
+                    <h4>🛡️ Security</h4>
+                    <ul class="change-list">
+                        <li class="change-security"><i class="fas fa-shield-alt"></i> GDPR data anonymization & cleanup automation</li>
+                        <li class="change-security"><i class="fas fa-shield-alt"></i> Webhook signature verification (HMAC-SHA256)</li>
+                        <li class="change-security"><i class="fas fa-shield-alt"></i> Rate limiting with per-plan quotas</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- v1.5.0 -->
+            <article class="release-card minor" data-type="minor" id="v1.5.0">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v1.5.0</span>
+                    <span class="release-badge badge-minor">Minor Release</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> June 1, 2026</span>
+                </div>
+                <p class="release-subtitle">Pipeline & Lead Management Enhancements</p>
+                <div class="changes-section">
+                    <h4>✨ New Features</h4>
+                    <ul class="change-list">
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Lead scoring with AI-powered qualification</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Email tracking (open, click, bounce rates) with analytics</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Bulk import/export for leads, clients, contacts <span class="tag-new">NEW</span></li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- v1.4.2 -->
+            <article class="release-card patch" data-type="patch" id="v1.4.2">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v1.4.2</span>
+                    <span class="release-badge badge-patch">Patch</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> May 20, 2026</span>
+                </div>
+                <p class="release-subtitle">Bug fixes & performance improvements</p>
+                <div class="changes-section">
+                    <h4>🐛 Bug Fixes</h4>
+                    <ul class="change-list">
+                        <li class="change-fixed"><i class="fas fa-bug"></i> Fixed invoice PDF generation alignment issues</li>
+                        <li class="change-fixed"><i class="fas fa-bug"></i> Fixed Firestore real-time listener memory leak</li>
+                    </ul>
+                </div>
+                <div class="changes-section">
+                    <h4>🔧 Improvements</h4>
+                    <ul class="change-list">
+                        <li class="change-changed"><i class="fas fa-sync"></i> Improved API response time by 40% with query optimization</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- v1.4.0 -->
+            <article class="release-card minor" data-type="minor" id="v1.4.0">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v1.4.0</span>
+                    <span class="release-badge badge-minor">Minor Release</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> April 15, 2026</span>
+                </div>
+                <p class="release-subtitle">Client Portal & Self-Service Features</p>
+                <div class="changes-section">
+                    <h4>✨ New Features</h4>
+                    <ul class="change-list">
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Client portal with invoice viewing, payment history</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Self-service payment links with UPI QR codes</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- v1.3.1 -->
+            <article class="release-card patch" data-type="patch" id="v1.3.1">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v1.3.1</span>
+                    <span class="release-badge badge-patch">Patch</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> March 28, 2026</span>
+                </div>
+                <div class="changes-section">
+                    <h4>🐛 Bug Fixes</h4>
+                    <ul class="change-list">
+                        <li class="change-fixed"><i class="fas fa-bug"></i> Fixed dashboard KPI calculation for monthly revenue</li>
+                    </ul>
+                </div>
+                <div class="changes-section">
+                    <h4>🛡️ Security</h4>
+                    <ul class="change-list">
+                        <li class="change-security"><i class="fas fa-shield-alt"></i> Patched XSS vulnerability in rich text input fields</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- v1.3.0 -->
+            <article class="release-card minor" data-type="minor" id="v1.3.0">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v1.3.0</span>
+                    <span class="release-badge badge-minor">Minor Release</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> March 1, 2026</span>
+                </div>
+                <p class="release-subtitle">Multi-Tenant Architecture & RBAC</p>
+                <div class="changes-section">
+                    <h4>✨ New Features</h4>
+                    <ul class="change-list">
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Multi-tenant isolation with organization-level data separation</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> 8-level RBAC (Super Admin to Viewer) with granular permissions</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- v1.0.0 -->
+            <article class="release-card major" data-type="major" id="v1.0.0">
+                <div class="timeline-dot"></div>
+                <div class="release-header">
+                    <span class="release-version">v1.0.0</span>
+                    <span class="release-badge badge-major">Major Release</span>
+                    <span class="release-date"><i class="fas fa-calendar-alt"></i> January 15, 2026</span>
+                </div>
+                <p class="release-subtitle">🚀 Initial Public Release</p>
+                <div class="changes-section">
+                    <h4>✨ Core Features</h4>
+                    <ul class="change-list">
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Firebase authentication with email/password & Google SSO</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Client & contact management</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Lead capture & tracking</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Basic invoicing with GST calculation</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> Dashboard with revenue KPIs</li>
+                        <li class="change-added"><i class="fas fa-plus-circle"></i> PWA support with offline mode</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+
+        <div class="subscribe-box">
+            <h3>📬 Stay Updated</h3>
+            <p>Get release notes delivered to your inbox. No spam, ever.</p>
+            <div class="subscribe-input">
+                <input type="email" placeholder="your@email.com" aria-label="Email for changelog updates">
+                <button onclick="subscribe()">Subscribe</button>
+            </div>
+        </div>
+    </main>
+
+    <button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Filter releases by type
+        function filterReleases(type) {
+            const cards = document.querySelectorAll('.release-card');
+            
+            cards.forEach(card => {
+                if (type === 'all' || card.dataset.type === type) {
+                    card.style.display = '';
+                    card.style.animation = 'fadeIn 0.4s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.querySelectorAll('.version-filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type === 'all' ? 'all releases' : type));
+                btn.setAttribute('aria-selected', btn.classList.contains('active'));
+            });
+        }
+
+        // Subscribe button
+        function subscribe() {
+            const email = document.querySelector('.subscribe-input input').value;
+            if (email && email.includes('@')) {
+                alert('✅ Subscribed! You will receive release updates at ' + email);
+                document.querySelector('.subscribe-input input').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        // Back to top button
+        const backTopBtn = document.getElementById('back-top');
+        window.addEventListener('scroll', () => {
+            backTopBtn.classList.toggle('visible', window.scrollY > 500);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Add fade-in animation style
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            .release-card { animation: fadeIn 0.5s ease; }
+        `;
+        document.head.appendChild(style);
+
+        console.log('Changelog loaded - 11 Avatar Digital Hub v2.0.0');
+    </script>
+</body>
+</html>
