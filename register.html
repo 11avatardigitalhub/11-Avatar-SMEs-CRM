@@ -3,7 +3,7 @@
 <head>
     <!-- ==========================================
          11 AVATAR DIGITAL HUB - Registration Page
-         Version: 3.0 Enterprise
+         Version: 3.0.1 Enterprise
          Theme: Public (Dark) - White/Gold/Black
          ========================================== -->
     
@@ -62,8 +62,8 @@
     <link rel="stylesheet" href="src/css/main.css" />
     <link rel="stylesheet" href="src/css/auth.css" />
     
-    <!-- Security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.firebaseapp.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.cloudfunctions.net wss://*.firebaseapp.com; frame-src 'self' https://*.firebaseapp.com;" />
+    <!-- Security - CSP with gstatic.com included -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.firebaseapp.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://*.cloudfunctions.net wss://*.firebaseapp.com; frame-src 'self' https://*.firebaseapp.com;" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
     <title>Create Free Account - 11 Avatar Digital Hub | Master Revenue CRM</title>
@@ -138,7 +138,7 @@
             <!-- ==========================================
                  REGISTRATION FORM
                  ========================================== -->
-            <form id="register-form" class="auth-form" novalidate autocomplete="on" method="POST" aria-label="Registration form">
+            <form id="register-form" class="auth-form" novalidate autocomplete="on" aria-label="Registration form">
                 
                 <!-- Hidden CSRF Token -->
                 <input type="hidden" id="register-csrf" name="csrf_token" value="" />
@@ -507,12 +507,14 @@
     </div>
     
     <!-- ==========================================
-         SCRIPTS
+         SCRIPTS - ALL Firebase SDKs included
          ========================================== -->
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compat mode - ALL FOUR required) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     
     <!-- Application Core -->
     <script src="src/js/config/constants.js"></script>
@@ -528,22 +530,18 @@
          * @fileoverview Register Page Bootstrap
          * @description Minimal inline script to initialize registration page.
          *              Heavy logic resides in src/js/auth/register.js (RegisterController).
-         * @version 3.0.0
+         * @version 3.0.1
          */
         'use strict';
         
         (function() {
             
-            /**
-             * Generate CSRF token
-             * @returns {string}
-             */
             function generateCSRFToken() {
                 try {
                     if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-                        var array = new Uint32Array(8);
-                        crypto.getRandomValues(array);
-                        return Array.from(array, function(dec) {
+                        var arr = new Uint32Array(8);
+                        crypto.getRandomValues(arr);
+                        return Array.from(arr, function(dec) {
                             return ('00000000' + dec.toString(16)).slice(-8);
                         }).join('');
                     }
@@ -551,25 +549,14 @@
                 return Date.now().toString(36) + Math.random().toString(36).substr(2, 15);
             }
             
-            /**
-             * Get hash params
-             * @returns {URLSearchParams}
-             */
             function getHashParams() {
                 try {
                     var hash = window.location.hash;
                     var idx = hash.indexOf('?');
                     return idx > -1 ? new URLSearchParams(hash.substring(idx + 1)) : new URLSearchParams();
-                } catch (e) {
-                    return new URLSearchParams();
-                }
+                } catch (e) { return new URLSearchParams(); }
             }
             
-            /**
-             * Show notification
-             * @param {string} message
-             * @param {string} type
-             */
             function showNotification(message, type) {
                 var el = document.getElementById('register-notification');
                 if (!el) return;
@@ -581,14 +568,11 @@
             function onDOMReady() {
                 document.body.classList.add('loaded');
                 
-                // Set CSRF token
                 var csrfInput = document.getElementById('register-csrf');
                 if (csrfInput) csrfInput.value = generateCSRFToken();
                 
-                // Check invite params in URL
                 var params = getHashParams();
                 var inviteEmail = params.get('email');
-                var inviteRole = params.get('role');
                 
                 if (inviteEmail) {
                     var emailInput = document.getElementById('register-email');
@@ -600,7 +584,6 @@
                     }
                 }
                 
-                // Log
                 if (window.Constants && window.Constants.APP && window.Constants.APP.DEBUG) {
                     console.log(
                         '%c[Register Page] %cReady %cv' + window.Constants.APP.VERSION,

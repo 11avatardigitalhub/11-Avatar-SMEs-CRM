@@ -1,16 +1,21 @@
 /**
  * @fileoverview 11 Avatar SMEs CRM - Firebase Configuration & Service Layer
  * @description Enterprise-grade Firebase initialization with Firestore, Auth, Storage,
- *              offline persistence, emulator support, and comprehensive CRUD service
- *              layer with batch operations and caching. Compatible with regular
- *              script tags (no ES modules required).
+ *              Realtime Database, Functions, Analytics, Performance Monitoring,
+ *              and Cloud Messaging. Full error handling, offline persistence,
+ *              emulator support, and comprehensive CRUD service layer.
+ *              Compatible with regular script tags (no ES modules required).
  * @module config/firebase
- * @version 3.0.0
+ * @version 3.0.1
  * @author 11 Avatar Digital Hub
  * @license Proprietary - All Rights Reserved
  * @copyright 2024-2026 11 Avatar Digital Hub
  *
  * @requires firebase (CDN loaded globally via script tag)
+ * @requires firebase-firestore-compat.js (for Firestore)
+ * @requires firebase-auth-compat.js (for Authentication)
+ * @requires firebase-storage-compat.js (for Storage)
+ *
  * @exports window.FirebaseService - Global namespace for Firebase operations
  */
 
@@ -147,7 +152,6 @@ const FirebaseService = (function() {
                     console.info(prefix, message, data || '');
                     break;
                 default:
-                    // Only log debug messages on localhost
                     if (isLocalhost()) {
                         console.log(prefix, message, data || '');
                     }
@@ -189,10 +193,8 @@ const FirebaseService = (function() {
     function queueOperation(operation) {
         try {
             if (isInitialized) {
-                // Already initialized - execute immediately
                 operation();
             } else {
-                // Queue for later execution
                 pendingOperations.push(operation);
             }
         } catch (error) {
@@ -211,7 +213,6 @@ const FirebaseService = (function() {
             if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
                 return cached.data;
             }
-            // Expired or not found - clean up
             documentCache.delete(cacheKey);
             return null;
         } catch (error) {
@@ -231,13 +232,12 @@ const FirebaseService = (function() {
                 timestamp: Date.now(),
             });
             
-            // Enforce cache size limit (500 entries max)
             if (documentCache.size > 500) {
                 var oldestKey = documentCache.keys().next().value;
                 documentCache.delete(oldestKey);
             }
         } catch (error) {
-            // Silent fail - caching is optional performance enhancement
+            // Silent fail - caching is optional
         }
     }
     
@@ -248,7 +248,6 @@ const FirebaseService = (function() {
     function clearCache(collection) {
         try {
             if (collection) {
-                // Clear only entries for specific collection
                 var keysToDelete = [];
                 documentCache.forEach(function(value, key) {
                     if (key.indexOf(collection + ':') === 0) {
@@ -259,7 +258,6 @@ const FirebaseService = (function() {
                     documentCache.delete(k);
                 });
             } else {
-                // Clear all cached entries
                 documentCache.clear();
             }
         } catch (error) {
@@ -283,12 +281,10 @@ const FirebaseService = (function() {
             
             isSDKLoaded = true;
             
-            // Check if app was already initialized (e.g., by another script)
             if (firebase.apps && firebase.apps.length > 0) {
                 app = firebase.apps[0];
                 logMessage('log', 'Using existing Firebase App instance');
             } else {
-                // Initialize new app instance
                 app = firebase.initializeApp(firebaseConfig);
                 logMessage('log', 'Firebase App initialized successfully');
             }
@@ -312,12 +308,12 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.firestore !== 'function') {
-                throw new Error('Firestore SDK not loaded. Include firebase-firestore-compat.js');
+                logMessage('warn', 'Firestore SDK not loaded - skipping');
+                return null;
             }
             
             db = firebase.firestore();
             
-            // Enable offline persistence for PWA support
             db.enablePersistence({ synchronizeTabs: true })
                 .then(function() {
                     logMessage('log', 'Firestore offline persistence enabled');
@@ -332,7 +328,6 @@ const FirebaseService = (function() {
                     }
                 });
             
-            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     db.useEmulator('localhost', 8080);
@@ -342,7 +337,6 @@ const FirebaseService = (function() {
                 }
             }
             
-            // Configure Firestore settings
             db.settings({
                 ignoreUndefinedProperties: true,
                 merge: true,
@@ -368,12 +362,12 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.auth !== 'function') {
-                throw new Error('Auth SDK not loaded. Include firebase-auth-compat.js');
+                logMessage('warn', 'Auth SDK not loaded - skipping');
+                return null;
             }
             
             auth = firebase.auth();
             
-            // Set persistence to LOCAL so sessions survive browser restarts
             auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 .then(function() {
                     logMessage('log', 'Auth persistence set to LOCAL');
@@ -382,7 +376,6 @@ const FirebaseService = (function() {
                     logMessage('error', 'Auth persistence setting failed', error);
                 });
             
-            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     auth.useEmulator('http://localhost:9099');
@@ -392,12 +385,10 @@ const FirebaseService = (function() {
                 }
             }
             
-            // Set up auth state observer for session management
             auth.onAuthStateChanged(
                 function(user) {
                     try {
                         if (user) {
-                            // User signed in - store session info
                             logMessage('log', 'User signed in: ' + (user.email || user.uid));
                             
                             var sessionData = {
@@ -415,14 +406,12 @@ const FirebaseService = (function() {
                             localStorage.setItem('auth_user', JSON.stringify(sessionData));
                             sessionStorage.setItem('auth_session_active', 'true');
                             
-                            // Notify other modules via custom event
                             if (typeof window !== 'undefined') {
                                 window.dispatchEvent(new CustomEvent('firebase:userSignedIn', {
                                     detail: { user: sessionData },
                                 }));
                             }
                         } else {
-                            // User signed out - clear session data
                             logMessage('log', 'User signed out');
                             
                             localStorage.removeItem('auth_user');
@@ -462,12 +451,12 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.storage !== 'function') {
-                throw new Error('Storage SDK not loaded. Include firebase-storage-compat.js');
+                logMessage('warn', 'Storage SDK not loaded - skipping');
+                return null;
             }
             
             storage = firebase.storage();
             
-            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     storage.useEmulator('localhost', 9199);
@@ -485,6 +474,167 @@ const FirebaseService = (function() {
             return null;
         }
     }
+    
+    /**
+     * Initialize Realtime Database (optional)
+     * @returns {firebase.database.Database|null} RTDB instance or null
+     */
+    function initializeRTDB() {
+        try {
+            if (!app) {
+                throw new Error('Firebase App must be initialized before RTDB');
+            }
+            
+            if (typeof firebase.database !== 'function') {
+                logMessage('warn', 'RTDB SDK not loaded - skipping');
+                return null;
+            }
+            
+            rtdb = firebase.database();
+            
+            if (isLocalhost()) {
+                try {
+                    rtdb.useEmulator('localhost', 9000);
+                    logMessage('log', 'RTDB connected to local emulator on port 9000');
+                } catch (emulatorError) {
+                    logMessage('warn', 'RTDB emulator not available - using production');
+                }
+            }
+            
+            logMessage('log', 'Realtime Database initialized');
+            return rtdb;
+        } catch (error) {
+            logMessage('warn', 'RTDB initialization failed (non-critical): ' + error.message);
+            rtdb = null;
+            return null;
+        }
+    }
+    
+    /**
+     * Initialize Cloud Functions (optional)
+     * @returns {firebase.functions.Functions|null} Functions instance or null
+     */
+    function initializeFunctions() {
+        try {
+            if (!app) {
+                throw new Error('Firebase App must be initialized before Functions');
+            }
+            
+            if (typeof firebase.functions !== 'function') {
+                logMessage('warn', 'Functions SDK not loaded - skipping');
+                return null;
+            }
+            
+            functions = firebase.functions();
+            functions.region = 'asia-south1';
+            
+            if (isLocalhost()) {
+                try {
+                    functions.useEmulator('localhost', 5001);
+                    logMessage('log', 'Functions connected to local emulator on port 5001');
+                } catch (emulatorError) {
+                    logMessage('warn', 'Functions emulator not available - using production');
+                }
+            }
+            
+            logMessage('log', 'Cloud Functions initialized');
+            return functions;
+        } catch (error) {
+            logMessage('warn', 'Functions initialization failed (non-critical): ' + error.message);
+            functions = null;
+            return null;
+        }
+    }
+    
+    /**
+     * Initialize Google Analytics (optional)
+     * @returns {firebase.analytics.Analytics|null} Analytics instance or null
+     */
+    function initializeAnalytics() {
+        try {
+            if (!app) {
+                logMessage('warn', 'App not initialized - skipping Analytics');
+                return null;
+            }
+            
+            if (typeof firebase.analytics !== 'function') {
+                logMessage('warn', 'Analytics SDK not loaded - skipping');
+                return null;
+            }
+            
+            analytics = firebase.analytics();
+            analytics.setAnalyticsCollectionEnabled(true);
+            
+            logMessage('log', 'Analytics initialized');
+            return analytics;
+        } catch (error) {
+            logMessage('warn', 'Analytics init failed (non-critical): ' + error.message);
+            analytics = null;
+            return null;
+        }
+    }
+    
+    /**
+     * Initialize Performance Monitoring (optional)
+     * @returns {firebase.performance.Performance|null} Performance instance or null
+     */
+    function initializePerformance() {
+        try {
+            if (!app) {
+                return null;
+            }
+            
+            if (typeof firebase.performance !== 'function') {
+                logMessage('warn', 'Performance SDK not loaded - skipping');
+                return null;
+            }
+            
+            performance = firebase.performance();
+            performance.instrumentationEnabled = true;
+            performance.dataCollectionEnabled = true;
+            
+            logMessage('log', 'Performance monitoring initialized');
+            return performance;
+        } catch (error) {
+            logMessage('warn', 'Performance init failed (non-critical): ' + error.message);
+            performance = null;
+            return null;
+        }
+    }
+    
+    /**
+     * Initialize Cloud Messaging (optional)
+     * @returns {firebase.messaging.Messaging|null} Messaging instance or null
+     */
+    function initializeMessaging() {
+        try {
+            if (!app) {
+                return null;
+            }
+            
+            if (typeof firebase.messaging !== 'function') {
+                logMessage('warn', 'Messaging SDK not loaded - skipping');
+                return null;
+            }
+            
+            messaging = firebase.messaging();
+            
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        logMessage('log', 'Notification permission granted');
+                    }
+                });
+            }
+            
+            logMessage('log', 'Cloud Messaging initialized');
+            return messaging;
+        } catch (error) {
+            logMessage('warn', 'Messaging init failed (non-critical): ' + error.message);
+            messaging = null;
+            return null;
+        }
+    }
 
     // -------------------------------------------------------------------------
     // SECTION 5: MASTER INITIALIZATION SEQUENCE
@@ -492,8 +642,9 @@ const FirebaseService = (function() {
     
     /**
      * Initialize all Firebase services in the correct order
-     * Core services (Firestore, Auth, Storage) are initialized in parallel
-     * Optional services are initialized non-blocking
+     * Core services (Firestore, Auth, Storage) are initialized in parallel.
+     * Optional services (RTDB, Functions, Analytics, Performance, Messaging)
+     * are initialized non-blocking - failures are logged but don't break the app.
      * @returns {Promise<Object>} Service snapshot after initialization
      */
     async function initializeAll() {
@@ -513,7 +664,6 @@ const FirebaseService = (function() {
                 Promise.resolve(initializeStorage()),
             ]);
             
-            // Log results of core service initialization
             var firestoreOk = results[0].status === 'fulfilled';
             var authOk = results[1].status === 'fulfilled';
             var storageOk = results[2].status === 'fulfilled';
@@ -522,12 +672,12 @@ const FirebaseService = (function() {
             if (!authOk) logMessage('error', 'Auth init failed', results[1].reason);
             if (!storageOk) logMessage('error', 'Storage init failed', results[2].reason);
             
-            // Step 3: Initialize optional services (non-blocking)
-            initializeRTDB();
-            initializeFunctions();
-            initializeAnalytics();
-            initializePerformance();
-            initializeMessaging();
+            // Step 3: Initialize optional services (non-blocking - errors are logged but ignored)
+            try { initializeRTDB(); } catch (e) { logMessage('warn', 'RTDB init skipped: ' + e.message); }
+            try { initializeFunctions(); } catch (e) { logMessage('warn', 'Functions init skipped: ' + e.message); }
+            try { initializeAnalytics(); } catch (e) { logMessage('warn', 'Analytics init skipped: ' + e.message); }
+            try { initializePerformance(); } catch (e) { logMessage('warn', 'Performance init skipped: ' + e.message); }
+            try { initializeMessaging(); } catch (e) { logMessage('warn', 'Messaging init skipped: ' + e.message); }
             
             // Mark as initialized
             isInitialized = true;
@@ -609,11 +759,10 @@ const FirebaseService = (function() {
      */
     async function createDocument(collection, data, docId) {
         try {
-            if (!db) throw new Error('Firestore is not available');
+            if (!db) throw new Error('Firestore is not available. Ensure firebase-firestore-compat.js is loaded.');
             if (!collection || typeof collection !== 'string') throw new Error('Invalid collection name');
             if (!data || typeof data !== 'object') throw new Error('Invalid document data');
             
-            // Enrich data with metadata
             var enrichedData = Object.assign({}, data, {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -651,7 +800,6 @@ const FirebaseService = (function() {
             if (!db) throw new Error('Firestore is not available');
             if (!collection || !docId) throw new Error('Collection and document ID are required');
             
-            // Check in-memory cache first
             var cacheKey = collection + ':' + docId;
             var cached = getCachedDocument(cacheKey);
             if (cached) return cached;
@@ -734,7 +882,6 @@ const FirebaseService = (function() {
             
             var query = db.collection(collection);
             
-            // Apply where conditions
             if (conditions && conditions.length > 0) {
                 conditions.forEach(function(cond) {
                     if (Array.isArray(cond) && cond.length === 3) {
@@ -743,12 +890,10 @@ const FirebaseService = (function() {
                 });
             }
             
-            // Apply ordering
             if (options && options.orderBy) {
                 query = query.orderBy(options.orderBy, options.orderDir || 'desc');
             }
             
-            // Apply limit (capped at 500)
             if (options && options.limit && options.limit > 0) {
                 query = query.limit(Math.min(options.limit, 500));
             }
@@ -760,7 +905,6 @@ const FirebaseService = (function() {
                 return Object.assign({ id: doc.id }, docData);
             });
             
-            // Cache individual results
             results.forEach(function(doc) {
                 setCachedDocument(collection + ':' + doc.id, doc);
             });
@@ -810,19 +954,16 @@ const FirebaseService = (function() {
         var maxWait = timeout || 10000;
         
         return new Promise(function(resolve, reject) {
-            // If already initialized, resolve immediately
             if (isInitialized) {
                 resolve(getServiceSnapshot());
                 return;
             }
             
-            // Set timeout for initialization
             var timeoutId = setTimeout(function() {
                 window.removeEventListener('firebase:initialized', handler);
                 reject(new Error('Firebase initialization timeout after ' + maxWait + 'ms'));
             }, maxWait);
             
-            // Listen for initialization event
             var handler = function(event) {
                 clearTimeout(timeoutId);
                 if (event.detail && event.detail.success) {
@@ -842,41 +983,26 @@ const FirebaseService = (function() {
     
     /** @type {Object} Frozen public API for FirebaseService */
     const publicAPI = Object.freeze({
-        // Configuration
         config: firebaseConfig,
-        
-        // Service instances (read-only via getters)
         get app() { return app; },
         get db() { return db; },
         get auth() { return auth; },
         get storage() { return storage; },
-        
-        // Status checks
         isInitialized: function() { return isInitialized; },
         isSDKLoaded: function() { return isSDKLoaded; },
         isServiceReady: isServiceReady,
         getServiceSnapshot: getServiceSnapshot,
         waitForInit: waitForInit,
-        
-        // Initialization
         initializeAll: initializeAll,
-        
-        // Authentication helpers
         getCurrentUser: getCurrentUser,
         signOut: signOut,
-        
-        // CRUD operations
         createDocument: createDocument,
         getDocument: getDocument,
         updateDocument: updateDocument,
         deleteDocument: deleteDocument,
         queryDocuments: queryDocuments,
-        
-        // Cache management
         clearCache: clearCache,
         getCachedDocument: getCachedDocument,
-        
-        // Operation queue
         queueOperation: queueOperation,
     });
     
@@ -889,7 +1015,6 @@ const FirebaseService = (function() {
 // =============================================================================
 
 if (typeof window !== 'undefined') {
-    // Start initialization when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             FirebaseService.initializeAll().catch(function(error) {
@@ -897,7 +1022,6 @@ if (typeof window !== 'undefined') {
             });
         });
     } else {
-        // DOM already loaded - initialize immediately
         FirebaseService.initializeAll().catch(function(error) {
             console.error('[FirebaseService] Auto-initialization failed:', error);
         });
