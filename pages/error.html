@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="internal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="Error - 11 Avatar Digital Hub. Something went wrong. Please try again." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <title>Error - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../src/css/main.css" />
+    
+    <style>
+        :root {
+            --transition-3d: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F0 0%, #F3F1EB 30%, #F0EDE5 60%, #F5F3ED 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        
+        .error-container {
+            text-align: center; padding: 40px 24px; max-width: 550px; width: 100%;
+            animation: fadeUp 0.6s ease;
+        }
+        
+        .error-icon-wrap {
+            position: relative; display: inline-block; margin-bottom: 24px;
+        }
+        .error-icon {
+            font-size: clamp(5rem, 12vw, 8rem);
+            animation: float 3s ease-in-out infinite;
+            display: block;
+        }
+        .error-icon-shadow {
+            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 12px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: shadow-pulse 3s ease-in-out infinite;
+        }
+        
+        .error-code {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900; line-height: 1;
+            background: linear-gradient(135deg, #EF4444, #DC2626, #B91C1C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .error-title {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 800; color: #0A0A0A;
+            font-family: 'Poppins', sans-serif; margin-bottom: 12px;
+        }
+        
+        .error-message {
+            font-size: 1rem; color: #666; line-height: 1.7;
+            margin-bottom: 32px; max-width: 400px; margin-left: auto; margin-right: auto;
+        }
+        
+        .error-actions {
+            display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px;
+        }
+        
+        .error-details {
+            background: #FFFFFF; border: 1px solid rgba(239,68,68,0.15);
+            border-radius: 16px; padding: 16px 20px; text-align: left;
+            font-size: 0.85rem; color: #888; margin-top: 24px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+        
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @keyframes shadow-pulse { 0%,100%{transform:translateX(-50%) scale(1);opacity:0.6} 50%{transform:translateX(-50%) scale(0.7);opacity:0.3} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        
+        @media(max-width: 480px) {
+            .error-actions { flex-direction: column; }
+            .error-actions .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="error-container" role="main" aria-label="Error page">
+        
+        <!-- Animated Icon -->
+        <div class="error-icon-wrap">
+            <span class="error-icon" aria-hidden="true">⚠️</span>
+            <div class="error-icon-shadow"></div>
+        </div>
+        
+        <!-- Error Code -->
+        <div class="error-code">Error</div>
+        
+        <!-- Title -->
+        <h1 class="error-title">Something Went Wrong</h1>
+        
+        <!-- Message -->
+        <p class="error-message" id="error-message">
+            We encountered an unexpected error. Please try again or contact support if the problem persists.
+        </p>
+        
+        <!-- Actions -->
+        <div class="error-actions">
+            <button class="btn btn-primary btn-lg" onclick="window.location.reload()" style="min-height:52px;padding:14px 28px">
+                🔃 Try Again
+            </button>
+            <a href="#/dashboard" class="btn btn-outline btn-lg" style="min-height:52px;padding:14px 28px">
+                📊 Go to Dashboard
+            </a>
+            <button class="btn btn-ghost btn-lg" onclick="history.back()" style="min-height:52px;padding:14px 28px">
+                ← Go Back
+            </button>
+        </div>
+        
+        <!-- Error Details (if available) -->
+        <div class="error-details" id="error-details" style="display:none">
+            <strong style="color:#EF4444">Error Details:</strong><br />
+            <span id="error-detail-text"></span>
+        </div>
+        
+        <!-- Support -->
+        <p style="color:#999;font-size:0.85rem;margin-top:24px">
+            Need help? Contact us at 
+            <a href="mailto:11avatardigitalhub@gmail.com" style="color:#D4AF37;font-weight:600">11avatardigitalhub@gmail.com</a>
+        </p>
+        
+        <!-- Auto-retry -->
+        <p style="color:#BBB;font-size:0.78rem;margin-top:12px" id="retry-timer">
+            Auto-retrying in <span id="retry-countdown">10</span> seconds...
+        </p>
+    </div>
+    
+    <script src="../../src/js/config/constants.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            
+            // Check for error details from URL
+            const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const errorMsg = params.get('message') || params.get('error');
+            
+            if (errorMsg) {
+                document.getElementById('error-message').textContent = decodeURIComponent(errorMsg);
+            }
+            
+            // Show error details if available
+            const errorDetails = sessionStorage.getItem('lastError');
+            if (errorDetails) {
+                const detailsEl = document.getElementById('error-details');
+                const detailText = document.getElementById('error-detail-text');
+                if (detailsEl && detailText) {
+                    detailsEl.style.display = 'block';
+                    detailText.textContent = errorDetails;
+                }
+                sessionStorage.removeItem('lastError');
+            }
+            
+            // Auto-retry countdown
+            let seconds = 10;
+            const countdownEl = document.getElementById('retry-countdown');
+            const timerEl = document.getElementById('retry-timer');
+            
+            const interval = setInterval(() => {
+                seconds--;
+                if (countdownEl) countdownEl.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    if (timerEl) {
+                        timerEl.innerHTML = '🔄 Retrying now...';
+                        timerEl.style.color = '#D4AF37';
+                    }
+                    setTimeout(() => window.location.reload(), 500);
+                }
+            }, 1000);
+            
+            // Cancel on user interaction
+            ['click', 'keydown'].forEach(evt => {
+                document.addEventListener(evt, () => {
+                    clearInterval(interval);
+                    if (timerEl) timerEl.textContent = 'Auto-retry cancelled';
+                }, { once: true });
+            });
+            
+            // Log error
+            console.error('Error page loaded:', {
+                url: window.location.href,
+                message: errorMsg || 'Unknown error',
+                timestamp: new Date().toISOString()
+            });
+            
+            console.log('✅ Error page ready');
+        });
+    </script>
+</body>
+</html>
