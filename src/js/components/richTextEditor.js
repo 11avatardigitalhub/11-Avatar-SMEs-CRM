@@ -976,7 +976,5 @@ if (typeof window !== 'undefined') {
     window.Global.RichTextEditor.instances = window.Global.RichTextEditor.instances || new Map();
     window.Global.RichTextEditor.RichTextEditor = RichTextEditor;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

@@ -609,7 +609,5 @@ if (typeof window !== 'undefined') {
     window.Global.TagInput.instances = window.Global.TagInput.instances || new Map();
     window.Global.TagInput.TagInput = TagInput;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

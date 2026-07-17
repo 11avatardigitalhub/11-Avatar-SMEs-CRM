@@ -140,28 +140,7 @@ Markdown Preview	Documentation preview
 Clone the Repository
 bash
 # Using HTTPS (recommended for most users)
-<<<<<<< HEAD
-git clone https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
-cd 11-Avatar-SMEs-CRM
 
-# Using SSH (if you have SSH keys configured)
-git clone git@github.com:11avatardigitalhub/11-Avatar-SMEs-CRM.git
-cd 11-Avatar-SMEs-CRM
-
-# Using GitHub CLI
-gh repo clone 11avatardigitalhub/11-Avatar-SMEs-CRM
-cd 11-Avatar-SMEs-CRM
-Fork the Repository (for contributors)
-bash
-# 1. Fork via GitHub UI: https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/fork
-
-# 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/11-Avatar-SMEs-CRM.git
-cd 11-Avatar-SMEs-CRM
-
-# 3. Add upstream remote
-git remote add upstream https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
-=======
 git clone https://github.com/11avatardigitalhub/lead2revenue.git
 cd lead2revenue
 
@@ -182,27 +161,22 @@ cd lead2revenue
 
 # 3. Add upstream remote
 git remote add upstream https://github.com/11avatardigitalhub/lead2revenue.git
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 
 # 4. Verify remotes
 git remote -v
 # Should show:
-<<<<<<< HEAD
-# origin    https://github.com/YOUR_USERNAME/11-Avatar-SMEs-CRM.git
-# upstream  https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
-=======
+
 # origin    https://github.com/YOUR_USERNAME/lead2revenue.git
 # upstream  https://github.com/11avatardigitalhub/lead2revenue.git
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 📦 Installing Dependencies
 Main Project Dependencies
 bash
 # Navigate to project root
-<<<<<<< HEAD
-cd 11-Avatar-SMEs-CRM
-=======
+
 cd lead2revenue
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 
 # Install all dependencies (including dev dependencies)
 npm install
@@ -317,11 +291,9 @@ npm start
 # - File watcher for auto-rebuild
 📁 Project Structure for Development
 text
-<<<<<<< HEAD
-11-Avatar-SMEs-CRM/
-=======
+
 lead2revenue/
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 ├── public/                    # Static public files
 │   ├── index.html             # Landing page
 │   ├── login.html             # Login page
@@ -548,7 +520,5 @@ Internal Docs: /docs/ directory
 API Reference: /docs/api-reference.md
 
 Document Version: 2.0.0 | Last Updated: July 16, 2026
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

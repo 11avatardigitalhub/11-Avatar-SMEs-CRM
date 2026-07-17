@@ -836,7 +836,5 @@ describe('Maps Integration - Location Services', () => {
 
 // Export for programmatic usage
 export { assert, testResults, setupMocks, teardownMocks, MockAPI, MockState, MockCache, MockPermissions };
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

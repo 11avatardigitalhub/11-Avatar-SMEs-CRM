@@ -28,11 +28,9 @@ const APP = {
     tagline: 'Leads → Conversations → Deals → Revenue → Retention',
     author: '11 Avatar Digital Hub',
     email: '11avatardigitalhub@gmail.com',
-<<<<<<< HEAD
-    website: 'https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM',
-=======
+
     website: 'https://11avatardigitalhub.github.io/lead2revenue',
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
     apiEndpoint: 'https://11avatar-api.11avatardigitalhub.workers.dev',
     copyright: `© ${new Date().getFullYear()} 11 Avatar Digital Hub. All rights reserved.`
 };
@@ -589,7 +587,5 @@ console.log('📋 Constants loaded:', {
 // ==========================================
 // END OF CONSTANTS
 // ==========================================
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

@@ -828,7 +828,5 @@ if (typeof window !== 'undefined') {
     window.Global.DatePicker.instances = window.Global.DatePicker.instances || new Map();
     window.Global.DatePicker.DatePicker = DatePicker;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

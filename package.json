@@ -25,21 +25,17 @@
     "clean": "rm -rf .wrangler/ .firebase/ node_modules/",
     "setup": "npm install && cd functions && npm install && cd ../workers/11avatar-api && npm install",
     "generate-icons": "node scripts/generate-icons.js",
-<<<<<<< HEAD
-    "audit": "lighthouse https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/ --output html --output-path ./reports/lighthouse.html",
-=======
+
     "audit": "lighthouse https://11avatardigitalhub.github.io/lead2revenue/ --output html --output-path ./reports/lighthouse.html",
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
     "format": "prettier --write '**/*.{js,html,css,json,md}'",
     "format:check": "prettier --check '**/*.{js,html,css,json,md}'"
   },
   "repository": {
     "type": "git",
-<<<<<<< HEAD
-    "url": "git+https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git"
-=======
+
     "url": "git+https://github.com/11avatardigitalhub/lead2revenue.git"
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
   },
   "keywords": [
     "crm",
@@ -66,11 +62,9 @@
   "author": {
     "name": "11 Avatar Digital Hub",
     "email": "11avatardigitalhub@gmail.com",
-<<<<<<< HEAD
-    "url": "https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"
-=======
+
     "url": "https://11avatardigitalhub.github.io/lead2revenue/"
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
   },
   "contributors": [
     {
@@ -80,17 +74,12 @@
   ],
   "license": "GPL-3.0",
   "bugs": {
-<<<<<<< HEAD
-    "url": "https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/issues",
-    "email": "11avatardigitalhub@gmail.com"
-  },
-  "homepage": "https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/",
-=======
+
     "url": "https://github.com/11avatardigitalhub/lead2revenue/issues",
     "email": "11avatardigitalhub@gmail.com"
   },
   "homepage": "https://11avatardigitalhub.github.io/lead2revenue/",
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
@@ -170,7 +159,5 @@
   },
   "engines-strict": true
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

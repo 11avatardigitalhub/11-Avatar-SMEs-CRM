@@ -871,7 +871,5 @@ if (typeof window !== 'undefined') {
     window.Global.Stepper.instances = window.Global.Stepper.instances || new Map();
     window.Global.Stepper.Stepper = Stepper;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

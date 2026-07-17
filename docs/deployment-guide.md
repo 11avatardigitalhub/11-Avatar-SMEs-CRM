@@ -18,11 +18,9 @@ This guide covers the complete deployment process for **11 Avatar Digital Hub** 
 
 | Component | Platform | URL |
 |-----------|----------|-----|
-<<<<<<< HEAD
-| **Frontend (SPA)** | Firebase Hosting + GitHub Pages | `https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/` |
-=======
+
 | **Frontend (SPA)** | Firebase Hosting + GitHub Pages | `https://11avatardigitalhub.github.io/lead2revenue/` |
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 | **API Gateway** | Cloudflare Workers | `https://11avatar-api.11avatardigitalhub.workers.dev` |
 | **Backend Functions** | Firebase Cloud Functions | `avatar-wa-dual-crm` |
 | **Database** | Firestore + Cloud SQL | `avatar-wa-dual-crm` |
@@ -34,11 +32,9 @@ This guide covers the complete deployment process for **11 Avatar Digital Hub** 
 ## 📋 Prerequisites
 
 ### Required Accounts & Access
-<<<<<<< HEAD
-- [ ] GitHub repository admin access (`11-Avatar-SMEs-CRM`)
-=======
+
 - [ ] GitHub repository admin access (`lead2revenue`)
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 - [ ] Firebase project owner access (`avatar-wa-dual-crm`)
 - [ ] Cloudflare account with Workers enabled
 - [ ] CloudWA admin access
@@ -67,11 +63,9 @@ wrangler login
 gh auth login
 🌍 Environment Overview
 Environment	Branch	URL	Purpose
-<<<<<<< HEAD
-Production	main	https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/	Live customer-facing
-=======
+
 Production	main	https://11avatardigitalhub.github.io/lead2revenue/	Live customer-facing
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 Staging	develop	Firebase Preview Channel	Pre-production testing
 Development	feature/*	Local (localhost:5000)	Active development
 🚀 Production Deployment
@@ -134,11 +128,9 @@ wrangler deploy --env production
 Step 4: Post-Deployment Verification
 bash
 # 1. Health check
-<<<<<<< HEAD
-curl -I https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/
-=======
+
 curl -I https://11avatardigitalhub.github.io/lead2revenue/
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 
 # 2. API health check
 curl https://11avatar-api.11avatardigitalhub.workers.dev/api/health
@@ -186,13 +178,10 @@ wrangler deploy --env staging
 Local Development Setup
 bash
 # 1. Clone repository
-<<<<<<< HEAD
-git clone https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
-cd 11-Avatar-SMEs-CRM
-=======
+
 git clone https://github.com/11avatardigitalhub/lead2revenue.git
 cd lead2revenue
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 
 # 2. Install all dependencies
 npm install
@@ -319,11 +308,9 @@ git revert <commit-hash>
 Health Check Endpoints
 bash
 # Frontend
-<<<<<<< HEAD
-curl -I https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/
-=======
+
 curl -I https://11avatardigitalhub.github.io/lead2revenue/
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 
 # API
 curl https://11avatar-api.11avatardigitalhub.workers.dev/api/health
@@ -360,7 +347,5 @@ Email: admin@11avatardigitalhub.cloud
 Emergency: +91 98765 43210
 
 Document Version: 2.0.0 | Last Updated: July 16, 2026
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

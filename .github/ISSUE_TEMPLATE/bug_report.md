@@ -163,7 +163,5 @@ I have assessed the business impact
 
 Thank you for helping us improve 11 Avatar Digital Hub! 🚀
 Our team will review this bug report and respond within 24-48 hours.
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

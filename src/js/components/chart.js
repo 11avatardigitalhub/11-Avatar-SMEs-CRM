@@ -721,7 +721,5 @@ if (typeof window !== 'undefined') {
     window.Global.Chart.instances = window.Global.Chart.instances || new Map();
     window.Global.Chart.ChartComponent = ChartComponent;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

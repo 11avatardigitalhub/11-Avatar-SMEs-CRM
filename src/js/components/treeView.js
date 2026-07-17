@@ -928,7 +928,5 @@ if (typeof window !== 'undefined') {
     window.Global.TreeView.instances = window.Global.TreeView.instances || new Map();
     window.Global.TreeView.TreeView = TreeView;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

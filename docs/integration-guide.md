@@ -550,7 +550,5 @@ Documentation: https://docs.11avatardigitalhub.cloud
 API Reference: /docs/api-reference.md
 
 Document Version: 2.0.0 | Last Updated: July 16, 2026
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

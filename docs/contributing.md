@@ -58,16 +58,7 @@ Before contributing, ensure you have the following installed:
 
 ```bash
 # 1. Fork the repository
-<<<<<<< HEAD
-# Visit: https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/fork
 
-# 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/11-Avatar-SMEs-CRM.git
-cd 11-Avatar-SMEs-CRM
-
-# 3. Add upstream remote
-git remote add upstream https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
-=======
 # Visit: https://github.com/11avatardigitalhub/lead2revenue/fork
 
 # 2. Clone your fork
@@ -76,7 +67,7 @@ cd lead2revenue
 
 # 3. Add upstream remote
 git remote add upstream https://github.com/11avatardigitalhub/lead2revenue.git
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 
 # 4. Install dependencies
 npm install
@@ -94,11 +85,9 @@ npm run dev
 npm test
 Project Structure Overview
 text
-<<<<<<< HEAD
-11-Avatar-SMEs-CRM/
-=======
+
 lead2revenue/
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 ├── public/          # Public pages (Dark Theme)
 ├── src/
 │   ├── css/         # Stylesheets
@@ -164,11 +153,9 @@ Closes #123"
 git push origin feature/my-awesome-feature
 
 # 8. Create a Pull Request
-<<<<<<< HEAD
-# Visit: https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/compare
-=======
+
 # Visit: https://github.com/11avatardigitalhub/lead2revenue/compare
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
 Commit Message Convention
 We follow Conventional Commits specification:
 
@@ -443,7 +430,5 @@ Contact us at info@11avatardigitalhub.cloud for any questions about contributing
 
 Thank you for contributing to 11 Avatar Digital Hub! 🚀
 Together, we're building the future of digital CRM for Indian businesses.
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

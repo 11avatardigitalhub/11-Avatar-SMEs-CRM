@@ -10,21 +10,14 @@
     <meta name="robots" content="noindex, nofollow" />
     
     <meta property="og:title" content="Login - 11 Avatar Digital Hub" />
-<<<<<<< HEAD
-    <meta property="og:description" content="Sign in to your CRM dashboard." />
-    
-    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/login.html" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
-    <link rel="apple-touch-icon" href="icons/icon-192x192.svg" />
-=======
+
     <meta property="og:description" content="Sign in to your CRM dashboard. Manage leads, pipeline, revenue, and more." />
     
     <link rel="canonical" href="https://11avatardigitalhub.github.io/lead2revenue/login" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/svg+xml" href="assets/images/logo-icon.svg" />
     <link rel="apple-touch-icon" href="assets/images/icons/icon-192.png" />
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,11 +26,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="src/css/main.css" />
     
-<<<<<<< HEAD
-    <title>Login - 11 Avatar Digital Hub | Free CRM for SMEs</title>
-=======
+
     <title>Login - 11 Avatar Digital Hub | Master Revenue CRM</title>
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
     
     <style>
         body{opacity:0;transition:opacity 0.3s ease}
@@ -49,15 +40,11 @@
         .input-group input{width:100%;background:#1E1E1E;border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 16px;padding-left:48px;font-size:1rem;color:#FFFFFF;transition:all 0.3s ease;min-height:52px;outline:none}
         .input-group input:focus{border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,0.1);background:#242424}
         .input-group input.input-error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
-<<<<<<< HEAD
-        .input-group .input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#888;pointer-events:none;transition:color 0.3s ease;z-index:1}
-        .input-group input:focus~.input-icon{color:#D4AF37}
-        .input-group .toggle-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1.2rem;padding:8px;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center;z-index:1}
-=======
+
         .input-group .input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#888;pointer-events:none;transition:color 0.3s ease}
         .input-group input:focus+.input-icon,.input-group input:focus~.input-icon{color:#D4AF37}
         .input-group .toggle-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1.2rem;padding:8px;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center}
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
         .input-group .toggle-password:hover{color:#D4AF37}
         .field-error{color:#EF4444;font-size:0.8rem;margin-top:6px;display:flex;align-items:center;gap:6px;animation:fadeUp 0.2s ease}
         .divider{display:flex;align-items:center;gap:16px;margin:24px 0;color:#666;font-size:0.85rem}
@@ -73,14 +60,11 @@
     <div class="login-container">
         <div class="login-card" role="main" aria-label="Login form">
             
-<<<<<<< HEAD
-            <div style="text-align:center;margin-bottom:32px">
-                <a href="index.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:8px" aria-label="11 Avatar Home">
-=======
+
             <!-- Logo & Brand -->
             <div style="text-align:center;margin-bottom:32px">
                 <a href="/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:8px" aria-label="11 Avatar Home">
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                     <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
                         <rect width="44" height="44" rx="12" fill="#D4AF37"/>
                         <text x="22" y="29" text-anchor="middle" fill="#0A0A0A" font-size="17" font-weight="800" font-family="Inter, sans-serif">11A</text>
@@ -91,23 +75,7 @@
                 <p style="color:#888;font-size:0.95rem">Sign in to access your CRM dashboard</p>
             </div>
             
-<<<<<<< HEAD
-            <div id="login-error" role="alert" aria-live="polite" style="display:none;background:rgba(239,68,68,0.08);border-left:3px solid #EF4444;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#EF4444;font-size:0.9rem"></div>
-            
-            <form id="login-form" novalidate autocomplete="on">
-                
-                <div class="input-group">
-                    <span class="input-icon" aria-hidden="true">📧</span>
-                    <input type="email" id="login-email" name="email" placeholder="Email address" autocomplete="email" required aria-required="true" aria-label="Email address" />
-                </div>
-                
-                <div class="input-group">
-                    <span class="input-icon" aria-hidden="true">🔒</span>
-                    <input type="password" id="login-password" name="password" placeholder="Password" autocomplete="current-password" required aria-required="true" aria-label="Password" minlength="6" />
-                    <button type="button" class="toggle-password" id="password-toggle" aria-label="Toggle password visibility" title="Show password">👁️</button>
-                </div>
-                
-=======
+
             <!-- Error Message Container -->
             <div id="login-error" role="alert" aria-live="polite" style="display:none;background:rgba(239,68,68,0.08);border-left:3px solid #EF4444;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#EF4444;font-size:0.9rem"></div>
             
@@ -149,18 +117,13 @@
                 </div>
                 
                 <!-- Remember Me & Forgot Password -->
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:8px">
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#CCC;font-size:0.9rem;min-height:44px">
                         <input type="checkbox" id="login-remember" style="width:18px;height:18px;accent-color:#D4AF37;min-height:auto" />
                         <span>Remember me</span>
                     </label>
-<<<<<<< HEAD
-                    <a href="forgot-password.html" style="color:#D4AF37;font-size:0.9rem;font-weight:500;text-decoration:none;padding:8px 0">Forgot password?</a>
-                </div>
-                
-                <button type="submit" id="login-submit" class="btn btn-primary btn-block btn-lg" style="font-size:1.05rem;min-height:52px;width:100%" aria-busy="false">
-=======
+
                     <a href="#/forgot-password" style="color:#D4AF37;font-size:0.9rem;font-weight:500;text-decoration:none;padding:8px 0">Forgot password?</a>
                 </div>
                 
@@ -172,16 +135,12 @@
                     style="font-size:1.05rem;min-height:52px;width:100%"
                     aria-busy="false"
                 >
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                     <span id="login-submit-text">Sign In</span>
                     <span id="login-spinner" class="spinner" style="display:none" aria-hidden="true"></span>
                 </button>
                 
-<<<<<<< HEAD
-                <div class="divider">or continue with</div>
-                
-                <button type="button" id="login-google" class="btn btn-outline btn-block" style="min-height:52px;width:100%;font-size:0.95rem;gap:10px;border-color:rgba(255,255,255,0.12)">
-=======
+
                 <!-- Divider -->
                 <div class="divider">or continue with</div>
                 
@@ -192,7 +151,7 @@
                     class="btn btn-outline btn-block"
                     style="min-height:52px;width:100%;font-size:0.95rem;gap:10px;border-color:rgba(255,255,255,0.12)"
                 >
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                     <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -204,15 +163,7 @@
                 
             </form>
             
-<<<<<<< HEAD
-            <p style="text-align:center;margin-top:24px;color:#888;font-size:0.9rem">
-                Don't have an account? 
-                <a href="register.html" style="color:#D4AF37;font-weight:600;text-decoration:none;padding:8px 0">Create free account →</a>
-            </p>
-            
-            <p style="text-align:center;margin-top:12px">
-                <a href="index.html" style="color:#666;font-size:0.85rem;text-decoration:none;padding:8px 0">← Back to Home</a>
-=======
+
             <!-- Register Link -->
             <p style="text-align:center;margin-top:24px;color:#888;font-size:0.9rem">
                 Don't have an account? 
@@ -222,103 +173,12 @@
             <!-- Back to Home -->
             <p style="text-align:center;margin-top:12px">
                 <a href="/" style="color:#666;font-size:0.85rem;text-decoration:none;padding:8px 0">← Back to Home</a>
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
             </p>
         </div>
     </div>
     
-<<<<<<< HEAD
-    <!-- Firebase SDKs (Rule #18 - Firebase Backend) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    
-    <!-- Firebase Config (Inline - No ES Module export errors) -->
-    <script>
-        // Firebase Configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyBZDaHJSt-4AV6EJYG76p8kcsIHf6LOxdU",
-            authDomain: "avatar-wa-dual-crm.firebaseapp.com",
-            projectId: "avatar-wa-dual-crm",
-            storageBucket: "avatar-wa-dual-crm.firebasestorage.app",
-            messagingSenderId: "946959261009",
-            appId: "1:946959261009:web:175f5390d63715f1f8c770"
-        };
-        
-        // Initialize Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            console.log('Firebase initialized');
-        } catch(e) {
-            console.error('Firebase init error:', e.message);
-        }
-        
-        // Initialize Firestore (safe)
-        var db = null;
-        try {
-            db = firebase.firestore();
-            console.log('Firestore ready');
-        } catch(e) {
-            console.warn('Firestore not available:', e.message);
-        }
-        
-        // Firebase Service (global)
-        window.FirebaseService = {
-            db: db,
-            createDocument: function(collection, data) {
-                if (!db) return Promise.reject('Firestore not available');
-                return db.collection(collection).add({
-                    ...data,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            },
-            getDocument: function(collection, docId) {
-                if (!db) return Promise.reject('Firestore not available');
-                return db.collection(collection).doc(docId).get().then(function(doc) {
-                    return doc.exists ? { id: doc.id, ...doc.data() } : null;
-                });
-            },
-            updateDocument: function(collection, docId, data) {
-                if (!db) return Promise.reject('Firestore not available');
-                return db.collection(collection).doc(docId).update({
-                    ...data,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            }
-        };
-        
-        console.log('Firebase Service ready');
-    </script>
-    
-    <!-- Login Page Logic (Rule #5 - Deep Detailing, Rule #6 - Error Handling) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.classList.add('loaded');
-            
-            var form = document.getElementById('login-form');
-            var emailInput = document.getElementById('login-email');
-            var passwordInput = document.getElementById('login-password');
-            var submitBtn = document.getElementById('login-submit');
-            var submitText = document.getElementById('login-submit-text');
-            var submitSpinner = document.getElementById('login-spinner');
-            var errorContainer = document.getElementById('login-error');
-            var googleBtn = document.getElementById('login-google');
-            var toggleBtn = document.getElementById('password-toggle');
-            var isSubmitting = false;
-            
-            // Password visibility toggle (Rule #8 - 44px touch target)
-            toggleBtn.addEventListener('click', function() {
-                var type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                this.textContent = type === 'password' ? '👁️' : '🙈';
-            });
-            
-            // Show error with animation (Rule #19 - Enterprise Animations)
-            function showError(message) {
-                if (errorContainer) {
-                    errorContainer.innerHTML = message;
-=======
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -360,7 +220,7 @@
             function showError(message) {
                 if (errorContainer) {
                     errorContainer.textContent = message;
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                     errorContainer.style.display = 'block';
                     errorContainer.style.animation = 'none';
                     errorContainer.offsetHeight;
@@ -368,23 +228,7 @@
                 }
             }
             
-<<<<<<< HEAD
-            function hideError() {
-                if (errorContainer) errorContainer.style.display = 'none';
-            }
-            
-            function clearFieldErrors() {
-                document.querySelectorAll('.input-error').forEach(function(el) { el.classList.remove('input-error'); });
-                document.querySelectorAll('.field-error').forEach(function(el) { el.remove(); });
-            }
-            
-            function showFieldError(input, message) {
-                input.classList.add('input-error');
-                input.setAttribute('aria-invalid', 'true');
-                var existing = input.parentElement.querySelector('.field-error');
-                if (existing) existing.remove();
-                var errorEl = document.createElement('div');
-=======
+
             // Hide error message
             function hideError() {
                 if (errorContainer) {
@@ -407,28 +251,13 @@
                 if (existing) existing.remove();
                 
                 const errorEl = document.createElement('div');
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                 errorEl.className = 'field-error';
                 errorEl.textContent = '⚠️ ' + message;
                 input.parentElement.appendChild(errorEl);
             }
             
-<<<<<<< HEAD
-            function setLoading(loading) {
-                isSubmitting = loading;
-                submitBtn.disabled = loading;
-                submitBtn.setAttribute('aria-busy', loading.toString());
-                submitText.style.display = loading ? 'none' : '';
-                submitSpinner.style.display = loading ? 'inline-block' : 'none';
-                googleBtn.disabled = loading;
-                emailInput.disabled = loading;
-                passwordInput.disabled = loading;
-            }
-            
-            // Form submission (Rule #6 - Comprehensive Error Handling)
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-=======
+
             // Set loading state
             function setLoading(loading) {
                 isSubmitting = loading;
@@ -456,25 +285,20 @@
             form?.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                 if (isSubmitting) return;
                 
                 hideError();
                 clearFieldErrors();
                 
-<<<<<<< HEAD
-                var email = emailInput.value.trim();
-                var password = passwordInput.value;
-                var rememberMe = document.getElementById('login-remember') ? document.getElementById('login-remember').checked : false;
-                var hasError = false;
-=======
+
                 const email = emailInput.value.trim();
                 const password = passwordInput.value;
                 const rememberMe = document.getElementById('login-remember')?.checked || false;
                 
                 // Validate
                 let hasError = false;
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
                 
                 if (!email) {
                     showFieldError(emailInput, 'Email is required');
@@ -491,80 +315,7 @@
                 
                 if (hasError) return;
                 
-<<<<<<< HEAD
-                setLoading(true);
-                
-                // Direct Firebase authentication (no ES module imports)
-                var persistence = rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
-                
-                firebase.auth().setPersistence(persistence).then(function() {
-                    return firebase.auth().signInWithEmailAndPassword(email, password);
-                }).then(function(userCredential) {
-                    console.log('Login successful:', userCredential.user.email);
-                    window.location.href = 'pages/dashboard.html';
-                }).catch(function(error) {
-                    console.error('Login error:', error.code, error.message);
-                    
-                    var errorMessages = {
-                        'auth/user-not-found': 'No account found with this email. <a href="register.html" style="color:#D4AF37;text-decoration:underline">Create one?</a>',
-                        'auth/wrong-password': 'Incorrect password. Please try again.',
-                        'auth/invalid-credential': 'Invalid email or password.',
-                        'auth/invalid-email': 'Please enter a valid email address.',
-                        'auth/too-many-requests': 'Too many login attempts. Please try again later or reset your password.',
-                        'auth/network-request-failed': 'Network error. Please check your internet connection.'
-                    };
-                    
-                    showError(errorMessages[error.code] || error.message || 'Login failed. Please try again.');
-                    
-                    // Shake animation on error
-                    var card = document.querySelector('.login-card');
-                    card.style.animation = 'shake 0.5s ease';
-                    setTimeout(function() { card.style.animation = ''; }, 500);
-                }).finally(function() {
-                    setLoading(false);
-                });
-            });
-            
-            // Google Sign-In
-            googleBtn.addEventListener('click', function() {
-                if (isSubmitting) return;
-                hideError();
-                setLoading(true);
-                
-                var provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
-                
-                firebase.auth().signInWithPopup(provider).then(function(result) {
-                    console.log('Google login successful:', result.user.email);
-                    
-                    // Save user to Firestore if new
-                    if (result.additionalUserInfo && result.additionalUserInfo.isNewUser && window.FirebaseService && window.FirebaseService.createDocument) {
-                        return FirebaseService.createDocument('users', {
-                            uid: result.user.uid,
-                            email: result.user.email,
-                            displayName: result.user.displayName,
-                            photoURL: result.user.photoURL,
-                            role: 'client_owner',
-                            status: 'active',
-                            createdAt: new Date().toISOString()
-                        });
-                    }
-                }).then(function() {
-                    window.location.href = 'pages/dashboard.html';
-                }).catch(function(error) {
-                    if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-                        console.error('Google login error:', error.code, error.message);
-                        showError('Google sign in failed. Please try again or use email login.');
-                    }
-                }).finally(function() {
-                    setLoading(false);
-                });
-            });
-            
-            // Check URL parameters for redirect reasons
-            var urlParams = new URLSearchParams(window.location.search);
-            var reason = urlParams.get('reason');
-=======
+
                 // Attempt login
                 setLoading(true);
                 
@@ -636,28 +387,12 @@
             // Check for redirect reason
             const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const reason = params.get('reason');
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
             
             if (reason === 'session_expired') {
                 showError('Your session expired. Please login again.');
             } else if (reason === 'logout') {
-<<<<<<< HEAD
-                var successEl = document.createElement('div');
-                successEl.style.cssText = 'background:rgba(16,185,129,0.08);border-left:3px solid #10B981;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#10B981;font-size:0.9rem';
-                successEl.textContent = '✅ Logged out successfully';
-                form.parentNode.insertBefore(successEl, form);
-                setTimeout(function() { successEl.remove(); }, 5000);
-            }
-            
-            // Focus email field on load
-            setTimeout(function() { emailInput.focus(); }, 600);
-            
-            console.log('✅ Login page ready - GitHub Pages compatible');
-        });
-    </script>
-</body>
-</html>
-=======
+
                 const successEl = document.createElement('div');
                 successEl.style.cssText = 'background:rgba(16,185,129,0.08);border-left:3px solid #10B981;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#10B981;font-size:0.9rem';
                 successEl.textContent = '✅ Logged out successfully';
@@ -673,4 +408,4 @@
     </script>
 </body>
 </html>
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

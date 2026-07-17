@@ -304,7 +304,5 @@ if (typeof window !== 'undefined') {
     window.Global.Breadcrumb.instances = window.Global.Breadcrumb.instances || new Map();
     window.Global.Breadcrumb.Breadcrumb = Breadcrumb;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

@@ -838,7 +838,5 @@ if (typeof window !== 'undefined') {
     window.Global.SearchBar.instances = window.Global.SearchBar.instances || new Map();
     window.Global.SearchBar.SearchBar = SearchBar;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

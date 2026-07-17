@@ -688,7 +688,5 @@ module.exports = {
 
 console.log('🚀 Firebase Cloud Functions loaded and ready');
 console.log('📋 Available functions:', Object.keys(exports).length);
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

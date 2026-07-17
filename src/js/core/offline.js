@@ -1216,7 +1216,5 @@ console.log('📡 Status:', offlineManager.getNetworkStatus());
 // ==========================================
 // END OF OFFLINE MANAGER
 // ==========================================
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+

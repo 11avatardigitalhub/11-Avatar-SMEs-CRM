@@ -451,7 +451,5 @@ if (typeof window !== 'undefined') {
     window.Global.Carousel.instances = window.Global.Carousel.instances || new Map();
     window.Global.Carousel.Carousel = Carousel;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
+
