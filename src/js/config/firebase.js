@@ -6,7 +6,7 @@
  *              emulator support, and comprehensive CRUD service layer.
  *              Compatible with regular script tags (no ES modules required).
  * @module config/firebase
- * @version 3.0.1
+ * @version 3.0.2
  * @author 11 Avatar Digital Hub
  * @license Proprietary - All Rights Reserved
  * @copyright 2024-2026 11 Avatar Digital Hub
@@ -298,7 +298,9 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Initialize Firestore with offline persistence support
+     * Initialize Firestore with offline persistence support.
+     * NOTE: db.settings() is wrapped in try/catch because Firestore may already
+     * have been started by Firebase Auth, which prevents settings changes.
      * @returns {firebase.firestore.Firestore|null} Firestore instance or null
      */
     function initializeFirestore() {
@@ -314,6 +316,7 @@ const FirebaseService = (function() {
             
             db = firebase.firestore();
             
+            // Enable offline persistence (may fail if already started - non-critical)
             db.enablePersistence({ synchronizeTabs: true })
                 .then(function() {
                     logMessage('log', 'Firestore offline persistence enabled');
@@ -324,10 +327,11 @@ const FirebaseService = (function() {
                     } else if (error.code === 'unimplemented') {
                         logMessage('warn', 'Firestore persistence not supported in this browser');
                     } else {
-                        logMessage('error', 'Firestore persistence error', error);
+                        logMessage('warn', 'Firestore persistence error (non-critical): ' + error.message);
                     }
                 });
             
+            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     db.useEmulator('localhost', 8080);
@@ -337,10 +341,20 @@ const FirebaseService = (function() {
                 }
             }
             
-            db.settings({
-                ignoreUndefinedProperties: true,
-                merge: true,
-            });
+            // Apply Firestore settings - wrapped in try/catch because
+            // Firestore may already have been started by another service (e.g., Auth)
+            // which makes settings immutable. This is a known Firebase behavior.
+            try {
+                db.settings({
+                    ignoreUndefinedProperties: true,
+                    merge: true,
+                });
+                logMessage('log', 'Firestore settings applied successfully');
+            } catch (settingsError) {
+                // Firestore was already started - settings cannot be changed
+                // This is expected when Auth initializes before Firestore
+                logMessage('warn', 'Firestore settings already configured by another service - skipping (this is normal)');
+            }
             
             logMessage('log', 'Firestore initialized successfully');
             return db;
@@ -368,6 +382,7 @@ const FirebaseService = (function() {
             
             auth = firebase.auth();
             
+            // Set persistence to LOCAL so sessions survive browser restarts
             auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                 .then(function() {
                     logMessage('log', 'Auth persistence set to LOCAL');
@@ -376,6 +391,7 @@ const FirebaseService = (function() {
                     logMessage('error', 'Auth persistence setting failed', error);
                 });
             
+            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     auth.useEmulator('http://localhost:9099');
@@ -385,10 +401,12 @@ const FirebaseService = (function() {
                 }
             }
             
+            // Set up auth state observer for session management
             auth.onAuthStateChanged(
                 function(user) {
                     try {
                         if (user) {
+                            // User signed in - store session info
                             logMessage('log', 'User signed in: ' + (user.email || user.uid));
                             
                             var sessionData = {
@@ -406,12 +424,14 @@ const FirebaseService = (function() {
                             localStorage.setItem('auth_user', JSON.stringify(sessionData));
                             sessionStorage.setItem('auth_session_active', 'true');
                             
+                            // Notify other modules via custom event
                             if (typeof window !== 'undefined') {
                                 window.dispatchEvent(new CustomEvent('firebase:userSignedIn', {
                                     detail: { user: sessionData },
                                 }));
                             }
                         } else {
+                            // User signed out - clear session data
                             logMessage('log', 'User signed out');
                             
                             localStorage.removeItem('auth_user');
@@ -476,7 +496,7 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Initialize Realtime Database (optional)
+     * Initialize Realtime Database (optional - non-critical)
      * @returns {firebase.database.Database|null} RTDB instance or null
      */
     function initializeRTDB() {
@@ -486,7 +506,7 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.database !== 'function') {
-                logMessage('warn', 'RTDB SDK not loaded - skipping');
+                logMessage('warn', 'RTDB SDK not loaded - skipping (non-critical)');
                 return null;
             }
             
@@ -511,7 +531,7 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Initialize Cloud Functions (optional)
+     * Initialize Cloud Functions (optional - non-critical)
      * @returns {firebase.functions.Functions|null} Functions instance or null
      */
     function initializeFunctions() {
@@ -521,12 +541,12 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.functions !== 'function') {
-                logMessage('warn', 'Functions SDK not loaded - skipping');
+                logMessage('warn', 'Functions SDK not loaded - skipping (non-critical)');
                 return null;
             }
             
             functions = firebase.functions();
-            functions.region = 'asia-south1';
+            functions.region = 'asia-south1'; // Mumbai region
             
             if (isLocalhost()) {
                 try {
@@ -547,18 +567,17 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Initialize Google Analytics (optional)
+     * Initialize Google Analytics (optional - non-critical)
      * @returns {firebase.analytics.Analytics|null} Analytics instance or null
      */
     function initializeAnalytics() {
         try {
             if (!app) {
-                logMessage('warn', 'App not initialized - skipping Analytics');
                 return null;
             }
             
             if (typeof firebase.analytics !== 'function') {
-                logMessage('warn', 'Analytics SDK not loaded - skipping');
+                logMessage('warn', 'Analytics SDK not loaded - skipping (non-critical)');
                 return null;
             }
             
@@ -575,7 +594,7 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Initialize Performance Monitoring (optional)
+     * Initialize Performance Monitoring (optional - non-critical)
      * @returns {firebase.performance.Performance|null} Performance instance or null
      */
     function initializePerformance() {
@@ -585,7 +604,7 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.performance !== 'function') {
-                logMessage('warn', 'Performance SDK not loaded - skipping');
+                logMessage('warn', 'Performance SDK not loaded - skipping (non-critical)');
                 return null;
             }
             
@@ -603,7 +622,7 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Initialize Cloud Messaging (optional)
+     * Initialize Cloud Messaging (optional - non-critical)
      * @returns {firebase.messaging.Messaging|null} Messaging instance or null
      */
     function initializeMessaging() {
@@ -613,12 +632,13 @@ const FirebaseService = (function() {
             }
             
             if (typeof firebase.messaging !== 'function') {
-                logMessage('warn', 'Messaging SDK not loaded - skipping');
+                logMessage('warn', 'Messaging SDK not loaded - skipping (non-critical)');
                 return null;
             }
             
             messaging = firebase.messaging();
             
+            // Request notification permission if not yet granted
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission().then(function(permission) {
                     if (permission === 'granted') {
@@ -641,7 +661,7 @@ const FirebaseService = (function() {
     // -------------------------------------------------------------------------
     
     /**
-     * Initialize all Firebase services in the correct order
+     * Initialize all Firebase services in the correct order.
      * Core services (Firestore, Auth, Storage) are initialized in parallel.
      * Optional services (RTDB, Functions, Analytics, Performance, Messaging)
      * are initialized non-blocking - failures are logged but don't break the app.

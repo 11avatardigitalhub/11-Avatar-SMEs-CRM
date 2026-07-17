@@ -1374,9 +1374,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = LoginController;
 }
-
-// Named export
-export {
-    LoginController as default,
-    LoginController,
-};
