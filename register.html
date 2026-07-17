@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="public">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Create your free 11 Avatar Digital Hub account. Start managing leads, pipeline, revenue, and more - all from ₹0." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <meta property="og:title" content="Register - 11 Avatar Digital Hub" />
+    <meta property="og:description" content="Create your free CRM account. No credit card required." />
+    
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/register.html" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.svg" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://avatar-wa-dual-crm.firebaseapp.com" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/main.css" />
+    
+    <title>Create Free Account - 11 Avatar Digital Hub | Free CRM for SMEs</title>
+    
+    <style>
+        body{opacity:0;transition:opacity 0.3s ease}
+        body.loaded{opacity:1}
+        .register-container{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%)}
+        .register-card{width:100%;max-width:500px;background:rgba(26,26,26,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px 32px;box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.05)}
+        .register-card:hover{border-color:rgba(212,175,55,0.2);transition:border-color 0.3s ease}
+        .input-group{position:relative;margin-bottom:20px}
+        .input-group input{width:100%;background:#1E1E1E;border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 16px;padding-left:48px;font-size:1rem;color:#FFFFFF;transition:all 0.3s ease;min-height:52px;outline:none}
+        .input-group input:focus{border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,0.1);background:#242424}
+        .input-group input.input-error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+        .input-group .input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#888;pointer-events:none;transition:color 0.3s ease;z-index:1}
+        .input-group input:focus~.input-icon{color:#D4AF37}
+        .input-group .toggle-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1.2rem;padding:8px;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center;z-index:1}
+        .input-group .toggle-password:hover{color:#D4AF37}
+        .field-error{color:#EF4444;font-size:0.8rem;margin-top:6px;display:flex;align-items:center;gap:6px;animation:fadeUp 0.2s ease}
+        .password-strength-bar{height:4px;border-radius:2px;transition:all 0.3s ease;margin-top:8px;width:0%}
+        .strength-weak{background:#EF4444;width:33%}.strength-medium{background:#F59E0B;width:66%}.strength-strong{background:#10B981;width:100%}
+        .requirement-item{display:flex;align-items:center;gap:8px;font-size:0.8rem;padding:4px 0}
+        .requirement-item.met{color:#10B981}.requirement-item.unmet{color:#888}
+        .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.2);border-top-color:#D4AF37;border-radius:50%;animation:spin 0.6s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-6px)}20%,40%,60%,80%{transform:translateX(6px)}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:480px){.register-card{padding:28px 20px}}
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card" role="main" aria-label="Registration form">
+            
+            <div style="text-align:center;margin-bottom:32px">
+                <a href="index.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:8px" aria-label="11 Avatar Home">
+                    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+                        <rect width="44" height="44" rx="12" fill="#D4AF37"/>
+                        <text x="22" y="29" text-anchor="middle" fill="#0A0A0A" font-size="17" font-weight="800" font-family="Inter, sans-serif">11A</text>
+                    </svg>
+                    <span style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;color:#D4AF37">11 Avatar Hub</span>
+                </a>
+                <h1 style="font-size:1.6rem;font-weight:700;color:#FFFFFF;margin-bottom:4px">Create Your Free Account 🚀</h1>
+                <p style="color:#888;font-size:0.95rem">No credit card required. Start in 30 seconds.</p>
+            </div>
+            
+            <div id="register-error" role="alert" aria-live="polite" style="display:none;background:rgba(239,68,68,0.08);border-left:3px solid #EF4444;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#EF4444;font-size:0.9rem"></div>
+            <div id="register-success" role="status" style="display:none;background:rgba(16,185,129,0.08);border-left:3px solid #10B981;border-radius:8px;padding:16px 20px;margin-bottom:20px;color:#10B981;font-size:0.95rem;line-height:1.7"></div>
+            
+            <form id="register-form" novalidate autocomplete="on">
+                
+                <div class="input-group">
+                    <span class="input-icon" aria-hidden="true">👤</span>
+                    <input type="text" id="register-name" name="name" placeholder="Full name" autocomplete="name" required minlength="2" aria-required="true" aria-label="Full name" />
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-icon" aria-hidden="true">📧</span>
+                    <input type="email" id="register-email" name="email" placeholder="Email address" autocomplete="email" required aria-required="true" aria-label="Email address" />
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-icon" aria-hidden="true">📱</span>
+                    <input type="tel" id="register-phone" name="phone" placeholder="Phone number (optional)" autocomplete="tel" maxlength="10" aria-label="Phone number" />
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-icon" aria-hidden="true">🏢</span>
+                    <input type="text" id="register-company" name="company" placeholder="Company name (optional)" autocomplete="organization" aria-label="Company name" />
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-icon" aria-hidden="true">🔒</span>
+                    <input type="password" id="register-password" name="password" placeholder="Create password (min 8 characters)" autocomplete="new-password" required minlength="8" aria-required="true" aria-label="Password" />
+                    <button type="button" class="toggle-password" data-target="register-password" aria-label="Toggle password visibility">👁️</button>
+                </div>
+                
+                <div id="password-strength-container" style="margin-top:-12px;margin-bottom:16px">
+                    <div class="password-strength-bar" id="password-strength-bar"></div>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+                        <span class="requirement-item unmet" data-req="length"><span>🔲</span> 8+ chars</span>
+                        <span class="requirement-item unmet" data-req="uppercase"><span>🔲</span> A-Z</span>
+                        <span class="requirement-item unmet" data-req="lowercase"><span>🔲</span> a-z</span>
+                        <span class="requirement-item unmet" data-req="number"><span>🔲</span> 0-9</span>
+                        <span class="requirement-item unmet" data-req="special"><span>🔲</span> @#$%</span>
+                    </div>
+                </div>
+                
+                <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:20px;min-height:44px">
+                    <input type="checkbox" id="register-accept-terms" style="margin-top:4px;width:18px;height:18px;accent-color:#D4AF37;flex-shrink:0" required />
+                    <span style="color:#CCC;font-size:0.9rem;line-height:1.5">I agree to the <a href="terms.html" style="color:#D4AF37;text-decoration:underline">Terms of Service</a> and <a href="privacy.html" style="color:#D4AF37;text-decoration:underline">Privacy Policy</a></span>
+                </label>
+                
+                <button type="submit" id="register-submit" class="btn btn-primary btn-block btn-lg" style="width:100%;font-size:1rem;min-height:52px" aria-busy="false">
+                    <span id="register-submit-text">🚀 Create Free Account</span>
+                    <span id="register-spinner" class="spinner" style="display:none" aria-hidden="true"></span>
+                </button>
+                
+                <div style="text-align:center;margin:24px 0;color:#666;font-size:0.85rem">or sign up with</div>
+                
+                <button type="button" id="register-google" class="btn btn-outline btn-block" style="min-height:52px;width:100%;font-size:0.95rem;gap:10px;border-color:rgba(255,255,255,0.12)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign up with Google
+                </button>
+                
+            </form>
+            
+            <p style="text-align:center;margin-top:24px;color:#888;font-size:0.9rem">
+                Already have an account? 
+                <a href="login.html" style="color:#D4AF37;font-weight:600;text-decoration:none;padding:8px 0">Sign in →</a>
+            </p>
+            
+            <p style="text-align:center;margin-top:8px">
+                <a href="index.html" style="color:#666;font-size:0.85rem;text-decoration:none;padding:8px 0">← Back to Home</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Firebase SDKs (Rule #18 - Firebase Backend) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config (Inline - No ES Module export errors) -->
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBZDaHJSt-4AV6EJYG76p8kcsIHf6LOxdU",
+            authDomain: "avatar-wa-dual-crm.firebaseapp.com",
+            projectId: "avatar-wa-dual-crm",
+            storageBucket: "avatar-wa-dual-crm.firebasestorage.app",
+            messagingSenderId: "946959261009",
+            appId: "1:946959261009:web:175f5390d63715f1f8c770"
+        };
+        
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log('Firebase initialized');
+        } catch(e) {
+            console.error('Firebase init error:', e.message);
+        }
+        
+        var db = null;
+        try {
+            db = firebase.firestore();
+            console.log('Firestore ready');
+        } catch(e) {
+            console.warn('Firestore not available:', e.message);
+        }
+        
+        window.FirebaseService = {
+            db: db,
+            createDocument: function(collection, data) {
+                if (!db) return Promise.reject('Firestore not available');
+                return db.collection(collection).add({
+                    ...data,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+        };
+        
+        console.log('Firebase Service ready');
+    </script>
+    
+    <!-- Register Page Logic (Rule #5 - Deep Detailing, Rule #6 - Error Handling) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            
+            var form = document.getElementById('register-form');
+            var nameInput = document.getElementById('register-name');
+            var emailInput = document.getElementById('register-email');
+            var phoneInput = document.getElementById('register-phone');
+            var companyInput = document.getElementById('register-company');
+            var passwordInput = document.getElementById('register-password');
+            var submitBtn = document.getElementById('register-submit');
+            var submitText = document.getElementById('register-submit-text');
+            var submitSpinner = document.getElementById('register-spinner');
+            var errorEl = document.getElementById('register-error');
+            var successEl = document.getElementById('register-success');
+            var googleBtn = document.getElementById('register-google');
+            var termsCheck = document.getElementById('register-accept-terms');
+            var isSubmitting = false;
+            
+            // Password visibility toggle (Rule #8 - 44px touch target)
+            document.querySelectorAll('.toggle-password').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var input = document.getElementById(this.getAttribute('data-target'));
+                    if (input) {
+                        input.type = input.type === 'password' ? 'text' : 'password';
+                        this.textContent = input.type === 'password' ? '👁️' : '🙈';
+                    }
+                });
+            });
+            
+            // Show error with animation (Rule #19 - Enterprise Animations)
+            function showError(msg) {
+                if (errorEl) {
+                    errorEl.innerHTML = msg;
+                    errorEl.style.display = 'block';
+                    errorEl.style.animation = 'none';
+                    errorEl.offsetHeight;
+                    errorEl.style.animation = 'fadeUp 0.3s ease';
+                }
+                if (successEl) successEl.style.display = 'none';
+            }
+            
+            function showSuccess(msg) {
+                if (successEl) {
+                    successEl.innerHTML = msg;
+                    successEl.style.display = 'block';
+                }
+                if (errorEl) errorEl.style.display = 'none';
+            }
+            
+            function clearFieldErrors() {
+                document.querySelectorAll('.input-error').forEach(function(el) { el.classList.remove('input-error'); });
+                document.querySelectorAll('.field-error').forEach(function(el) { el.remove(); });
+            }
+            
+            function showFieldError(input, message) {
+                input.classList.add('input-error');
+                input.setAttribute('aria-invalid', 'true');
+                var existing = input.parentElement.querySelector('.field-error');
+                if (existing) existing.remove();
+                var errEl = document.createElement('div');
+                errEl.className = 'field-error';
+                errEl.textContent = '⚠️ ' + message;
+                input.parentElement.appendChild(errEl);
+            }
+            
+            function setLoading(on) {
+                isSubmitting = on;
+                if (submitBtn) { submitBtn.disabled = on; submitBtn.setAttribute('aria-busy', on.toString()); }
+                if (submitText) submitText.style.display = on ? 'none' : '';
+                if (submitSpinner) submitSpinner.style.display = on ? 'inline-block' : 'none';
+                if (googleBtn) googleBtn.disabled = on;
+                if (nameInput) nameInput.disabled = on;
+                if (emailInput) emailInput.disabled = on;
+                if (passwordInput) passwordInput.disabled = on;
+            }
+            
+            // Password strength meter (Rule #5 - Deep Detailing)
+            passwordInput.addEventListener('input', function() {
+                var val = this.value;
+                var bar = document.getElementById('password-strength-bar');
+                if (!val) { bar.className = 'password-strength-bar'; bar.style.width = '0%'; return; }
+                
+                var score = 0;
+                if (val.length >= 8) score++;
+                if (/[A-Z]/.test(val)) score++;
+                if (/[a-z]/.test(val)) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+                
+                if (score <= 2) bar.className = 'password-strength-bar strength-weak';
+                else if (score <= 3) bar.className = 'password-strength-bar strength-medium';
+                else bar.className = 'password-strength-bar strength-strong';
+                
+                // Update requirement indicators
+                document.querySelector('[data-req="length"]').className = 'requirement-item ' + (val.length >= 8 ? 'met' : 'unmet');
+                document.querySelector('[data-req="length"] span').textContent = val.length >= 8 ? '✅' : '🔲';
+                document.querySelector('[data-req="uppercase"]').className = 'requirement-item ' + (/[A-Z]/.test(val) ? 'met' : 'unmet');
+                document.querySelector('[data-req="uppercase"] span').textContent = /[A-Z]/.test(val) ? '✅' : '🔲';
+                document.querySelector('[data-req="lowercase"]').className = 'requirement-item ' + (/[a-z]/.test(val) ? 'met' : 'unmet');
+                document.querySelector('[data-req="lowercase"] span').textContent = /[a-z]/.test(val) ? '✅' : '🔲';
+                document.querySelector('[data-req="number"]').className = 'requirement-item ' + (/[0-9]/.test(val) ? 'met' : 'unmet');
+                document.querySelector('[data-req="number"] span').textContent = /[0-9]/.test(val) ? '✅' : '🔲';
+                document.querySelector('[data-req="special"]').className = 'requirement-item ' + (/[^A-Za-z0-9]/.test(val) ? 'met' : 'unmet');
+                document.querySelector('[data-req="special"] span').textContent = /[^A-Za-z0-9]/.test(val) ? '✅' : '🔲';
+            });
+            
+            // Form submission (Rule #6 - Comprehensive Error Handling)
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (isSubmitting) return;
+                
+                clearFieldErrors();
+                showError('');
+                
+                var name = nameInput.value.trim();
+                var email = emailInput.value.trim();
+                var phone = phoneInput.value.trim();
+                var company = companyInput.value.trim();
+                var password = passwordInput.value;
+                var hasError = false;
+                
+                if (!name || name.length < 2) {
+                    showFieldError(nameInput, 'Full name is required (min 2 characters)');
+                    hasError = true;
+                }
+                
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    showFieldError(emailInput, 'Please enter a valid email address');
+                    hasError = true;
+                }
+                
+                if (!password || password.length < 8) {
+                    showFieldError(passwordInput, 'Password must be at least 8 characters');
+                    hasError = true;
+                }
+                
+                if (!termsCheck.checked) {
+                    showError('Please accept the Terms of Service and Privacy Policy to continue.');
+                    hasError = true;
+                }
+                
+                if (hasError) return;
+                
+                setLoading(true);
+                
+                // Direct Firebase registration (no ES module imports)
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(function(result) {
+                        // Update profile with display name
+                        return result.user.updateProfile({ displayName: name }).then(function() {
+                            return result.user;
+                        });
+                    })
+                    .then(function(user) {
+                        console.log('Registration successful:', user.email);
+                        
+                        // Save user to Firestore
+                        if (window.FirebaseService && window.FirebaseService.createDocument) {
+                            return FirebaseService.createDocument('users', {
+                                uid: user.uid,
+                                email: email,
+                                displayName: name,
+                                phone: phone,
+                                company: company,
+                                role: 'client_owner',
+                                status: 'active',
+                                createdAt: new Date().toISOString()
+                            });
+                        }
+                    })
+                    .then(function() {
+                        showSuccess('🎉 <strong>Account created successfully!</strong><br><br>Welcome to 11 Avatar Digital Hub!<br>Redirecting to your dashboard...');
+                        
+                        // Redirect after 2 seconds
+                        setTimeout(function() {
+                            window.location.href = 'pages/dashboard.html';
+                        }, 2000);
+                    })
+                    .catch(function(error) {
+                        console.error('Registration error:', error.code, error.message);
+                        
+                        var errorMessages = {
+                            'auth/email-already-in-use': 'This email is already registered. <a href="login.html" style="color:#D4AF37;text-decoration:underline">Login here</a>',
+                            'auth/weak-password': 'Password is too weak. Please use a stronger password with at least 8 characters, including uppercase, lowercase, numbers, and special characters.',
+                            'auth/invalid-email': 'Please enter a valid email address.',
+                            'auth/network-request-failed': 'Network error. Please check your internet connection and try again.',
+                            'auth/too-many-requests': 'Too many registration attempts. Please try again later.'
+                        };
+                        
+                        showError(errorMessages[error.code] || error.message || 'Registration failed. Please try again.');
+                        
+                        // Shake animation on error
+                        var card = document.querySelector('.register-card');
+                        card.style.animation = 'shake 0.5s ease';
+                        setTimeout(function() { card.style.animation = ''; }, 500);
+                    })
+                    .finally(function() {
+                        setLoading(false);
+                    });
+            });
+            
+            // Google Sign-Up
+            googleBtn.addEventListener('click', function() {
+                if (isSubmitting) return;
+                showError('');
+                setLoading(true);
+                
+                var provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                
+                firebase.auth().signInWithPopup(provider)
+                    .then(function(result) {
+                        console.log('Google sign-up successful:', result.user.email);
+                        
+                        // Save to Firestore if new user
+                        if (result.additionalUserInfo && result.additionalUserInfo.isNewUser && window.FirebaseService) {
+                            return FirebaseService.createDocument('users', {
+                                uid: result.user.uid,
+                                email: result.user.email,
+                                displayName: result.user.displayName,
+                                photoURL: result.user.photoURL,
+                                role: 'client_owner',
+                                status: 'active',
+                                createdAt: new Date().toISOString()
+                            });
+                        }
+                    })
+                    .then(function() {
+                        window.location.href = 'pages/dashboard.html';
+                    })
+                    .catch(function(error) {
+                        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+                            console.error('Google sign-up error:', error.code, error.message);
+                            showError('Google sign up failed. Please try again or use email registration.');
+                        }
+                    })
+                    .finally(function() {
+                        setLoading(false);
+                    });
+            });
+            
+            // Focus name field on load
+            setTimeout(function() { nameInput.focus(); }, 600);
+            
+            console.log('✅ Register page ready - GitHub Pages compatible');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+/* ==========================================
+   11 AVATAR DIGITAL HUB
+   Authentication Pages Stylesheet
+   Version: 2.0 Enterprise
+   Theme: Public (Dark Mode) - White/Gold/Black
+   ==========================================
+   Purpose:
+   - Login page styles
+   - Registration page styles
+   - Forgot password page styles
+   - Form elements & validation
+   - Social login buttons
+   - Password strength meter
+   - Multi-step wizard
+   - Responsive auth layouts
+   ========================================== */
+
+/* ==========================================
+   AUTH CONTAINER (Shared)
+   ========================================== */
+.auth-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: -300px;
+    right: -200px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    animation: authGlow 10s ease-in-out infinite alternate;
+}
+
+.auth-container::after {
+    content: '';
+    position: absolute;
+    bottom: -250px;
+    left: -150px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+    pointer-events: none;
+    animation: authGlow 12s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes authGlow {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.2); opacity: 1; }
+}
+
+/* ==========================================
+   AUTH CARD (Shared)
+   ========================================== */
+.auth-card {
+    width: 100%;
+    max-width: 460px;
+    background: rgba(26,26,26,0.85);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 44px 36px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.05);
+    position: relative;
+    z-index: 1;
+    animation: cardIn 0.6s ease;
+    transition: border-color 0.4s ease;
+}
+
+.auth-card:hover {
+    border-color: rgba(212,175,55,0.2);
+}
+
+.auth-card.register-card {
+    max-width: 520px;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ==========================================
+   AUTH HEADER (Shared)
+   ========================================== */
+.auth-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.auth-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-bottom: 12px;
+}
+
+.auth-logo svg {
+    width: 44px;
+    height: 44px;
+}
+
+.auth-logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #D4AF37;
+}
+
+.auth-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-subtitle {
+    font-size: 0.95rem;
+    color: #888;
+}
+
+/* ==========================================
+   AUTH FORM (Shared)
+   ========================================== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ==========================================
+   INPUT GROUP
+   ========================================== */
+.input-group {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.input-group .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #888;
+    pointer-events: none;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    background: #1E1E1E;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 15px 18px;
+    padding-left: 48px;
+    font-size: 1rem;
+    color: #FFFFFF;
+    transition: all 0.3s ease;
+    min-height: 54px;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 4px rgba(212,175,55,0.08);
+    background: #242424;
+}
+
+.input-group input:focus ~ .input-icon,
+.input-group select:focus ~ .input-icon {
+    color: #D4AF37;
+}
+
+.input-group input.input-error,
+.input-group select.input-error {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 4px rgba(239,68,68,0.08);
+}
+
+.input-group input::placeholder {
+    color: #666;
+}
+
+/* ==========================================
+   PASSWORD TOGGLE
+   ========================================== */
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 10px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #D4AF37;
+}
+
+/* ==========================================
+   FIELD ERROR
+   ========================================== */
+.field-error {
+    color: #EF4444;
+    font-size: 0.82rem;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeInUp 0.2s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   ERROR CONTAINER
+   ========================================== */
+.auth-error {
+    display: none;
+    background: rgba(239,68,68,0.08);
+    border-left: 4px solid #EF4444;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    color: #EF4444;
+    font-size: 0.9rem;
+    animation: fadeInUp 0.3s ease;
+}
+
+.auth-error.show {
+    display: block;
+}
+
+/* ==========================================
+   SUCCESS CONTAINER
+   ========================================== */
+.auth-success {
+    display: none;
+    background: rgba(16,185,129,0.08);
+    border-left: 4px solid #10B981;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    color: #10B981;
+    font-size: 0.9rem;
+    animation: fadeInUp 0.3s ease;
+}
+
+.auth-success.show {
+    display: block;
+}
+
+/* ==========================================
+   REMEMBER ME & FORGOT ROW
+   ========================================== */
+.auth-options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #CCCCCC;
+    font-size: 0.9rem;
+    min-height: 44px;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #D4AF37;
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: #D4AF37;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: #E8C95A;
+}
+
+/* ==========================================
+   SUBMIT BUTTON
+   ========================================== */
+.auth-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #D4AF37, #E8C95A);
+    color: #0A0A0A;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 28px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: 54px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(212,175,55,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.auth-submit-btn:hover {
+    background: linear-gradient(135deg, #E8C95A, #F5D97E);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(212,175,55,0.3);
+}
+
+.auth-submit-btn:active {
+    transform: scale(0.98);
+}
+
+.auth-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-submit-btn .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(0,0,0,0.2);
+    border-top-color: #0A0A0A;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: none;
+}
+
+.auth-submit-btn.loading .spinner {
+    display: inline-block;
+}
+
+.auth-submit-btn.loading .btn-text {
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================
+   DIVIDER
+   ========================================== */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 28px 0;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+}
+
+/* ==========================================
+   GOOGLE BUTTON
+   ========================================== */
+.google-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #CCCCCC;
+    cursor: pointer;
+    min-height: 54px;
+    transition: all 0.3s ease;
+}
+
+.google-btn:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.25);
+}
+
+.google-btn:active {
+    transform: scale(0.98);
+}
+
+.google-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* ==========================================
+   AUTH FOOTER LINKS
+   ========================================== */
+.auth-footer {
+    text-align: center;
+    margin-top: 28px;
+}
+
+.auth-footer p {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.auth-footer a {
+    color: #D4AF37;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 0;
+    transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+    color: #E8C95A;
+}
+
+.auth-back-link {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    color: #666;
+    font-size: 0.85rem;
+    text-decoration: none;
+    padding: 8px 0;
+}
+
+.auth-back-link:hover {
+    color: #D4AF37;
+}
+
+/* ==========================================
+   PASSWORD STRENGTH METER
+   ========================================== */
+.password-strength-wrap {
+    margin-top: -12px;
+    margin-bottom: 18px;
+}
+
+.strength-bar {
+    height: 5px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.strength-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s ease, background 0.4s ease;
+    width: 0%;
+}
+
+.strength-bar-fill.weak {
+    width: 25%;
+    background: #EF4444;
+}
+
+.strength-bar-fill.medium {
+    width: 60%;
+    background: #F59E0B;
+}
+
+.strength-bar-fill.strong {
+    width: 100%;
+    background: #10B981;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+.strength-text.weak { color: #EF4444; }
+.strength-text.medium { color: #F59E0B; }
+.strength-text.strong { color: #10B981; }
+
+/* ==========================================
+   PASSWORD REQUIREMENTS
+   ========================================== */
+.password-requirements {
+    background: #1A1A1A;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-top: -6px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.requirement-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+.requirement-item.met {
+    color: #10B981;
+}
+
+.requirement-item.unmet {
+    color: #888;
+}
+
+.requirement-item .req-icon {
+    width: 18px;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+/* ==========================================
+   STEP INDICATORS (Register Wizard)
+   ========================================== */
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 36px;
+}
+
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    transition: all 0.4s ease;
+}
+
+.step-dot.active {
+    background: #D4AF37;
+    box-shadow: 0 0 16px rgba(212,175,55,0.4);
+    width: 36px;
+    border-radius: 20px;
+}
+
+.step-dot.completed {
+    background: #10B981;
+}
+
+/* ==========================================
+   CHECKBOX STYLES
+   ========================================== */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-top: 3px;
+    width: 20px;
+    height: 20px;
+    accent-color: #D4AF37;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.checkbox-group .checkbox-label {
+    font-size: 0.9rem;
+    color: #CCCCCC;
+    line-height: 1.5;
+}
+
+.checkbox-group .checkbox-label a {
+    color: #D4AF37;
+    text-decoration: none;
+}
+
+.checkbox-group .checkbox-label a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================
+   SECURITY NOTE
+   ========================================== */
+.security-note {
+    display: flex;
+    gap: 10px;
+    padding: 14px 18px;
+    background: rgba(212,175,55,0.05);
+    border-radius: 12px;
+    margin-top: 24px;
+}
+
+.security-note .note-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.security-note .note-text {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+.security-note .note-text strong {
+    color: #D4AF37;
+}
+
+/* ==========================================
+   RESEND BUTTON
+   ========================================== */
+.resend-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px;
+    background: transparent;
+    color: #CCCCCC;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.resend-btn:hover {
+    border-color: #D4AF37;
+    color: #D4AF37;
+}
+
+.resend-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.resend-timer {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* ==========================================
+   SUCCESS STATE
+   ========================================== */
+.success-state {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.success-icon {
+    font-size: 4.5rem;
+    margin-bottom: 16px;
+    animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.success-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #10B981;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    font-size: 0.95rem;
+    color: #AAA;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+/* ==========================================
+   ACCOUNT SUMMARY CARD
+   ========================================== */
+.account-summary {
+    background: #1A1A1A;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.account-summary .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.account-summary .summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.account-summary .summary-icon {
+    font-size: 1.2rem;
+}
+
+.account-summary .summary-text {
+    font-size: 0.9rem;
+    color: #CCCCCC;
+}
+
+/* ==========================================
+   SHAKE ANIMATION
+   ========================================== */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+.shake {
+    animation: shake 0.6s ease;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 32px 24px;
+        border-radius: 24px;
+    }
+    
+    .auth-title {
+        font-size: 1.4rem;
+    }
+    
+    .input-group input,
+    .input-group select {
+        min-height: 50px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 16px;
+    }
+    
+    .auth-card {
+        padding: 28px 20px;
+    }
+    
+    .auth-logo svg {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .auth-options-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ==========================================
+   END OF AUTH STYLESHEET
+   ========================================== */

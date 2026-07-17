@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="internal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="Dashboard - 11 Avatar Digital Hub. Your business command center." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <title>Dashboard - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../src/css/main.css" />
+    
+    <style>
+        /* ==========================================
+           DASHBOARD - ENTERPRISE 3D DYNAMIC DESIGN
+           ========================================== */
+        
+        :root {
+            --card-3d-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.05), 0 20px 40px -5px rgba(0,0,0,0.04);
+            --card-3d-hover: 0 10px 25px -5px rgba(0,0,0,0.08), 0 20px 40px -10px rgba(0,0,0,0.06), 0 30px 60px -15px rgba(0,0,0,0.04);
+            --gold-glow: 0 0 30px rgba(212,175,55,0.12), 0 0 60px rgba(212,175,55,0.06);
+            --transition-3d: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F0 0%, #F3F1EB 30%, #F0EDE5 60%, #F5F3ED 100%);
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -300px;
+            right: -200px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, rgba(212,175,55,0.02) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -250px;
+            left: -150px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, rgba(184,150,15,0.02) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .dashboard-container {
+            position: relative;
+            z-index: 1;
+            padding: 32px 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        
+        /* Welcome Section */
+        .welcome-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 40px;
+            padding: 32px 36px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 50%, #FFFAEE 100%);
+            border: 1px solid rgba(212,175,55,0.15);
+            border-radius: 24px;
+            box-shadow: var(--card-3d-shadow), inset 0 1px 0 rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: var(--transition-3d);
+        }
+        
+        .welcome-section:hover {
+            box-shadow: var(--card-3d-hover), var(--gold-glow);
+            transform: translateY(-2px);
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .welcome-text h1 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            color: #0A0A0A;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-text .gold-accent {
+            background: linear-gradient(135deg, #D4AF37, #B8960F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-text p {
+            color: #666;
+            font-size: 1.05rem;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 3D Stat Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        @media(min-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        
+        .stat-card-3d {
+            background: linear-gradient(145deg, #FFFFFF 0%, #FAFAFA 100%);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 20px;
+            padding: 28px 24px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 800px;
+            transition: var(--transition-3d);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02), 0 8px 16px rgba(0,0,0,0.03), 0 16px 32px rgba(0,0,0,0.03);
+        }
+        
+        .stat-card-3d::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(212,175,55,0.03) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        
+        .stat-card-3d:hover {
+            transform: translateY(-6px) rotateX(2deg) rotateY(-2deg);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06), 0 20px 40px rgba(0,0,0,0.06), 0 30px 60px rgba(212,175,55,0.05);
+            border-color: rgba(212,175,55,0.25);
+        }
+        
+        .stat-card-3d:hover::after {
+            opacity: 1;
+        }
+        
+        .stat-card-3d:active {
+            transform: translateY(-2px) scale(0.98);
+            transition: all 0.1s ease;
+        }
+        
+        .stat-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: var(--transition-bounce);
+        }
+        
+        .stat-card-3d:hover .stat-icon-wrap {
+            transform: translateZ(20px) scale(1.1);
+        }
+        
+        .icon-revenue { background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(232,201,90,0.1)); }
+        .icon-leads { background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(96,165,250,0.08)); }
+        .icon-clients { background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(52,211,153,0.08)); }
+        .icon-tasks { background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(167,139,250,0.08)); }
+        
+        .stat-value-3d {
+            font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+            font-weight: 800;
+            color: #0A0A0A;
+            line-height: 1;
+            margin-bottom: 6px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.5px;
+        }
+        
+        .stat-label-3d {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        
+        .stat-change.up { color: #059669; background: rgba(16,185,129,0.08); }
+        .stat-change.down { color: #DC2626; background: rgba(239,68,68,0.08); }
+        
+        /* Main Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        @media(min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        @media(min-width: 1280px) {
+            .dashboard-grid {
+                grid-template-columns: 2.5fr 1fr;
+            }
+        }
+        
+        /* 3D Panel Cards */
+        .panel-3d {
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--card-3d-shadow);
+            transition: var(--transition-3d);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .panel-3d:hover {
+            box-shadow: var(--card-3d-hover);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-title .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            background: rgba(212,175,55,0.1);
+        }
+        
+        /* Activity List */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            transition: var(--transition-3d);
+            cursor: pointer;
+            position: relative;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+        
+        .activity-item:hover {
+            background: rgba(212,175,55,0.03);
+            border-color: rgba(212,175,55,0.1);
+            transform: translateX(4px);
+        }
+        
+        .activity-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .activity-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.3;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        
+        .activity-dot.call { background: #3B82F6; }
+        .activity-dot.whatsapp { background: #10B981; }
+        .activity-dot.meeting { background: #F59E0B; }
+        .activity-dot.lead { background: #8B5CF6; }
+        .activity-dot.revenue { background: #D4AF37; }
+        .activity-dot.won { background: #059669; }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        
+        .activity-content { flex: 1; min-width: 0; }
+        .activity-text { font-size: 0.9rem; color: #333; font-weight: 500; line-height: 1.4; }
+        .activity-meta { font-size: 0.78rem; color: #999; margin-top: 2px; }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 24px 16px;
+            background: linear-gradient(145deg, #FAFAFA 0%, #F5F5F5 100%);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition-3d);
+            text-decoration: none;
+            min-height: 110px;
+            transform-style: preserve-3d;
+            perspective: 600px;
+        }
+        
+        .quick-action-btn:hover {
+            background: linear-gradient(145deg, #FFFFFF 0%, #FFFDF7 100%);
+            border-color: rgba(212,175,55,0.3);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06), 0 15px 40px rgba(212,175,55,0.06);
+        }
+        
+        .quick-action-btn:active {
+            transform: translateY(-1px) scale(0.97);
+        }
+        
+        .quick-action-icon {
+            font-size: 2rem;
+            transition: var(--transition-bounce);
+        }
+        
+        .quick-action-btn:hover .quick-action-icon {
+            transform: translateZ(15px) scale(1.2);
+        }
+        
+        .quick-action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+        }
+        
+        /* Revenue Bar */
+        .revenue-bar-wrap {
+            margin-top: 8px;
+        }
+        
+        .revenue-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .revenue-bar {
+            height: 12px;
+            background: #F0EDE5;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .revenue-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D4AF37, #E8C95A, #B8960F);
+            border-radius: 20px;
+            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+        
+        .revenue-bar-fill::after {
+            content: '';
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            bottom: 2px;
+            width: 30px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+            border-radius: 20px;
+        }
+        
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(212,175,55,0.2);
+            border-radius: 50%;
+            animation: float-particle 15s linear infinite;
+        }
+        
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px) scale(1); opacity: 0; }
+        }
+        
+        /* Loading shimmer */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+        
+        /* Responsive Fine-tuning */
+        @media(max-width: 768px) {
+            .dashboard-container { padding: 20px 16px; }
+            .welcome-section { padding: 24px 20px; }
+            .welcome-section { flex-direction: column; text-align: center; }
+            .welcome-actions { justify-content: center; }
+            .stats-grid { gap: 12px; }
+            .stat-card-3d { padding: 20px 16px; }
+            .panel-3d { padding: 20px; }
+        }
+        
+        @media(max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .quick-actions { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .quick-action-btn { padding: 18px 12px; min-height: 90px; }
+            .welcome-text h1 { font-size: 1.4rem; }
+        }
+        
+        /* Print */
+        @media print {
+            body::before, body::after, .particles { display: none; }
+            .stat-card-3d, .panel-3d { box-shadow: none; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" aria-hidden="true">
+        <div class="particle" style="left:10%;animation-delay:0s"></div>
+        <div class="particle" style="left:25%;animation-delay:3s"></div>
+        <div class="particle" style="left:40%;animation-delay:6s"></div>
+        <div class="particle" style="left:55%;animation-delay:2s"></div>
+        <div class="particle" style="left:70%;animation-delay:8s"></div>
+        <div class="particle" style="left:85%;animation-delay:4s"></div>
+        <div class="particle" style="left:15%;animation-delay:7s"></div>
+        <div class="particle" style="left:60%;animation-delay:1s"></div>
+        <div class="particle" style="left:35%;animation-delay:9s"></div>
+        <div class="particle" style="left:90%;animation-delay:5s"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="/" class="header-brand" aria-label="11 Avatar Hub">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect width="36" height="36" rx="10" fill="#D4AF37"/>
+                <text x="18" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter">11A</text>
+            </svg>
+            <span style="color:#B8960F">11 Avatar Hub</span>
+        </a>
+        <nav class="header-nav">
+            <a href="pages/dashboard.html" class="header-link active">Dashboard</a>
+            <a href="pages/leads.html" class="header-link">Leads</a>
+            <a href="pages/pipeline.html" class="header-link">Pipeline</a>
+            <a href="pages/clients.html" class="header-link">Clients</a>
+            <a href="pages/revenue.html" class="header-link">Revenue</a>
+            <a href="pages/whatsapp.html" class="header-link">WhatsApp</a>
+        </nav>
+        <div class="header-actions">
+            <button class="header-btn" aria-label="Notifications" title="Notifications">🔔</button>
+            <button class="header-btn" aria-label="Profile" title="Profile">👤</button>
+            <button class="header-btn header-toggle" aria-label="Menu">☰</button>
+        </div>
+    </header>
+    
+    <!-- Sub Menu -->
+    <nav class="submenu" id="submenu-nav">
+        <a href="#overview" class="submenu-btn active">Overview</a>
+        <a href="#today-tasks" class="submenu-btn">Today's Tasks</a>
+        <a href="#revenue-stats" class="submenu-btn">Revenue Stats</a>
+        <a href="#quick-actions" class="submenu-btn">Quick Actions</a>
+        <a href="#recent-activity" class="submenu-btn">Recent Activity</a>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <div class="dashboard-container">
+            
+            <!-- Welcome Section -->
+            <section id="overview" class="welcome-section page-section">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span class="gold-accent" id="user-name">User</span> 👋</h1>
+                    <p id="welcome-date">Here's what's happening with your business today</p>
+                </div>
+                <div class="welcome-actions">
+                    <a href="pages/leads.html?action=new" class="btn btn-primary">+ New Lead</a>
+                    <a href="pages/revenue.html?action=add" class="btn btn-outline">+ Add Revenue</a>
+                </div>
+            </section>
+            
+            <!-- Stats Grid -->
+            <section id="revenue-stats" class="stats-grid page-section">
+                <div class="stat-card-3d">
+                    <div class="stat-icon-wrap icon-revenue">💰</div>
+                    <div class="stat-value-3d" id="stat-revenue">₹0</div>
+                    <div class="stat-label-3d">Total Revenue</div>
+                    <div class="stat-change up" id="stat-revenue-change">↑ 12% vs last month</div>
+                </div>
+                
+                <div class="stat-card-3d">
+                    <div class="stat-icon-wrap icon-leads">📋</div>
+                    <div class="stat-value-3d" id="stat-leads">0</div>
+                    <div class="stat-label-3d">Active Leads</div>
+                    <div class="stat-change up" id="stat-leads-change">↑ 8 new this week</div>
+                </div>
+                
+                <div class="stat-card-3d">
+                    <div class="stat-icon-wrap icon-clients">👥</div>
+                    <div class="stat-value-3d" id="stat-clients">0</div>
+                    <div class="stat-label-3d">Total Clients</div>
+                    <div class="stat-change up" id="stat-clients-change">↑ 3 this month</div>
+                </div>
+                
+                <div class="stat-card-3d">
+                    <div class="stat-icon-wrap icon-tasks">✅</div>
+                    <div class="stat-value-3d" id="stat-tasks">0</div>
+                    <div class="stat-label-3d">Pending Tasks</div>
+                    <div class="stat-change down" id="stat-tasks-change">5 due today</div>
+                </div>
+            </section>
+            
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Left Column: Activity & Tasks -->
+                <div>
+                    <!-- Today's Tasks -->
+                    <section id="today-tasks" class="panel-3d page-section" style="margin-bottom:24px">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <span class="icon">📋</span> Today's Tasks
+                            </div>
+                            <a href="pages/tasks.html" class="btn btn-ghost btn-sm">View All →</a>
+                        </div>
+                        <div id="tasks-list" style="display:flex;flex-direction:column;gap:10px">
+                            <div style="text-align:center;padding:30px;color:#999">
+                                <div style="font-size:3rem;margin-bottom:8px">🎉</div>
+                                <p style="font-weight:500">No pending tasks for today!</p>
+                                <p style="font-size:0.85rem">Great job staying on top of things.</p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Revenue Progress -->
+                    <section class="panel-3d page-section">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <span class="icon">📊</span> Monthly Revenue Goal
+                            </div>
+                            <span style="font-weight:700;color:#D4AF37" id="revenue-goal-text">₹70,000</span>
+                        </div>
+                        <div class="revenue-bar-wrap">
+                            <div class="revenue-bar-header">
+                                <span id="revenue-collected-label">Collected: ₹0</span>
+                                <span id="revenue-percent-label">0%</span>
+                            </div>
+                            <div class="revenue-bar">
+                                <div class="revenue-bar-fill" id="revenue-bar-fill" style="width:0%"></div>
+                            </div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:0.8rem;color:#999">
+                            <span id="revenue-remaining-label">Remaining: ₹70,000</span>
+                            <span id="revenue-daily-label">Required/day: ₹2,333</span>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Right Column: Quick Actions & Activity -->
+                <div>
+                    <!-- Quick Actions -->
+                    <section id="quick-actions" class="panel-3d page-section" style="margin-bottom:24px">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <span class="icon">⚡</span> Quick Actions
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <a href="pages/leads.html?action=new" class="quick-action-btn">
+                                <span class="quick-action-icon">➕</span>
+                                <span class="quick-action-label">New Lead</span>
+                            </a>
+                            <a href="pages/whatsapp.html" class="quick-action-btn">
+                                <span class="quick-action-icon">💬</span>
+                                <span class="quick-action-label">WhatsApp</span>
+                            </a>
+                            <a href="pages/revenue.html?action=add" class="quick-action-btn">
+                                <span class="quick-action-icon">💰</span>
+                                <span class="quick-action-label">Add Revenue</span>
+                            </a>
+                            <a href="pages/invoices.html?action=new" class="quick-action-btn">
+                                <span class="quick-action-icon">🧾</span>
+                                <span class="quick-action-label">GST Invoice</span>
+                            </a>
+                        </div>
+                    </section>
+                    
+                    <!-- Recent Activity -->
+                    <section id="recent-activity" class="panel-3d page-section">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <span class="icon">🕐</span> Recent Activity
+                            </div>
+                            <a href="#/history" class="btn btn-ghost btn-sm">View All →</a>
+                        </div>
+                        <div class="activity-list" id="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-dot call"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Called <strong>Rajesh Sharma</strong></div>
+                                    <div class="activity-meta">10 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot whatsapp"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">WhatsApp message to <strong>Priya Kapoor</strong></div>
+                                    <div class="activity-meta">25 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot revenue"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Revenue added: <strong>₹50,000</strong> from <strong>Amit Mehta</strong></div>
+                                    <div class="activity-meta">1 hour ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot won"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Deal Won: <strong>SEO Package</strong> for <strong>Vikram Industries</strong></div>
+                                    <div class="activity-meta">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot lead"></div>
+                                <div class="activity-content">
+                                    <div class="activity-text">New lead created: <strong>Suresh Patel</strong></div>
+                                    <div class="activity-meta">3 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <span>© 2026 11 Avatar Digital Hub. All rights reserved.</span>
+                <span>🇮🇳 Made with ❤️ in India</span>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="../../src/js/config/constants.js"></script>
+    <script src="../../src/js/config/firebase.js"></script>
+    <script src="../../src/js/core/state.js"></script>
+    <script src="../../src/js/core/eventBus.js"></script>
+    <script src="../../src/js/auth/auth.js"></script>
+    <script src="../../src/js/auth/permissions.js"></script>
+    
+    <script>
+        // ==========================================
+        // DASHBOARD INITIALIZATION
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            
+            // Set user name
+            const userName = window.auth?.state?.userProfile?.displayName || 
+                           window.auth?.state?.user?.displayName || 
+                           'User';
+            document.getElementById('user-name').textContent = userName;
+            
+            // Set welcome date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('welcome-date').textContent = 
+                now.toLocaleDateString('en-IN', options);
+            
+            // Submenu active on scroll
+            const sections = document.querySelectorAll('.page-section');
+            const submenuBtns = document.querySelectorAll('.submenu-btn');
+            
+            function updateSubmenu() {
+                let current = '';
+                sections.forEach(section => {
+                    if (window.scrollY >= section.offsetTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                submenuBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('href') === '#' + current);
+                });
+            }
+            
+            window.addEventListener('scroll', updateSubmenu, { passive: true });
+            
+            // Smooth scroll for submenu
+            submenuBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+            
+            // Load dashboard data
+            async function loadDashboardData() {
+                try {
+                    // Get leads count
+                    const leads = window.StateManager?.get('data.leads') || [];
+                    const activeLeads = leads.filter(l => l.status !== 'Won' && l.status !== 'Lost');
+                    document.getElementById('stat-leads').textContent = activeLeads.length;
+                    document.getElementById('stat-leads-change').textContent = 
+                        `↑ ${leads.filter(l => l.createdDate === new Date().toISOString().slice(0,10)).length} new today`;
+                    
+                    // Get clients count
+                    const clients = window.StateManager?.get('data.clients') || [];
+                    document.getElementById('stat-clients').textContent = clients.length;
+                    
+                    // Get tasks count
+                    const tasks = leads.filter(l => l.followupDate && l.followupDate <= new Date().toISOString().slice(0,10));
+                    document.getElementById('stat-tasks').textContent = tasks.length;
+                    
+                    // Get revenue
+                    const revenueEntries = window.StateManager?.get('data.revenueEntries') || [];
+                    const totalRevenue = revenueEntries.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0);
+                    const goal = window.StateManager?.get('user.preferences.goal') || 70000;
+                    
+                    document.getElementById('stat-revenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+                    document.getElementById('revenue-goal-text').textContent = '₹' + goal.toLocaleString('en-IN');
+                    document.getElementById('revenue-collected-label').textContent = 'Collected: ₹' + totalRevenue.toLocaleString('en-IN');
+                    
+                    const percent = Math.min(100, Math.round((totalRevenue / goal) * 100));
+                    document.getElementById('revenue-bar-fill').style.width = percent + '%';
+                    document.getElementById('revenue-percent-label').textContent = percent + '%';
+                    
+                    const remaining = Math.max(0, goal - totalRevenue);
+                    document.getElementById('revenue-remaining-label').textContent = 'Remaining: ₹' + remaining.toLocaleString('en-IN');
+                    
+                    const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate() + 1;
+                    const daily = Math.round(remaining / Math.max(1, daysLeft));
+                    document.getElementById('revenue-daily-label').textContent = 'Required/day: ₹' + daily.toLocaleString('en-IN');
+                    
+                } catch(error) {
+                    console.error('Dashboard data load error:', error);
+                }
+            }
+            
+            // Load data
+            loadDashboardData();
+            
+            // Listen for data changes
+            window.EventBus?.on('data:saved', () => loadDashboardData());
+            window.EventBus?.on('lead:created', () => loadDashboardData());
+            window.EventBus?.on('revenue:added', () => loadDashboardData());
+            
+            console.log('✅ Dashboard ready');
+        });
+        
+        // Close mobile drawer
+        function closeDrawer() {
+            document.querySelector('.mobile-drawer')?.classList.remove('open');
+            document.querySelector('.mobile-drawer-backdrop')?.classList.remove('open');
+        }
+    </script>
+</body>
+</html>
+
+

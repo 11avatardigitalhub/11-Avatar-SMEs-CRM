@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================
+     11 AVATAR DIGITAL HUB
+     Sitemap.xml - Search Engine Sitemap
+     Version: 2.0 Enterprise
+     ==========================================
+     Purpose:
+     - Help search engines discover all pages
+     - Prioritize important pages
+     - Set update frequencies
+     - Multi-language support
+     - Image and video sitemap extensions
+     ========================================== -->
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+
+    <!-- ==========================================
+         SITEMAP METADATA
+         ========================================== -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"/>
+        <xhtml:link rel="alternate" hreflang="en-IN" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"/>
+        <xhtml:link rel="alternate" hreflang="hi" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/?lang=hi"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"/>
+    </url>
+
+    <!-- ==========================================
+         PUBLIC PAGES (High Priority)
+         ========================================== -->
+    
+    <!-- Landing Page -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/index.html</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/images/og-image.png</image:loc>
+            <image:title>11 Avatar Digital Hub - Master Revenue CRM</image:title>
+            <image:caption>India's #1 Revenue Operating System for SMEs</image:caption>
+        </image:image>
+    </url>
+
+    <!-- Login Page -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/login.html</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Register Page -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/register.html</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Forgot Password -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/forgot-password.html</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- 404 Page -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/404.html</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Offline Page -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/offline.html</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- ==========================================
+         MARKETING & LANDING SECTIONS
+         ========================================== -->
+    
+    <!-- Features Section -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#features</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Pricing Section -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#pricing</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Solutions Section -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#solutions</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- FAQ Section -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#faq</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Testimonials Section -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#testimonials</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- How It Works -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#how-it-works</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Stats Section -->
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/#stats</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- ==========================================
+         INDUSTRY SOLUTION PAGES
+         ========================================== -->
+    
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/real-estate</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/education</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/healthcare</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/manufacturing</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/retail</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/financial-services</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/it-saas</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/solutions/field-sales</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- ==========================================
+         FEATURE PAGES
+         ========================================== -->
+    
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features/lead-management</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features/pipeline-management</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features/revenue-tracking</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features/gst-invoices</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features/whatsapp-integration</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features/client-management</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- ==========================================
+         STATIC ASSETS (Low Priority)
+         ========================================== -->
+    
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/manifest.json</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/sw.js</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.1</priority>
+    </url>
+
+    <!-- ==========================================
+         LEGAL PAGES
+         ========================================== -->
+    
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/legal/privacy-policy</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/legal/terms-of-service</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/legal/gdpr</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/legal/refund-policy</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- ==========================================
+         BLOG & RESOURCES
+         ========================================== -->
+    
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/blog</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/blog/crm-for-indian-smes</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/blog/gst-invoice-guide</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/blog/whatsapp-business-api</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- ==========================================
+         CONTACT & SUPPORT
+         ========================================== -->
+    
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/contact</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <url>
+        <loc>https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/support</loc>
+        <lastmod>2026-07-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- ==========================================
+         END OF SITEMAP
+         ========================================== -->
+</urlset>
+

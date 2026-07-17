@@ -1,0 +1,253 @@
+# ============================================================
+# 11 AVATAR DIGITAL HUB - Code Owners
+# Enterprise-grade code ownership definitions
+# Version: 2.0.0
+# ============================================================
+# 
+# This file defines who is responsible for code in specific
+# parts of the repository. When someone opens a pull request,
+# the corresponding code owners are automatically requested
+# for review.
+#
+# Order is important - the last matching pattern takes precedence.
+#
+# Syntax:
+# pattern        @username1 @username2 @org/team-name
+#
+# ============================================================
+
+# ============================================================
+# DEFAULT OWNERS (Fallback for everything)
+# ============================================================
+*                                           @rahul-sharma-11 @ananya-patel
+
+# ============================================================
+# GLOBAL / ROOT FILES
+# ============================================================
+/.github/                                   @rahul-sharma-11
+/.firebaserc                                @rahul-sharma-11 @vikram-kumar
+/.gitignore                                 @rahul-sharma-11
+/LICENSE                                    @rahul-sharma-11
+/README.md                                  @rahul-sharma-11 @priya-singh
+/firebase.json                              @vikram-kumar
+/package.json                               @ananya-patel @vikram-kumar
+/wrangler.toml                              @ananya-patel
+
+# ============================================================
+# CORE ARCHITECTURE & INFRASTRUCTURE
+# ============================================================
+/src/js/core/                               @ananya-patel @priya-singh
+/src/js/config/                             @ananya-patel @vikram-kumar
+/src/js/app.js                              @ananya-patel @priya-singh
+
+# ============================================================
+# AUTHENTICATION & AUTHORIZATION
+# ============================================================
+/src/js/auth/                               @rahul-sharma-11 @priya-singh
+/src/js/auth/permissions.js                 @rahul-sharma-11 @priya-singh
+/src/js/auth/roles.js                       @rahul-sharma-11 @priya-singh
+
+# ============================================================
+# UI COMPONENTS
+# ============================================================
+/src/js/components/                         @neha-kapoor @ananya-patel
+/src/js/components/modal.js                 @neha-kapoor @ananya-patel
+/src/js/components/kanban.js                @neha-kapoor @ananya-patel
+/src/js/components/dataTable.js             @neha-kapoor @ananya-patel
+/src/js/components/chart.js                 @neha-kapoor @ananya-patel
+/src/js/components/tabs.js                  @neha-kapoor
+/src/js/components/treeView.js              @neha-kapoor
+/src/js/components/richTextEditor.js        @neha-kapoor @priya-singh
+/src/js/components/datePicker.js            @neha-kapoor
+/src/js/components/colorPicker.js           @neha-kapoor
+/src/js/components/commandPalette.js        @neha-kapoor @ananya-patel
+/src/js/components/signaturePad.js          @neha-kapoor
+/src/js/components/stepper.js               @neha-kapoor
+/src/js/components/timeline.js              @neha-kapoor
+/src/js/components/carousel.js              @neha-kapoor
+
+# ============================================================
+# CSS & STYLING
+# ============================================================
+/src/css/                                   @neha-kapoor
+/src/css/main.css                           @neha-kapoor
+/src/css/components.css                     @neha-kapoor
+/src/css/dashboard.css                      @neha-kapoor
+/src/css/auth.css                           @neha-kapoor
+/src/css/landing.css                        @neha-kapoor
+/src/css/mobile.css                         @neha-kapoor
+
+# ============================================================
+# BUSINESS MODULES - CRM
+# ============================================================
+/src/js/modules/leads.js                    @mohan-das @priya-singh
+/src/js/modules/clients.js                  @mohan-das @priya-singh
+/src/js/modules/pipeline.js                 @mohan-das @priya-singh
+/src/js/modules/dashboard.js                @mohan-das @vikram-kumar
+
+# ============================================================
+# BUSINESS MODULES - FINANCE
+# ============================================================
+/src/js/modules/invoices.js                 @vikram-kumar @priya-singh
+/src/js/modules/payments.js                 @vikram-kumar @priya-singh
+/src/js/modules/revenue.js                  @vikram-kumar @mohan-das
+/src/js/modules/retainers.js                @vikram-kumar @priya-singh
+
+# ============================================================
+# BUSINESS MODULES - PROJECTS & TASKS
+# ============================================================
+/src/js/modules/tasks.js                    @priya-singh @vikram-kumar
+/src/js/modules/projects.js                 @priya-singh @vikram-kumar
+
+# ============================================================
+# BUSINESS MODULES - COMMUNICATION
+# ============================================================
+/src/js/modules/whatsapp.js                 @rahul-sharma-11 @ananya-patel
+/src/js/modules/notifications.js            @rahul-sharma-11 @ananya-patel
+
+# ============================================================
+# BUSINESS MODULES - LEARNING & ANALYTICS
+# ============================================================
+/src/js/modules/training.js                 @neha-kapoor @priya-singh
+/src/js/modules/referrals.js                @mohan-das @vikram-kumar
+/src/js/modules/reports.js                  @vikram-kumar @mohan-das
+/src/js/modules/settings.js                 @rahul-sharma-11 @ananya-patel
+
+# ============================================================
+# INTEGRATIONS - COMMUNICATION
+# ============================================================
+/src/js/integrations/whatsapp.js            @rahul-sharma-11 @ananya-patel
+/src/js/integrations/email.js               @rahul-sharma-11 @priya-singh
+/src/js/integrations/sms.js                 @rahul-sharma-11 @priya-singh
+/src/js/integrations/slack.js               @rahul-sharma-11
+
+# ============================================================
+# INTEGRATIONS - PAYMENTS & FINANCE
+# ============================================================
+/src/js/integrations/payment.js             @vikram-kumar @priya-singh
+/src/js/integrations/gst.js                 @vikram-kumar @priya-singh
+
+# ============================================================
+# INTEGRATIONS - CRM & PRODUCTIVITY
+# ============================================================
+/src/js/integrations/calendar.js            @priya-singh
+/src/js/integrations/maps.js                @priya-singh
+/src/js/integrations/social.js              @neha-kapoor
+
+# ============================================================
+# INTEGRATIONS - STORAGE
+# ============================================================
+/src/js/integrations/googleDrive.js         @priya-singh
+/src/js/integrations/dropbox.js             @priya-singh
+
+# ============================================================
+# INTEGRATIONS - THIRD-PARTY CRM/ERP
+# ============================================================
+/src/js/integrations/tally.js               @vikram-kumar @priya-singh
+/src/js/integrations/zoho.js                @vikram-kumar @priya-singh
+/src/js/integrations/hubspot.js             @mohan-das @priya-singh
+/src/js/integrations/salesforce.js          @mohan-das @priya-singh
+/src/js/integrations/zapier.js              @ananya-patel
+
+# ============================================================
+# INTEGRATIONS - WEBHOOKS & API
+# ============================================================
+/src/js/integrations/webhook.js             @ananya-patel @priya-singh
+
+# ============================================================
+# UTILITIES
+# ============================================================
+/src/js/utils/                              @ananya-patel @priya-singh
+/src/js/utils/formatters.js                 @ananya-patel
+/src/js/utils/validators.js                 @ananya-patel
+/src/js/utils/helpers.js                    @ananya-patel
+/src/js/utils/exporters.js                  @vikram-kumar
+/src/js/utils/importers.js                  @vikram-kumar
+/src/js/utils/backup.js                     @ananya-patel
+
+# ============================================================
+# FIREBASE CLOUD FUNCTIONS
+# ============================================================
+/functions/                                 @ananya-patel @priya-singh
+/functions/index.js                         @ananya-patel @priya-singh
+/functions/payment-webhook.js               @vikram-kumar @ananya-patel
+/functions/email-sender.js                  @rahul-sharma-11 @ananya-patel
+/functions/sms-sender.js                    @rahul-sharma-11 @ananya-patel
+/functions/backup-scheduler.js              @ananya-patel
+/functions/data-cleanup.js                  @ananya-patel
+
+# ============================================================
+# DATABASE
+# ============================================================
+/database/                                  @ananya-patel @priya-singh
+/database/schema.sql                        @ananya-patel @priya-singh
+/database/migrations/                       @ananya-patel @priya-singh
+/database/firestore.rules                   @ananya-patel @priya-singh
+/database/firestore.indexes.json            @ananya-patel @priya-singh
+
+# ============================================================
+# PUBLIC PAGES
+# ============================================================
+/public/                                    @neha-kapoor @rahul-sharma-11
+/public/index.html                          @neha-kapoor @rahul-sharma-11
+/public/terms.html                          @rahul-sharma-11
+/public/privacy.html                        @rahul-sharma-11
+/public/refund.html                         @vikram-kumar @rahul-sharma-11
+/public/security.html                       @rahul-sharma-11 @ananya-patel
+
+# ============================================================
+# INTERNAL PAGES
+# ============================================================
+/src/pages/                                 @neha-kapoor @ananya-patel
+/src/pages/dashboard.html                   @neha-kapoor @vikram-kumar
+/src/pages/api-docs.html                    @ananya-patel
+/src/pages/changelog.html                   @rahul-sharma-11
+/src/pages/support.html                     @rahul-sharma-11
+
+# ============================================================
+# SCRIPTS & AUTOMATION
+# ============================================================
+/scripts/                                   @ananya-patel @priya-singh
+/scripts/deploy-production.sh               @ananya-patel @priya-singh
+/scripts/deploy-staging.sh                  @ananya-patel @priya-singh
+/scripts/build.sh                           @ananya-patel
+/scripts/seed-data.js                       @priya-singh
+
+# ============================================================
+# TESTS
+# ============================================================
+/tests/                                     @priya-singh @ananya-patel
+/tests/unit/                                @priya-singh
+/tests/e2e/                                 @priya-singh @neha-kapoor
+
+# ============================================================
+# DOCUMENTATION
+# ============================================================
+/docs/                                      @rahul-sharma-11 @priya-singh
+/docs/architecture.md                       @ananya-patel @priya-singh
+/docs/api-reference.md                      @ananya-patel
+/docs/user-guide.md                         @rahul-sharma-11 @neha-kapoor
+/docs/security-policy.md                    @rahul-sharma-11 @ananya-patel
+/docs/contributing.md                       @rahul-sharma-11
+
+# ============================================================
+# CLOUDFLARE WORKERS
+# ============================================================
+/workers/                                   @ananya-patel
+/11avatar-api/                              @ananya-patel
+
+# ============================================================
+# CONFIGURATION FILES
+# ============================================================
+/config/                                    @rahul-sharma-11 @ananya-patel
+/config/security.xml                        @rahul-sharma-11 @ananya-patel
+
+# ============================================================
+# TEAM MEMBERS REFERENCE:
+# ============================================================
+# @rahul-sharma-11    - Founder & CEO (Product Vision, Legal, Security)
+# @ananya-patel       - CTO (Architecture, Core, API, Cloud, DevOps)
+# @vikram-kumar       - Head of Product (Finance, Payments, GST, Analytics)
+# @priya-singh        - VP Engineering (Backend, Database, Functions, Tests)
+# @neha-kapoor        - Head of Design (UI/UX, Components, CSS, Pages)
+# @mohan-das          - Head of Sales (CRM, Leads, Pipeline, Deals)

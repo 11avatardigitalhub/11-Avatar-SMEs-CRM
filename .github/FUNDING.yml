@@ -1,0 +1,147 @@
+# ============================================================
+# 11 AVATAR DIGITAL HUB - GitHub Sponsors Configuration
+# Enterprise-grade funding & sponsorship definitions
+# Version: 2.0.0
+# ============================================================
+
+# ============================================================
+# GITHUB SPONSORS
+# ============================================================
+github:
+  - 11avatardigitalhub
+  - rahul-sharma-11
+  - ananya-patel
+
+# ============================================================
+# CUSTOM FUNDING LINKS
+# These links appear on the repository's sponsor button
+# ============================================================
+custom:
+  # One-time contributions
+  - label: "💳 One-Time Donation (Razorpay)"
+    url: "https://rzp.io/l/11avatar-donate"
+    icon: "heart"
+    
+  - label: "☕ Buy Us a Coffee"
+    url: "https://www.buymeacoffee.com/11avatar"
+    icon: "coffee"
+
+  # Recurring sponsorship
+  - label: "🔄 Monthly Sponsorship (GitHub)"
+    url: "https://github.com/sponsors/11avatardigitalhub"
+    icon: "sponsor"
+
+  # UPI Direct (Indian contributors)
+  - label: "📱 UPI Payment (India)"
+    url: "https://pay.upi.com/11avatardigitalhub@upi"
+    icon: "mobile"
+
+  # Enterprise licensing
+  - label: "🏢 Enterprise License"
+    url: "https://11avatardigitalhub.cloud/pricing"
+    icon: "briefcase"
+
+  # Partnership inquiries
+  - label: "🤝 Become a Partner"
+    url: "https://11avatardigitalhub.cloud/partners"
+    icon: "handshake"
+
+  # Community support
+  - label: "💬 Join Community Discord"
+    url: "https://discord.gg/11avatardigitalhub"
+    icon: "comment"
+
+  # Documentation & resources
+  - label: "📚 Documentation"
+    url: "https://docs.11avatardigitalhub.cloud"
+    icon: "book"
+
+  # Social media
+  - label: "🐦 Follow on Twitter/X"
+    url: "https://twitter.com/11avatardigital"
+    icon: "twitter"
+
+  - label: "💼 Follow on LinkedIn"
+    url: "https://linkedin.com/company/11avatardigitalhub"
+    icon: "linkedin"
+
+  - label: "📺 YouTube Channel"
+    url: "https://youtube.com/@11avatardigitalhub"
+    icon: "youtube"
+
+  - label: "📸 Instagram"
+    url: "https://instagram.com/11avatardigitalhub"
+    icon: "instagram"
+
+# ============================================================
+# SPONSORSHIP TIERS (Displayed on GitHub Sponsors Page)
+# ============================================================
+# Note: Tiers are managed through GitHub Sponsors dashboard
+# This section documents the tier structure for reference
+#
+# Tier Structure:
+# ┌─────────────────────────────────────────────────────────────┐
+# │ 🌟 Supporter          - $5/month                            │
+# │   • Sponsor badge on your profile                           │
+# │   • Early access to beta features                           │
+# │   • Priority support queue                                  │
+# ├─────────────────────────────────────────────────────────────┤
+# │ ⭐ Bronze Sponsor     - $25/month                           │
+# │   • All Supporter benefits                                  │
+# │   • Name in README sponsors section                         │
+# │   • Monthly newsletter with roadmap updates                 │
+# ├─────────────────────────────────────────────────────────────┤
+# │ 💫 Silver Sponsor     - $100/month                          │
+# │   • All Bronze benefits                                     │
+# │   • Logo on project website                                 │
+# │   • Quarterly strategy call with team                       │
+# ├─────────────────────────────────────────────────────────────┤
+# │ 👑 Gold Sponsor       - $500/month                          │
+# │   • All Silver benefits                                     │
+# │   • Featured case study on website                          │
+# │   • Dedicated support channel (Slack)                       │
+# │   • Priority feature requests                               │
+# ├─────────────────────────────────────────────────────────────┤
+# │ 💎 Platinum Sponsor   - $2,000/month                        │
+# │   • All Gold benefits                                       │
+# │   • Co-branded marketing opportunities                      │
+# │   • Custom integration development                          │
+# │   • Monthly executive briefing                              │
+# │   • On-premise deployment support                           │
+# └─────────────────────────────────────────────────────────────┘
+
+# ============================================================
+# COMMUNITY SUPPORT GUIDELINES
+# ============================================================
+# All sponsors receive:
+# - Public acknowledgment in our README and documentation
+# - Priority response to issues and feature requests
+# - Direct line to the development team
+# - Input on product roadmap priorities
+
+# ============================================================
+# INDIAN TAX INFORMATION
+# ============================================================
+# For Indian donors:
+# - Donations are processed via Razorpay (UPI, Cards, NetBanking)
+# - GST invoice provided for donations above ₹5,000
+# - 80G tax exemption certificate available upon request
+# - PAN: AABCG2194N | GSTIN: 27AABCG2194N1Z1
+
+# ============================================================
+# OPEN SOURCE COMMITMENT
+# ============================================================
+# 11 Avatar Digital Hub is committed to open source.
+# Your sponsorship helps us:
+# - Maintain and improve the open-source codebase
+# - Provide free access to small businesses and startups
+# - Create educational content and documentation
+# - Host community events and hackathons
+# - Offer internships to aspiring developers
+
+# ============================================================
+# CONTACT FOR SPONSORSHIP INQUIRIES
+# ============================================================
+# Email: sponsors@11avatardigitalhub.cloud
+# Phone: +91 98765 43210
+# Address: 11 Avatar Digital Hub, Mumbai, Maharashtra, India

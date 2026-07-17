@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="internal">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="description" content="Appointments - 11 Avatar Digital Hub. Schedule and manage your meetings and appointments." />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <title>Appointments - 11 Avatar Digital Hub | Master Revenue CRM</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../src/css/main.css" />
+    
+    <style>
+        :root {
+            --card-3d-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 20px rgba(0,0,0,0.04);
+            --card-3d-hover: 0 12px 30px rgba(0,0,0,0.07), 0 20px 50px rgba(0,0,0,0.05);
+            --transition-3d: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #F8F6F0 0%, #F3F1EB 30%, #F0EDE5 60%, #F5F3ED 100%);
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed; top: -300px; right: -200px;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(139,92,246,0.03) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        
+        .appointments-container {
+            position: relative; z-index: 1;
+            padding: 32px 24px; max-width: 1200px; margin: 0 auto;
+        }
+        
+        .page-header-3d {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px; margin-bottom: 28px;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8F6FF 50%, #F5F3FF 100%);
+            border: 1px solid rgba(139,92,246,0.12);
+            border-radius: 20px;
+            box-shadow: var(--card-3d-shadow);
+            transition: var(--transition-3d);
+        }
+        .page-header-3d:hover { box-shadow: var(--card-3d-hover); transform: translateY(-2px); }
+        .page-title-wrap h1 { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; color: #0A0A0A; margin-bottom: 4px; }
+        .page-title-wrap p { color: #888; font-size: 0.9rem; margin: 0; }
+        
+        .stats-row-3d {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px;
+        }
+        @media(min-width: 768px) { .stats-row-3d { grid-template-columns: repeat(4, 1fr); } }
+        
+        .stat-mini-3d {
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px; padding: 18px 20px;
+            cursor: pointer; transition: var(--transition-3d);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .stat-mini-3d:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .stat-mini-value { font-size: 1.5rem; font-weight: 800; color: #0A0A0A; font-family: 'Poppins', sans-serif; }
+        .stat-mini-label { font-size: 0.75rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+        
+        /* Timeline */
+        .timeline-3d {
+            position: relative; padding-left: 40px;
+        }
+        .timeline-3d::before {
+            content: ''; position: absolute; left: 18px; top: 0; bottom: 0;
+            width: 3px; background: linear-gradient(180deg, #8B5CF6, #D4AF37, #10B981);
+            border-radius: 3px;
+        }
+        
+        .appointment-card-3d {
+            position: relative; margin-bottom: 20px;
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 16px; padding: 20px 24px;
+            cursor: pointer; transition: var(--transition-3d);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            transform-style: preserve-3d;
+        }
+        .appointment-card-3d:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            border-color: rgba(139,92,246,0.2);
+        }
+        .appointment-card-3d:active { transform: scale(0.98); }
+        
+        .timeline-dot-3d {
+            position: absolute; left: -30px; top: 22px;
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: var(--transition-bounce);
+        }
+        .appointment-card-3d:hover .timeline-dot-3d { transform: scale(1.3); }
+        .dot-upcoming { background: #8B5CF6; }
+        .dot-today { background: #F59E0B; }
+        .dot-completed { background: #10B981; }
+        .dot-cancelled { background: #EF4444; }
+        
+        .appointment-header-3d {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 12px; margin-bottom: 10px;
+        }
+        .appointment-time {
+            font-weight: 700; font-size: 1rem; color: #8B5CF6;
+            font-family: 'Poppins', sans-serif;
+        }
+        .appointment-title { font-weight: 700; font-size: 1rem; color: #333; }
+        .appointment-with { font-size: 0.85rem; color: #888; }
+        .appointment-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; color: #999; margin-top: 6px; }
+        
+        .appointment-status-badge {
+            display: inline-flex; padding: 4px 12px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 600;
+        }
+        .badge-upcoming { background: rgba(139,92,246,0.1); color: #7C3AED; }
+        .badge-today { background: rgba(245,158,11,0.1); color: #D97706; }
+        .badge-completed { background: rgba(16,185,129,0.1); color: #059669; }
+        .badge-cancelled { background: rgba(239,68,68,0.1); color: #DC2626; }
+        
+        .appointment-actions-3d { display: flex; gap: 8px; margin-top: 12px; }
+        .action-btn-3d {
+            width: 36px; height: 36px; border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.08); background: #FAFAFA;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+        .action-btn-3d:hover { transform: scale(1.1); border-color: #8B5CF6; background: #F8F6FF; }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            z-index: 300; display: flex; align-items: center; justify-content: center;
+            padding: 20px; animation: fadeIn 0.2s ease;
+        }
+        .modal-3d {
+            background: #FFFFFF; border-radius: 20px;
+            width: 100%; max-width: 500px; max-height: 85vh;
+            overflow-y: auto; padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        
+        .form-group-3d { margin-bottom: 18px; }
+        .form-group-3d label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: #333; }
+        .form-group-3d input, .form-group-3d select {
+            width: 100%; padding: 12px 16px;
+            border: 1.5px solid rgba(0,0,0,0.1); border-radius: 12px;
+            font-size: 0.95rem; min-height: 48px;
+            background: #FAFAFA; transition: var(--transition-3d);
+        }
+        .form-group-3d input:focus, .form-group-3d select:focus {
+            border-color: #8B5CF6; box-shadow: 0 0 0 3px rgba(139,92,246,0.08);
+            background: #FFF; outline: none;
+        }
+        .form-row-3d { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media(min-width: 500px) { .form-row-3d { grid-template-columns: 1fr 1fr; } }
+        
+        @media(max-width: 768px) {
+            .appointments-container { padding: 16px 12px; }
+            .page-header-3d { padding: 20px; flex-direction: column; }
+            .timeline-3d { padding-left: 30px; }
+            .timeline-dot-3d { left: -22px; width: 14px; height: 14px; }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+        <a href="/" class="header-brand">
+            <svg width="36" height="36" viewBox="0 0 36 36"><rect width="36" height="36" rx="10" fill="#D4AF37"/><text x="18" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter">11A</text></svg>
+            <span style="color:#B8960F">11 Avatar Hub</span>
+        </a>
+        <nav class="header-nav">
+            <a href="pages/dashboard.html" class="header-link">Dashboard</a>
+            <a href="pages/leads.html" class="header-link">Leads</a>
+            <a href="#/appointments" class="header-link active">Appointments</a>
+        </nav>
+        <div class="header-actions">
+            <button class="header-btn">🔔</button><button class="header-btn">👤</button>
+            <button class="header-btn header-toggle">☰</button>
+        </div>
+    </header>
+    
+    <nav class="submenu" id="submenu-nav">
+        <a href="#today" class="submenu-btn active">Today</a>
+        <a href="#upcoming" class="submenu-btn">Upcoming</a>
+        <a href="#completed" class="submenu-btn">Completed</a>
+        <a href="#schedule" class="submenu-btn">Schedule New</a>
+    </nav>
+    
+    <main class="main-content">
+        <div class="appointments-container">
+            
+            <div class="page-header-3d">
+                <div class="page-title-wrap">
+                    <h1>📅 Appointments</h1>
+                    <p>Schedule and manage your meetings and appointments</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAppointmentModal()">+ Schedule New</button>
+            </div>
+            
+            <div class="stats-row-3d" id="apt-stats">
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-total">0</div><div class="stat-mini-label">Total</div></div>
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-today">0</div><div class="stat-mini-label">Today</div></div>
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-upcoming">0</div><div class="stat-mini-label">Upcoming</div></div>
+                <div class="stat-mini-3d"><div class="stat-mini-value" id="stat-completed">0</div><div class="stat-mini-label">Completed</div></div>
+            </div>
+            
+            <div class="timeline-3d" id="appointments-timeline">
+                <div style="text-align:center;padding:60px;color:#999"><div style="font-size:5rem">📅</div><h3>No appointments</h3></div>
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="apt-modal" style="display:none" onclick="if(event.target===this)closeAptModal()">
+        <div class="modal-3d">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+                <h2 id="apt-modal-title">Schedule Appointment</h2>
+                <button onclick="closeAptModal()" style="width:36px;height:36px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:1.2rem;cursor:pointer">✕</button>
+            </div>
+            <form id="apt-form" onsubmit="saveAppointment(event)">
+                <input type="hidden" id="apt-edit-id" />
+                <div class="form-group-3d"><label>Title *</label><input id="apt-title" required placeholder="e.g. Discovery Call" /></div>
+                <div class="form-group-3d"><label>With *</label><input id="apt-with" required placeholder="Client or Lead name" /></div>
+                <div class="form-row-3d">
+                    <div class="form-group-3d"><label>Date *</label><input id="apt-date" type="date" required /></div>
+                    <div class="form-group-3d"><label>Time *</label><input id="apt-time" type="time" required /></div>
+                </div>
+                <div class="form-group-3d"><label>Notes</label><input id="apt-notes" placeholder="Meeting agenda..." /></div>
+                <div style="display:flex;gap:12px;justify-content:flex-end"><button type="button" class="btn btn-outline" onclick="closeAptModal()">Cancel</button><button type="submit" class="btn btn-primary">💾 Save</button></div>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="footer"><div class="container"><div class="footer-bottom"><span>© 2026 11 Avatar Digital Hub</span><span>🇮🇳 Made with ❤️ in India</span></div></div></footer>
+    
+    <script src="../../src/js/config/constants.js"></script>
+    <script src="../../src/js/config/firebase.js"></script>
+    <script src="../../src/js/core/state.js"></script>
+    
+    <script>
+        let appointments = [];
+        function loadAppointments() {
+            appointments = window.StateManager?.get('data.appointments') || [];
+            if(!appointments.length){ try{ appointments=JSON.parse(localStorage.getItem('mrcrm_state')||'{}')?.appointments||[] }catch(e){} }
+            renderAppointments(); updateStats();
+        }
+        function updateStats() {
+            const today = new Date().toISOString().slice(0,10);
+            document.getElementById('stat-total').textContent=appointments.length;
+            document.getElementById('stat-today').textContent=appointments.filter(a=>a.date===today).length;
+            document.getElementById('stat-upcoming').textContent=appointments.filter(a=>a.date>today).length;
+            document.getElementById('stat-completed').textContent=appointments.filter(a=>a.status==='Completed').length;
+        }
+        function renderAppointments() {
+            const timeline=document.getElementById('appointments-timeline');
+            if(!appointments.length){ timeline.innerHTML=`<div style="text-align:center;padding:60px;color:#999"><div style="font-size:5rem">📅</div><h3>No appointments</h3></div>`; return; }
+            const today=new Date().toISOString().slice(0,10);
+            const sc={'Upcoming':'dot-upcoming','Today':'dot-today','Completed':'dot-completed','Cancelled':'dot-cancelled'};
+            const bc={'Upcoming':'badge-upcoming','Today':'badge-today','Completed':'badge-completed','Cancelled':'badge-cancelled'};
+            const sorted=[...appointments].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+            timeline.innerHTML=sorted.map(a=>{
+                let status=a.status||(a.date===today?'Today':a.date>today?'Upcoming':'Completed');
+                return`<div class="appointment-card-3d" onclick="editAppointment('${a.id}')">
+                    <div class="timeline-dot-3d ${sc[status]||'dot-upcoming'}"></div>
+                    <div class="appointment-header-3d">
+                        <div><div class="appointment-time">${a.date||'?'} ${a.time||''}</div><div class="appointment-title">${a.title||'Untitled'}</div></div>
+                        <span class="appointment-status-badge ${bc[status]||'badge-upcoming'}">${status}</span>
+                    </div>
+                    <div class="appointment-with">👤 ${a.with||'No name'}</div>
+                    ${a.notes?`<div class="appointment-meta">📝 ${a.notes}</div>`:''}
+                    <div class="appointment-actions-3d">
+                        <button class="action-btn-3d" onclick="event.stopPropagation();editAppointment('${a.id}')">✏️</button>
+                        <button class="action-btn-3d" onclick="event.stopPropagation();completeApt('${a.id}')">✅</button>
+                        <button class="action-btn-3d" onclick="event.stopPropagation();deleteApt('${a.id}')" style="color:#EF4444">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        function openAppointmentModal(id) {
+            document.getElementById('apt-modal').style.display='flex';
+            if(id){ document.getElementById('apt-modal-title').textContent='Edit Appointment';
+                const a=appointments.find(x=>x.id===id); if(a){ document.getElementById('apt-edit-id').value=a.id; document.getElementById('apt-title').value=a.title||''; document.getElementById('apt-with').value=a.with||''; document.getElementById('apt-date').value=a.date||''; document.getElementById('apt-time').value=a.time||''; document.getElementById('apt-notes').value=a.notes||''; }
+            } else { document.getElementById('apt-modal-title').textContent='Schedule Appointment'; document.getElementById('apt-form').reset(); document.getElementById('apt-edit-id').value=''; document.getElementById('apt-date').value=new Date().toISOString().slice(0,10); }
+        }
+        function closeAptModal(){document.getElementById('apt-modal').style.display='none'}
+        function editAppointment(id){openAppointmentModal(id)}
+        function saveAppointment(e){
+            e.preventDefault();
+            const editId=document.getElementById('apt-edit-id').value;
+            const data={id:editId||('APT'+Date.now().toString(36).toUpperCase()),title:document.getElementById('apt-title').value.trim(),with:document.getElementById('apt-with').value.trim(),date:document.getElementById('apt-date').value,time:document.getElementById('apt-time').value,notes:document.getElementById('apt-notes').value.trim(),createdAt:editId?(appointments.find(a=>a.id===editId)?.createdAt||new Date().toISOString()):new Date().toISOString()};
+            if(!data.title||!data.with)return;
+            if(editId){const i=appointments.findIndex(a=>a.id===editId);if(i>-1)appointments[i]=data}else{appointments.push(data)}
+            saveApts();closeAptModal();renderAppointments();updateStats();
+        }
+        function completeApt(id){const a=appointments.find(x=>x.id===id);if(a){a.status='Completed';saveApts();renderAppointments();updateStats()}}
+        function deleteApt(id){if(!confirm('Delete?'))return;appointments=appointments.filter(a=>a.id!==id);saveApts();renderAppointments();updateStats()}
+        function saveApts(){window.StateManager?.set('data.appointments',appointments);try{const s=JSON.parse(localStorage.getItem('mrcrm_state')||'{}');s.appointments=appointments;localStorage.setItem('mrcrm_state',JSON.stringify(s))}catch(e){}}
+        document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('loaded');loadAppointments();console.log('✅ Appointments ready')});
+    </script>
+</body>
+</html>
+
+

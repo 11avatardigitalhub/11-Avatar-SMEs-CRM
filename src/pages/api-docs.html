@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="11 Avatar Digital Hub - API Documentation & Developer Reference">
+    <meta name="theme-color" content="#D4AF37">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>API Documentation - 11 Avatar Digital Hub</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #E8C95A;
+            --gold-dark: #B8960F;
+            --bg: #F8F6F0;
+            --bg-card: #FFFFFF;
+            --text: #0A0A0A;
+            --text-secondary: #333333;
+            --text-muted: #666666;
+            --border: rgba(0,0,0,0.05);
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-mono: 'Fira Code', 'Consolas', 'Monaco', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 15px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            background: var(--gold);
+            color: #000;
+            padding: 12px 20px;
+            z-index: 1000;
+            border-radius: 0 0 8px 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: top 0.3s;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--gold);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .header-logo img { height: 36px; }
+        .header-logo span {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--gold-dark);
+        }
+
+        .header-nav { display: flex; gap: 8px; }
+        .header-nav a {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .header-nav a:hover, .header-nav a.active {
+            background: var(--gold);
+            color: #000;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 24px 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .sidebar-section {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        .sidebar-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 2px;
+        }
+        .sidebar-link:hover {
+            background: rgba(212, 175, 55, 0.08);
+            color: var(--gold-dark);
+        }
+        .sidebar-link.active {
+            background: var(--gold);
+            color: #000;
+            font-weight: 600;
+        }
+        .sidebar-link .method-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            min-width: 48px;
+            text-align: center;
+        }
+        .method-get { background: #10B98120; color: #059669; }
+        .method-post { background: #3B82F620; color: #2563EB; }
+        .method-put { background: #F59E0B20; color: #D97706; }
+        .method-delete { background: #DC262620; color: #DC2626; }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 32px 40px;
+            max-width: 900px;
+        }
+
+        .content h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            padding-top: 24px;
+            border-top: 2px solid var(--border);
+        }
+        .content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: var(--text-secondary);
+        }
+        .content p {
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        /* Endpoint Card */
+        .endpoint-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .endpoint-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
+        }
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .endpoint-method {
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 6px;
+            min-width: 56px;
+            text-align: center;
+        }
+        .endpoint-path {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            flex: 1;
+        }
+        .endpoint-description {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        .endpoint-body {
+            padding: 16px 20px;
+            display: none;
+        }
+        .endpoint-body.open { display: block; }
+        .endpoint-body h4 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin: 16px 0 8px;
+        }
+        .endpoint-body h4:first-child { margin-top: 0; }
+        .endpoint-body p { font-size: 14px; margin-bottom: 4px; }
+        .endpoint-body strong { color: var(--text); }
+
+        /* Code Block */
+        pre {
+            background: #1E1E1E;
+            color: #D4D4D4;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 12px 0;
+            position: relative;
+        }
+        pre .key { color: #9CDCFE; }
+        pre .string { color: #CE9178; }
+        pre .number { color: #B5CEA8; }
+        pre .boolean { color: #569CD6; }
+        pre .null { color: #569CD6; }
+        pre .comment { color: #6A9955; }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #999;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+        /* Status Codes */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+        .status-table th, .status-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        .status-table th {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-code {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .status-2xx { background: #10B98115; color: #059669; }
+        .status-4xx { background: #F59E0B15; color: #D97706; }
+        .status-5xx { background: #DC262615; color: #DC2626; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .tab {
+            padding: 10px 20px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: var(--transition);
+        }
+        .tab:hover { color: var(--text); }
+        .tab.active {
+            color: var(--gold-dark);
+            border-bottom-color: var(--gold);
+        }
+
+        /* Search */
+        .search-box {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px 14px 48px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-card);
+            transition: var(--transition);
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Auth note */
+        .auth-note {
+            background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05));
+            border: 1px solid var(--gold);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin: 20px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .auth-note i { color: var(--gold-dark); font-size: 20px; margin-top: 2px; }
+        .auth-note div strong { display: block; margin-bottom: 4px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar { width: 240px; min-width: 240px; }
+            .content { padding: 24px; }
+        }
+        @media (max-width: 768px) {
+            .layout { flex-direction: column; }
+            .sidebar {
+                width: 100%; min-width: 100%; height: auto;
+                position: relative; top: 0; border-right: none;
+                border-bottom: 1px solid var(--border); padding: 16px;
+            }
+            .content { padding: 20px 16px; }
+            .endpoint-description { display: none; }
+            pre { font-size: 12px; padding: 12px; }
+        }
+        @media (max-width: 480px) {
+            .header { padding: 0 12px; }
+            .header-logo span { font-size: 16px; }
+            .content h1 { font-size: 24px; }
+            .content h2 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
+            <img src="/assets/logo.png" alt="" width="36" height="36" loading="lazy">
+            <span>11 Avatar API Docs</span>
+        </a>
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/api-docs.html" class="active">API Docs</a>
+            <a href="/support.html">Support</a>
+        </nav>
+    </header>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" role="navigation" aria-label="API navigation">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <a href="#introduction" class="sidebar-link active">
+                    <i class="fas fa-book-open"></i> Introduction
+                </a>
+                <a href="#authentication" class="sidebar-link">
+                    <i class="fas fa-key"></i> Authentication
+                </a>
+                <a href="#errors" class="sidebar-link">
+                    <i class="fas fa-exclamation-triangle"></i> Error Codes
+                </a>
+                <a href="#rate-limits" class="sidebar-link">
+                    <i class="fas fa-tachometer-alt"></i> Rate Limits
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core APIs</div>
+                <a href="#auth" class="sidebar-link"><span class="method-badge method-post">POST</span> Auth</a>
+                <a href="#users" class="sidebar-link"><span class="method-badge method-get">GET</span> Users</a>
+                <a href="#clients" class="sidebar-link"><span class="method-badge method-get">GET</span> Clients</a>
+                <a href="#leads" class="sidebar-link"><span class="method-badge method-get">GET</span> Leads</a>
+                <a href="#deals" class="sidebar-link"><span class="method-badge method-get">GET</span> Deals</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Finance APIs</div>
+                <a href="#invoices" class="sidebar-link"><span class="method-badge method-get">GET</span> Invoices</a>
+                <a href="#payments" class="sidebar-link"><span class="method-badge method-get">GET</span> Payments</a>
+                <a href="#retainers" class="sidebar-link"><span class="method-badge method-get">GET</span> Retainers</a>
+                <a href="#gst" class="sidebar-link"><span class="method-badge method-post">POST</span> GST</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Communication</div>
+                <a href="#whatsapp" class="sidebar-link"><span class="method-badge method-post">POST</span> WhatsApp</a>
+                <a href="#email" class="sidebar-link"><span class="method-badge method-post">POST</span> Email</a>
+                <a href="#sms" class="sidebar-link"><span class="method-badge method-post">POST</span> SMS</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <a href="#webhooks" class="sidebar-link"><i class="fas fa-broadcast-tower"></i> Webhooks</a>
+                <a href="#changelog" class="sidebar-link"><i class="fas fa-history"></i> Changelog</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content" id="main-content" role="main">
+            <h1>API Documentation</h1>
+            <p>Complete REST API reference for 11 Avatar Digital Hub CRM. Base URL: <code>https://11avatar-api.11avatardigitalhub.workers.dev</code></p>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="api-search" placeholder="Search endpoints..." aria-label="Search API endpoints" oninput="searchAPI()">
+            </div>
+
+            <!-- Introduction -->
+            <section id="introduction">
+                <h2>Introduction</h2>
+                <p>The 11 Avatar Digital Hub API provides programmatic access to all CRM features including leads, clients, deals, invoices, payments, tasks, projects, WhatsApp messaging, email, SMS, and more.</p>
+                <p>All API requests must be made over <strong>HTTPS</strong>. The API follows RESTful conventions and uses <strong>JSON</strong> for request and response bodies.</p>
+                
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/health</span>
+                        <span class="endpoint-description">Health Check</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Check API health status. No authentication required.</p>
+                        <h4>Response 200</h4>
+                        <pre>{
+  <span class="key">"status"</span>: <span class="string">"healthy"</span>,
+  <span class="key">"version"</span>: <span class="string">"2.0.0"</span>,
+  <span class="key">"timestamp"</span>: <span class="string">"2026-07-16T10:30:00.000Z"</span>,
+  <span class="key">"uptime"</span>: <span class="number">86400</span>
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Authentication -->
+            <section id="authentication">
+                <h2>Authentication</h2>
+                <p>All API requests (except health check) require authentication via <strong>Bearer Token</strong> (JWT) or <strong>API Key</strong>.</p>
+                
+                <div class="auth-note">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Authentication Methods</strong>
+                        <p>Use Firebase ID Token for user-based access or API Key for server-to-server integration.</p>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/auth/login</span>
+                        <span class="endpoint-description">User Login</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Authenticate user and receive JWT token.</p>
+                        <h4>Request Body</h4>
+                        <pre>{
+  <span class="key">"email"</span>: <span class="string">"user@example.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"your-password"</span>
+}</pre>
+                        <h4>Response 200</h4>
+                        <pre>{
+  <span class="key">"success"</span>: <span class="boolean">true</span>,
+  <span class="key">"token"</span>: <span class="string">"eyJhbGciOiJSUzI1NiIs..."</span>,
+  <span class="key">"expiresIn"</span>: <span class="number">3600</span>,
+  <span class="key">"user"</span>: {
+    <span class="key">"id"</span>: <span class="string">"uuid"</span>,
+    <span class="key">"email"</span>: <span class="string">"user@example.com"</span>,
+    <span class="key">"role"</span>: <span class="string">"admin"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/auth/api-key</span>
+                        <span class="endpoint-description">Generate API Key</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Generate API key for server-to-server access. Requires admin role.</p>
+                        <h4>Request Body</h4>
+                        <pre>{
+  <span class="key">"name"</span>: <span class="string">"My Integration"</span>,
+  <span class="key">"permissions"</span>: [<span class="string">"read:clients"</span>, <span class="string">"write:invoices"</span>]
+}</pre>
+                        <h4>Response 201</h4>
+                        <pre>{
+  <span class="key">"success"</span>: <span class="boolean">true</span>,
+  <span class="key">"apiKey"</span>: <span class="string">"adk_live_8f7a9b3c..."</span>,
+  <span class="key">"prefix"</span>: <span class="string">"adk_live"</span>,
+  <span class="key">"expiresAt"</span>: <span class="string">"2027-07-16T10:30:00.000Z"</span>
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients API -->
+            <section id="clients">
+                <h2>Clients API</h2>
+                
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-get">GET</span>
+                        <span class="endpoint-path">/api/clients</span>
+                        <span class="endpoint-description">List Clients</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Retrieve paginated list of clients with filtering and sorting.</p>
+                        <h4>Query Parameters</h4>
+                        <table class="status-table">
+                            <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+                            <tr><td>page</td><td>integer</td><td>1</td><td>Page number</td></tr>
+                            <tr><td>limit</td><td>integer</td><td>25</td><td>Items per page (max 100)</td></tr>
+                            <tr><td>status</td><td>string</td><td>-</td><td>Filter by status</td></tr>
+                            <tr><td>search</td><td>string</td><td>-</td><td>Search name/email/phone</td></tr>
+                            <tr><td>sortBy</td><td>string</td><td>createdAt</td><td>Sort field</td></tr>
+                            <tr><td>sortOrder</td><td>string</td><td>desc</td><td>asc or desc</td></tr>
+                        </table>
+                        <h4>Response 200</h4>
+                        <pre>{
+  <span class="key">"success"</span>: <span class="boolean">true</span>,
+  <span class="key">"clients"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="string">"uuid"</span>,
+      <span class="key">"companyName"</span>: <span class="string">"Acme Corp"</span>,
+      <span class="key">"email"</span>: <span class="string">"contact@acme.com"</span>,
+      <span class="key">"phone"</span>: <span class="string">"9876543210"</span>,
+      <span class="key">"status"</span>: <span class="string">"active"</span>,
+      <span class="key">"createdAt"</span>: <span class="string">"2026-07-16T10:30:00.000Z"</span>
+    }
+  ],
+  <span class="key">"pagination"</span>: {
+    <span class="key">"page"</span>: <span class="number">1</span>,
+    <span class="key">"limit"</span>: <span class="number">25</span>,
+    <span class="key">"total"</span>: <span class="number">150</span>,
+    <span class="key">"totalPages"</span>: <span class="number">6</span>
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/clients</span>
+                        <span class="endpoint-description">Create Client</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Create a new client record.</p>
+                        <h4>Request Body</h4>
+                        <pre>{
+  <span class="key">"companyName"</span>: <span class="string">"New Client Ltd"</span>,
+  <span class="key">"email"</span>: <span class="string">"info@newclient.com"</span>,
+  <span class="key">"phone"</span>: <span class="string">"9876543210"</span>,
+  <span class="key">"gstin"</span>: <span class="string">"27AABCG2194N1Z1"</span>,
+  <span class="key">"industry"</span>: <span class="string">"Technology"</span>,
+  <span class="key">"address"</span>: {
+    <span class="key">"line1"</span>: <span class="string">"123 Business Park"</span>,
+    <span class="key">"city"</span>: <span class="string">"Mumbai"</span>,
+    <span class="key">"state"</span>: <span class="string">"Maharashtra"</span>,
+    <span class="key">"pincode"</span>: <span class="string">"400001"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Invoices API -->
+            <section id="invoices">
+                <h2>Invoices API</h2>
+                
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/invoices</span>
+                        <span class="endpoint-description">Create Invoice</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Create GST-compliant invoice with line items.</p>
+                        <h4>Request Body</h4>
+                        <pre>{
+  <span class="key">"clientId"</span>: <span class="string">"uuid"</span>,
+  <span class="key">"invoiceType"</span>: <span class="string">"B2B"</span>,
+  <span class="key">"invoiceDate"</span>: <span class="string">"2026-07-16"</span>,
+  <span class="key">"dueDate"</span>: <span class="string">"2026-08-15"</span>,
+  <span class="key">"items"</span>: [
+    {
+      <span class="key">"description"</span>: <span class="string">"Web Development Services"</span>,
+      <span class="key">"hsnSac"</span>: <span class="string">"998313"</span>,
+      <span class="key">"quantity"</span>: <span class="number">1</span>,
+      <span class="key">"rate"</span>: <span class="number">50000</span>,
+      <span class="key">"gstRate"</span>: <span class="string">"18%"</span>
+    }
+  ],
+  <span class="key">"notes"</span>: <span class="string">"Payment due within 30 days"</span>
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WhatsApp API -->
+            <section id="whatsapp">
+                <h2>WhatsApp API</h2>
+                
+                <div class="endpoint-card">
+                    <div class="endpoint-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="endpoint-method method-post">POST</span>
+                        <span class="endpoint-path">/api/whatsapp/send</span>
+                        <span class="endpoint-description">Send WhatsApp Message</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p>Send WhatsApp message via CloudWA integration.</p>
+                        <h4>Request Body</h4>
+                        <pre>{
+  <span class="key">"to"</span>: <span class="string">"919876543210"</span>,
+  <span class="key">"type"</span>: <span class="string">"template"</span>,
+  <span class="key">"templateName"</span>: <span class="string">"payment_reminder"</span>,
+  <span class="key">"templateData"</span>: {
+    <span class="key">"name"</span>: <span class="string">"John"</span>,
+    <span class="key">"amount"</span>: <span class="string">"₹50,000"</span>,
+    <span class="key">"dueDate"</span>: <span class="string">"15 Aug 2026"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Codes -->
+            <section id="errors">
+                <h2>Error Codes</h2>
+                <table class="status-table">
+                    <tr><th>Code</th><th>Description</th></tr>
+                    <tr><td><span class="status-code status-2xx">200</span></td><td>Success</td></tr>
+                    <tr><td><span class="status-code status-2xx">201</span></td><td>Created</td></tr>
+                    <tr><td><span class="status-code status-4xx">400</span></td><td>Bad Request - Invalid parameters</td></tr>
+                    <tr><td><span class="status-code status-4xx">401</span></td><td>Unauthorized - Invalid/missing token</td></tr>
+                    <tr><td><span class="status-code status-4xx">403</span></td><td>Forbidden - Insufficient permissions</td></tr>
+                    <tr><td><span class="status-code status-4xx">404</span></td><td>Not Found - Resource doesn't exist</td></tr>
+                    <tr><td><span class="status-code status-4xx">429</span></td><td>Too Many Requests - Rate limit exceeded</td></tr>
+                    <tr><td><span class="status-code status-5xx">500</span></td><td>Internal Server Error</td></tr>
+                    <tr><td><span class="status-code status-5xx">503</span></td><td>Service Unavailable</td></tr>
+                </table>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-body open">
+                        <h4>Error Response Format</h4>
+                        <pre>{
+  <span class="key">"success"</span>: <span class="boolean">false</span>,
+  <span class="key">"error"</span>: {
+    <span class="key">"code"</span>: <span class="string">"VALIDATION_ERROR"</span>,
+    <span class="key">"message"</span>: <span class="string">"Email is required"</span>,
+    <span class="key">"details"</span>: [
+      {
+        <span class="key">"field"</span>: <span class="string">"email"</span>,
+        <span class="key">"message"</span>: <span class="string">"Invalid email format"</span>
+      }
+    ]
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rate Limits -->
+            <section id="rate-limits">
+                <h2>Rate Limits</h2>
+                <table class="status-table">
+                    <tr><th>Plan</th><th>Requests/Min</th><th>Requests/Hour</th><th>Requests/Day</th></tr>
+                    <tr><td>Free</td><td>30</td><td>500</td><td>5,000</td></tr>
+                    <tr><td>Starter</td><td>60</td><td>2,000</td><td>20,000</td></tr>
+                    <tr><td>Business</td><td>120</td><td>5,000</td><td>50,000</td></tr>
+                    <tr><td>Enterprise</td><td>300</td><td>10,000</td><td>100,000</td></tr>
+                </table>
+                <p>Rate limit headers are included in every response: <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code></p>
+            </section>
+
+            <!-- Webhooks -->
+            <section id="webhooks">
+                <h2>Webhooks</h2>
+                <p>Register webhook endpoints to receive real-time event notifications.</p>
+                <p><strong>Supported Events:</strong> <code>payment.completed</code>, <code>payment.failed</code>, <code>invoice.paid</code>, <code>deal.won</code>, <code>lead.created</code>, <code>task.completed</code></p>
+                <p><strong>Webhook URL:</strong> <code>https://11avatar-api.11avatardigitalhub.workers.dev/webhooks</code></p>
+            </section>
+
+            <!-- Footer -->
+            <footer style="margin-top:60px;padding:24px 0;border-top:2px solid var(--border);text-align:center;color:var(--text-muted);font-size:13px;">
+                <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved. | Version 2.0.0</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Toggle all endpoint bodies on first click
+        document.querySelectorAll('.endpoint-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const body = this.nextElementSibling;
+                body.classList.toggle('open');
+            });
+        });
+
+        // API Search
+        function searchAPI() {
+            const query = document.getElementById('api-search').value.toLowerCase();
+            const sections = document.querySelectorAll('section[id]');
+            const cards = document.querySelectorAll('.endpoint-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (!query || text.includes(query)) {
+                    card.style.display = '';
+                    card.querySelector('.endpoint-body')?.classList.add('open');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Smooth scroll for sidebar links
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Highlight active section on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    document.querySelectorAll('.sidebar-link').forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
+
+        console.log('API Docs loaded - 11 Avatar Digital Hub v2.0.0');
+    </script>
+</body>
+</html>
+
+
