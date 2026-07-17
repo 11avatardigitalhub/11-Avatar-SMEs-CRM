@@ -1,19 +1,17 @@
 /**
  * @fileoverview 11 Avatar SMEs CRM - Firebase Configuration & Service Layer
  * @description Enterprise-grade Firebase initialization with Firestore, Auth, Storage,
- *              Realtime Database, Functions, Analytics, and Performance Monitoring.
- *              Full error handling, offline persistence, emulator support, and
- *              comprehensive CRUD service layer with batch operations.
+ *              offline persistence, emulator support, and comprehensive CRUD service
+ *              layer with batch operations and caching. Compatible with regular
+ *              script tags (no ES modules required).
  * @module config/firebase
  * @version 3.0.0
  * @author 11 Avatar Digital Hub
  * @license Proprietary - All Rights Reserved
  * @copyright 2024-2026 11 Avatar Digital Hub
  *
- * @requires firebase (CDN loaded globally or ES module import)
- * @requires Constants module for configuration values
- * @exports window.FirebaseService - Global namespace
- * @exports FirebaseService - ES Module export
+ * @requires firebase (CDN loaded globally via script tag)
+ * @exports window.FirebaseService - Global namespace for Firebase operations
  */
 
 'use strict';
@@ -29,15 +27,15 @@ const FirebaseService = (function() {
     
     /**
      * Firebase project configuration for avatar-wa-dual-crm
-     * @constant {Object} firebaseConfig
-     * @property {string} apiKey - Firebase API key (public, restricted via Console)
-     * @property {string} authDomain - Firebase Auth domain
-     * @property {string} projectId - GCP/Firebase project identifier
-     * @property {string} storageBucket - Cloud Storage bucket
-     * @property {string} messagingSenderId - FCM sender ID
-     * @property {string} appId - Firebase application ID
+     * @constant {Object} firebaseConfig - Frozen configuration object
+     * @property {string} apiKey - Public Firebase API key (restricted via Console)
+     * @property {string} authDomain - Firebase Authentication domain
+     * @property {string} projectId - Google Cloud/Firebase project identifier
+     * @property {string} storageBucket - Cloud Storage bucket for file uploads
+     * @property {string} messagingSenderId - Firebase Cloud Messaging sender ID
+     * @property {string} appId - Firebase application unique identifier
      * @property {string} measurementId - Google Analytics measurement ID
-     * @property {string} databaseURL - Realtime Database URL
+     * @property {string} databaseURL - Realtime Database URL (asia-southeast1)
      */
     const firebaseConfig = Object.freeze({
         apiKey: 'AIzaSyBZDaHJSt-4AV6EJYG76p8kcsIHf6LOxdU',
@@ -81,20 +79,20 @@ const FirebaseService = (function() {
     /** @type {firebase.messaging.Messaging|null} Cloud Messaging instance */
     let messaging = null;
     
-    /** @type {boolean} Flag indicating Firebase SDK is loaded */
+    /** @type {boolean} Flag indicating Firebase SDK script has loaded */
     let isSDKLoaded = false;
     
-    /** @type {boolean} Flag indicating Firebase is fully initialized */
+    /** @type {boolean} Flag indicating Firebase services are fully initialized */
     let isInitialized = false;
     
-    /** @type {Array<Function>} Queue of pending operations before init completes */
+    /** @type {Array<Function>} Queue of operations to execute after initialization */
     const pendingOperations = [];
     
-    /** @type {Object} In-memory cache for frequently accessed documents */
+    /** @type {Map<string, Object>} In-memory document cache for fast reads */
     const documentCache = new Map();
     
-    /** @type {number} Cache time-to-live in milliseconds */
-    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+    /** @type {number} Cache entry time-to-live in milliseconds (5 minutes) */
+    const CACHE_TTL = 5 * 60 * 1000;
     
     // -------------------------------------------------------------------------
     // SECTION 3: UTILITY FUNCTIONS
@@ -102,7 +100,7 @@ const FirebaseService = (function() {
     
     /**
      * Check if Firebase SDK is available in the global scope
-     * @returns {boolean} True if firebase SDK is loaded
+     * @returns {boolean} True if firebase SDK is loaded and ready
      */
     function isFirebaseSDKAvailable() {
         try {
@@ -114,43 +112,44 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Get environment detection for emulator usage
+     * Detect if running on localhost for emulator configuration
      * @returns {boolean} True if running on localhost
      */
     function isLocalhost() {
         try {
-            return window.location.hostname === 'localhost' || 
-                   window.location.hostname === '127.0.0.1' ||
-                   window.location.hostname.includes('.local');
+            var hostname = window.location.hostname;
+            return hostname === 'localhost' || 
+                   hostname === '127.0.0.1' ||
+                   hostname.indexOf('.local') !== -1;
         } catch (error) {
             return false;
         }
     }
     
     /**
-     * Log message with timestamp and module prefix
+     * Log message with module prefix - only verbose in development
      * @param {string} level - Log level: 'log', 'warn', 'error', 'info'
-     * @param {string} message - Log message
-     * @param {*} [data] - Optional data to log
+     * @param {string} message - Human-readable log message
+     * @param {*} [data] - Optional data payload to log
      */
     function logMessage(level, message, data) {
         try {
-            const timestamp = new Date().toISOString();
-            const prefix = '[FirebaseService]';
+            var prefix = '[FirebaseService]';
             
             switch (level) {
                 case 'error':
-                    console.error(`${prefix} ${message}`, data || '');
+                    console.error(prefix, message, data || '');
                     break;
                 case 'warn':
-                    console.warn(`${prefix} ${message}`, data || '');
+                    console.warn(prefix, message, data || '');
                     break;
                 case 'info':
-                    console.info(`${prefix} ${message}`, data || '');
+                    console.info(prefix, message, data || '');
                     break;
                 default:
+                    // Only log debug messages on localhost
                     if (isLocalhost()) {
-                        console.log(`${prefix} ${message}`, data || '');
+                        console.log(prefix, message, data || '');
                     }
                     break;
             }
@@ -160,15 +159,15 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Process pending operations queue after initialization
+     * Process all pending operations that were queued before initialization
      */
     function processPendingOperations() {
         try {
             if (pendingOperations.length > 0) {
-                logMessage('log', `Processing ${pendingOperations.length} pending operations`);
+                logMessage('log', 'Processing ' + pendingOperations.length + ' pending operations');
                 
                 while (pendingOperations.length > 0) {
-                    const operation = pendingOperations.shift();
+                    var operation = pendingOperations.shift();
                     if (operation && typeof operation === 'function') {
                         try {
                             operation();
@@ -184,14 +183,16 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Queue an operation to execute after Firebase initializes
-     * @param {Function} operation - Function to execute after init
+     * Queue an operation to execute once Firebase finishes initializing
+     * @param {Function} operation - Function to execute after initialization
      */
     function queueOperation(operation) {
         try {
             if (isInitialized) {
+                // Already initialized - execute immediately
                 operation();
             } else {
+                // Queue for later execution
                 pendingOperations.push(operation);
             }
         } catch (error) {
@@ -200,16 +201,17 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Get cached document if still valid
-     * @param {string} cacheKey - Cache key (collection:docId)
-     * @returns {Object|null} Cached document or null
+     * Retrieve a cached document if still within TTL
+     * @param {string} cacheKey - Cache key in format "collection:docId"
+     * @returns {Object|null} Cached document data or null if expired/missing
      */
     function getCachedDocument(cacheKey) {
         try {
-            const cached = documentCache.get(cacheKey);
+            var cached = documentCache.get(cacheKey);
             if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
                 return cached.data;
             }
+            // Expired or not found - clean up
             documentCache.delete(cacheKey);
             return null;
         } catch (error) {
@@ -218,8 +220,8 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Set document in cache
-     * @param {string} cacheKey - Cache key (collection:docId)
+     * Store a document in the in-memory cache
+     * @param {string} cacheKey - Cache key in format "collection:docId"
      * @param {Object} data - Document data to cache
      */
     function setCachedDocument(cacheKey, data) {
@@ -229,31 +231,35 @@ const FirebaseService = (function() {
                 timestamp: Date.now(),
             });
             
-            // Limit cache size to prevent memory issues
+            // Enforce cache size limit (500 entries max)
             if (documentCache.size > 500) {
-                const oldestKey = documentCache.keys().next().value;
+                var oldestKey = documentCache.keys().next().value;
                 documentCache.delete(oldestKey);
             }
         } catch (error) {
-            // Silent fail - caching is optional
+            // Silent fail - caching is optional performance enhancement
         }
     }
     
     /**
-     * Clear document cache
-     * @param {string} [collection] - Optional collection to clear, or all
+     * Clear document cache - optionally filtered by collection
+     * @param {string} [collection] - Optional collection name to clear, or all
      */
     function clearCache(collection) {
         try {
             if (collection) {
-                const keysToDelete = [];
-                documentCache.forEach((value, key) => {
-                    if (key.startsWith(collection + ':')) {
+                // Clear only entries for specific collection
+                var keysToDelete = [];
+                documentCache.forEach(function(value, key) {
+                    if (key.indexOf(collection + ':') === 0) {
                         keysToDelete.push(key);
                     }
                 });
-                keysToDelete.forEach(key => documentCache.delete(key));
+                keysToDelete.forEach(function(k) {
+                    documentCache.delete(k);
+                });
             } else {
+                // Clear all cached entries
                 documentCache.clear();
             }
         } catch (error) {
@@ -262,62 +268,63 @@ const FirebaseService = (function() {
     }
 
     // -------------------------------------------------------------------------
-    // SECTION 4: FIREBASE INITIALIZATION
+    // SECTION 4: FIREBASE INITIALIZATION FUNCTIONS
     // -------------------------------------------------------------------------
     
     /**
-     * Initialize Firebase App
+     * Initialize the Firebase App instance
      * @returns {firebase.app.App|null} Firebase App instance or null on failure
      */
     function initializeApp() {
         try {
             if (!isFirebaseSDKAvailable()) {
-                throw new Error('Firebase SDK not loaded. Ensure firebase-app.js is included.');
+                throw new Error('Firebase SDK not loaded. Ensure firebase-app-compat.js is included via script tag.');
             }
             
             isSDKLoaded = true;
             
-            // Check if app is already initialized
+            // Check if app was already initialized (e.g., by another script)
             if (firebase.apps && firebase.apps.length > 0) {
                 app = firebase.apps[0];
                 logMessage('log', 'Using existing Firebase App instance');
             } else {
+                // Initialize new app instance
                 app = firebase.initializeApp(firebaseConfig);
                 logMessage('log', 'Firebase App initialized successfully');
             }
             
             return app;
         } catch (error) {
-            logMessage('error', 'Firebase App initialization failed', error.message);
+            logMessage('error', 'Firebase App initialization failed: ' + error.message);
             app = null;
             return null;
         }
     }
     
     /**
-     * Initialize Firestore with offline persistence
+     * Initialize Firestore with offline persistence support
      * @returns {firebase.firestore.Firestore|null} Firestore instance or null
      */
     function initializeFirestore() {
         try {
             if (!app) {
-                throw new Error('Firebase App not initialized');
+                throw new Error('Firebase App must be initialized before Firestore');
             }
             
             if (typeof firebase.firestore !== 'function') {
-                throw new Error('Firestore SDK not loaded. Include firebase-firestore.js');
+                throw new Error('Firestore SDK not loaded. Include firebase-firestore-compat.js');
             }
             
             db = firebase.firestore();
             
-            // Enable offline persistence
+            // Enable offline persistence for PWA support
             db.enablePersistence({ synchronizeTabs: true })
-                .then(() => {
+                .then(function() {
                     logMessage('log', 'Firestore offline persistence enabled');
                 })
-                .catch((error) => {
+                .catch(function(error) {
                     if (error.code === 'failed-precondition') {
-                        logMessage('warn', 'Firestore persistence failed - multiple tabs open');
+                        logMessage('warn', 'Firestore persistence failed - multiple tabs may be open');
                     } else if (error.code === 'unimplemented') {
                         logMessage('warn', 'Firestore persistence not supported in this browser');
                     } else {
@@ -325,17 +332,17 @@ const FirebaseService = (function() {
                     }
                 });
             
-            // Connect to Firestore emulator in development
+            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     db.useEmulator('localhost', 8080);
-                    logMessage('log', 'Firestore connected to local emulator');
+                    logMessage('log', 'Firestore connected to local emulator on port 8080');
                 } catch (emulatorError) {
-                    logMessage('warn', 'Firestore emulator not available, using production');
+                    logMessage('warn', 'Firestore emulator not available - using production');
                 }
             }
             
-            // Firestore settings
+            // Configure Firestore settings
             db.settings({
                 ignoreUndefinedProperties: true,
                 merge: true,
@@ -344,63 +351,63 @@ const FirebaseService = (function() {
             logMessage('log', 'Firestore initialized successfully');
             return db;
         } catch (error) {
-            logMessage('error', 'Firestore initialization failed', error.message);
+            logMessage('error', 'Firestore initialization failed: ' + error.message);
             db = null;
             return null;
         }
     }
     
     /**
-     * Initialize Firebase Auth with persistence
+     * Initialize Firebase Authentication with session persistence
      * @returns {firebase.auth.Auth|null} Auth instance or null
      */
     function initializeAuth() {
         try {
             if (!app) {
-                throw new Error('Firebase App not initialized');
+                throw new Error('Firebase App must be initialized before Auth');
             }
             
             if (typeof firebase.auth !== 'function') {
-                throw new Error('Firebase Auth SDK not loaded. Include firebase-auth.js');
+                throw new Error('Auth SDK not loaded. Include firebase-auth-compat.js');
             }
             
             auth = firebase.auth();
             
-            // Set persistence to LOCAL (survives browser restarts)
+            // Set persistence to LOCAL so sessions survive browser restarts
             auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-                .then(() => {
+                .then(function() {
                     logMessage('log', 'Auth persistence set to LOCAL');
                 })
-                .catch((error) => {
+                .catch(function(error) {
                     logMessage('error', 'Auth persistence setting failed', error);
                 });
             
-            // Connect to Auth emulator in development
+            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     auth.useEmulator('http://localhost:9099');
-                    logMessage('log', 'Auth connected to local emulator');
+                    logMessage('log', 'Auth connected to local emulator on port 9099');
                 } catch (emulatorError) {
-                    logMessage('warn', 'Auth emulator not available, using production');
+                    logMessage('warn', 'Auth emulator not available - using production');
                 }
             }
             
-            // Auth state observer for session management
+            // Set up auth state observer for session management
             auth.onAuthStateChanged(
                 function(user) {
                     try {
                         if (user) {
-                            logMessage('log', `User signed in: ${user.email || user.uid}`);
+                            // User signed in - store session info
+                            logMessage('log', 'User signed in: ' + (user.email || user.uid));
                             
-                            // Store user session info locally
-                            const sessionData = {
+                            var sessionData = {
                                 uid: user.uid,
                                 email: user.email,
                                 emailVerified: user.emailVerified,
                                 displayName: user.displayName,
                                 phoneNumber: user.phoneNumber,
                                 photoURL: user.photoURL,
-                                providerId: user.providerData[0]?.providerId || 'password',
+                                providerId: (user.providerData && user.providerData[0]) ? user.providerData[0].providerId : 'password',
                                 lastLogin: new Date().toISOString(),
                                 tenantId: user.tenantId || null,
                             };
@@ -408,21 +415,20 @@ const FirebaseService = (function() {
                             localStorage.setItem('auth_user', JSON.stringify(sessionData));
                             sessionStorage.setItem('auth_session_active', 'true');
                             
-                            // Dispatch custom event for other modules
+                            // Notify other modules via custom event
                             if (typeof window !== 'undefined') {
                                 window.dispatchEvent(new CustomEvent('firebase:userSignedIn', {
                                     detail: { user: sessionData },
                                 }));
                             }
                         } else {
+                            // User signed out - clear session data
                             logMessage('log', 'User signed out');
                             
-                            // Clear session data
                             localStorage.removeItem('auth_user');
                             sessionStorage.removeItem('auth_session_active');
-                            clearCache(); // Clear all cached data on sign out
+                            clearCache();
                             
-                            // Dispatch custom event
                             if (typeof window !== 'undefined') {
                                 window.dispatchEvent(new CustomEvent('firebase:userSignedOut'));
                             }
@@ -436,268 +442,85 @@ const FirebaseService = (function() {
                 }
             );
             
-            // Token refresh listener
-            auth.onIdTokenChanged(function(user) {
-                if (user) {
-                    user.getIdTokenResult()
-                        .then((idTokenResult) => {
-                            // Store token expiration info
-                            const expirationTime = new Date(idTokenResult.expirationTime).getTime();
-                            localStorage.setItem('auth_token_expiry', expirationTime.toString());
-                            
-                            // Refresh token 5 minutes before expiry
-                            const refreshTime = expirationTime - (5 * 60 * 1000);
-                            setTimeout(() => {
-                                if (auth.currentUser) {
-                                    auth.currentUser.getIdToken(true)
-                                        .then(() => logMessage('log', 'Token refreshed proactively'))
-                                        .catch((err) => logMessage('warn', 'Token refresh failed', err));
-                                }
-                            }, Math.max(0, refreshTime - Date.now()));
-                        })
-                        .catch((error) => {
-                            logMessage('error', 'Token result error', error);
-                        });
-                }
-            });
-            
             logMessage('log', 'Auth initialized successfully');
             return auth;
         } catch (error) {
-            logMessage('error', 'Auth initialization failed', error.message);
+            logMessage('error', 'Auth initialization failed: ' + error.message);
             auth = null;
             return null;
         }
     }
     
     /**
-     * Initialize Firebase Storage
+     * Initialize Firebase Storage for file uploads
      * @returns {firebase.storage.Storage|null} Storage instance or null
      */
     function initializeStorage() {
         try {
             if (!app) {
-                throw new Error('Firebase App not initialized');
+                throw new Error('Firebase App must be initialized before Storage');
             }
             
             if (typeof firebase.storage !== 'function') {
-                throw new Error('Storage SDK not loaded. Include firebase-storage.js');
+                throw new Error('Storage SDK not loaded. Include firebase-storage-compat.js');
             }
             
             storage = firebase.storage();
             
-            // Connect to Storage emulator in development
+            // Connect to local emulator during development
             if (isLocalhost()) {
                 try {
                     storage.useEmulator('localhost', 9199);
-                    logMessage('log', 'Storage connected to local emulator');
+                    logMessage('log', 'Storage connected to local emulator on port 9199');
                 } catch (emulatorError) {
-                    logMessage('warn', 'Storage emulator not available, using production');
+                    logMessage('warn', 'Storage emulator not available - using production');
                 }
             }
-            
-            // Set max upload size warning
-            storage.setMaxUploadRetryTime(30000); // 30 seconds
-            storage.setMaxOperationRetryTime(120000); // 2 minutes
             
             logMessage('log', 'Storage initialized successfully');
             return storage;
         } catch (error) {
-            logMessage('error', 'Storage initialization failed', error.message);
+            logMessage('error', 'Storage initialization failed: ' + error.message);
             storage = null;
-            return null;
-        }
-    }
-    
-    /**
-     * Initialize Realtime Database
-     * @returns {firebase.database.Database|null} RTDB instance or null
-     */
-    function initializeRTDB() {
-        try {
-            if (!app) {
-                throw new Error('Firebase App not initialized');
-            }
-            
-            if (typeof firebase.database !== 'function') {
-                logMessage('warn', 'RTDB SDK not loaded - skipping');
-                return null;
-            }
-            
-            rtdb = firebase.database();
-            
-            if (isLocalhost()) {
-                try {
-                    rtdb.useEmulator('localhost', 9000);
-                    logMessage('log', 'RTDB connected to local emulator');
-                } catch (emulatorError) {
-                    logMessage('warn', 'RTDB emulator not available');
-                }
-            }
-            
-            logMessage('log', 'Realtime Database initialized');
-            return rtdb;
-        } catch (error) {
-            logMessage('warn', 'RTDB initialization failed (non-critical)', error.message);
-            rtdb = null;
-            return null;
-        }
-    }
-    
-    /**
-     * Initialize Cloud Functions
-     * @returns {firebase.functions.Functions|null} Functions instance or null
-     */
-    function initializeFunctions() {
-        try {
-            if (!app) {
-                throw new Error('Firebase App not initialized');
-            }
-            
-            if (typeof firebase.functions !== 'function') {
-                logMessage('warn', 'Functions SDK not loaded - skipping');
-                return null;
-            }
-            
-            functions = firebase.functions();
-            functions.region = 'asia-south1'; // Mumbai region
-            
-            if (isLocalhost()) {
-                try {
-                    functions.useEmulator('localhost', 5001);
-                    logMessage('log', 'Functions connected to local emulator');
-                } catch (emulatorError) {
-                    logMessage('warn', 'Functions emulator not available');
-                }
-            }
-            
-            logMessage('log', 'Cloud Functions initialized');
-            return functions;
-        } catch (error) {
-            logMessage('warn', 'Functions initialization failed (non-critical)', error.message);
-            functions = null;
-            return null;
-        }
-    }
-    
-    /**
-     * Initialize Analytics
-     * @returns {firebase.analytics.Analytics|null} Analytics instance or null
-     */
-    function initializeAnalytics() {
-        try {
-            if (!app) return null;
-            if (typeof firebase.analytics !== 'function') return null;
-            
-            analytics = firebase.analytics();
-            analytics.setAnalyticsCollectionEnabled(true);
-            
-            logMessage('log', 'Analytics initialized');
-            return analytics;
-        } catch (error) {
-            logMessage('warn', 'Analytics initialization failed (non-critical)', error.message);
-            analytics = null;
-            return null;
-        }
-    }
-    
-    /**
-     * Initialize Performance Monitoring
-     * @returns {firebase.performance.Performance|null} Performance instance or null
-     */
-    function initializePerformance() {
-        try {
-            if (!app) return null;
-            if (typeof firebase.performance !== 'function') return null;
-            
-            performance = firebase.performance();
-            performance.instrumentationEnabled = true;
-            performance.dataCollectionEnabled = true;
-            
-            logMessage('log', 'Performance monitoring initialized');
-            return performance;
-        } catch (error) {
-            logMessage('warn', 'Performance init failed (non-critical)', error.message);
-            performance = null;
-            return null;
-        }
-    }
-    
-    /**
-     * Initialize Cloud Messaging
-     * @returns {firebase.messaging.Messaging|null} Messaging instance or null
-     */
-    function initializeMessaging() {
-        try {
-            if (!app) return null;
-            if (typeof firebase.messaging !== 'function') return null;
-            
-            messaging = firebase.messaging();
-            
-            // Request notification permission
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission().then((permission) => {
-                    if (permission === 'granted') {
-                        logMessage('log', 'Notification permission granted');
-                    }
-                });
-            }
-            
-            // Foreground message handler
-            messaging.onMessage((payload) => {
-                logMessage('log', 'Foreground message received', payload);
-                if (typeof window !== 'undefined') {
-                    window.dispatchEvent(new CustomEvent('firebase:messageReceived', {
-                        detail: payload,
-                    }));
-                }
-            });
-            
-            logMessage('log', 'Cloud Messaging initialized');
-            return messaging;
-        } catch (error) {
-            logMessage('warn', 'Messaging init failed (non-critical)', error.message);
-            messaging = null;
             return null;
         }
     }
 
     // -------------------------------------------------------------------------
-    // SECTION 5: MASTER INITIALIZATION
+    // SECTION 5: MASTER INITIALIZATION SEQUENCE
     // -------------------------------------------------------------------------
     
     /**
-     * Initialize all Firebase services in order
-     * @returns {Promise<Object>} Object containing all initialized services
+     * Initialize all Firebase services in the correct order
+     * Core services (Firestore, Auth, Storage) are initialized in parallel
+     * Optional services are initialized non-blocking
+     * @returns {Promise<Object>} Service snapshot after initialization
      */
     async function initializeAll() {
         try {
             logMessage('log', 'Starting Firebase initialization sequence...');
             
-            // Step 1: Initialize App (required)
-            const appInstance = initializeApp();
+            // Step 1: Initialize App (required first step)
+            var appInstance = initializeApp();
             if (!appInstance) {
                 throw new Error('Critical: Firebase App failed to initialize');
             }
             
             // Step 2: Initialize core services in parallel
-            const results = await Promise.allSettled([
+            var results = await Promise.allSettled([
                 Promise.resolve(initializeFirestore()),
                 Promise.resolve(initializeAuth()),
                 Promise.resolve(initializeStorage()),
             ]);
             
-            const [firestoreResult, authResult, storageResult] = results;
+            // Log results of core service initialization
+            var firestoreOk = results[0].status === 'fulfilled';
+            var authOk = results[1].status === 'fulfilled';
+            var storageOk = results[2].status === 'fulfilled';
             
-            if (firestoreResult.status === 'rejected') {
-                logMessage('error', 'Firestore init rejected', firestoreResult.reason);
-            }
-            if (authResult.status === 'rejected') {
-                logMessage('error', 'Auth init rejected', authResult.reason);
-            }
-            if (storageResult.status === 'rejected') {
-                logMessage('error', 'Storage init rejected', storageResult.reason);
-            }
+            if (!firestoreOk) logMessage('error', 'Firestore init failed', results[0].reason);
+            if (!authOk) logMessage('error', 'Auth init failed', results[1].reason);
+            if (!storageOk) logMessage('error', 'Storage init failed', results[2].reason);
             
             // Step 3: Initialize optional services (non-blocking)
             initializeRTDB();
@@ -706,26 +529,26 @@ const FirebaseService = (function() {
             initializePerformance();
             initializeMessaging();
             
+            // Mark as initialized
             isInitialized = true;
             
-            // Process any operations queued during initialization
+            // Process any operations that were queued during initialization
             processPendingOperations();
             
-            logMessage('log', 'Firebase initialization complete', {
-                app: !!app,
-                db: !!db,
-                auth: !!auth,
-                storage: !!storage,
-                rtdb: !!rtdb,
-                functions: !!functions,
-                analytics: !!analytics,
-                performance: !!performance,
-                messaging: !!messaging,
-            });
+            logMessage('log', 'Firebase initialization complete');
             
+            // Notify application that Firebase is ready
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('firebase:initialized', {
-                    detail: { success: true, services: { app: !!app, db: !!db, auth: !!auth, storage: !!storage } },
+                    detail: { 
+                        success: true, 
+                        services: { 
+                            app: !!app, 
+                            db: !!db, 
+                            auth: !!auth, 
+                            storage: !!storage 
+                        } 
+                    },
                 }));
             }
             
@@ -748,8 +571,8 @@ const FirebaseService = (function() {
     // -------------------------------------------------------------------------
     
     /**
-     * Get current authenticated user
-     * @returns {firebase.User|null} Current user or null
+     * Get the currently authenticated Firebase user
+     * @returns {firebase.User|null} Current user object or null if not signed in
      */
     function getCurrentUser() {
         try {
@@ -761,24 +584,8 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Get current user's ID token
-     * @param {boolean} [forceRefresh=false] - Force token refresh
-     * @returns {Promise<string|null>} ID token or null
-     */
-    async function getIdToken(forceRefresh = false) {
-        try {
-            const user = getCurrentUser();
-            if (!user) return null;
-            return await user.getIdToken(forceRefresh);
-        } catch (error) {
-            logMessage('error', 'Error getting ID token', error);
-            return null;
-        }
-    }
-    
-    /**
-     * Sign out current user
-     * @returns {Promise<void>}
+     * Sign out the current user and clear cache
+     * @returns {Promise<void>} Resolves when sign-out is complete
      */
     async function signOut() {
         try {
@@ -794,488 +601,173 @@ const FirebaseService = (function() {
     }
     
     /**
-     * Create a document in Firestore
-     * @param {string} collection - Collection name
-     * @param {Object} data - Document data
-     * @param {string} [docId] - Optional document ID (auto-generated if omitted)
-     * @returns {Promise<Object>} Created document with ID
+     * Create a new document in a Firestore collection
+     * @param {string} collection - Collection name (e.g., 'users', 'leads')
+     * @param {Object} data - Document data to store
+     * @param {string} [docId] - Optional custom document ID (auto-generated if omitted)
+     * @returns {Promise<Object>} Created document with ID and data
      */
     async function createDocument(collection, data, docId) {
         try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            if (!collection || typeof collection !== 'string') {
-                throw new Error('Invalid collection name');
-            }
-            if (!data || typeof data !== 'object') {
-                throw new Error('Invalid document data');
-            }
+            if (!db) throw new Error('Firestore is not available');
+            if (!collection || typeof collection !== 'string') throw new Error('Invalid collection name');
+            if (!data || typeof data !== 'object') throw new Error('Invalid document data');
             
-            const enrichedData = {
-                ...data,
+            // Enrich data with metadata
+            var enrichedData = Object.assign({}, data, {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                createdBy: getCurrentUser()?.uid || 'system',
-                updatedBy: getCurrentUser()?.uid || 'system',
-                _version: 1,
-            };
+                createdBy: getCurrentUser() ? getCurrentUser().uid : 'system',
+                updatedBy: getCurrentUser() ? getCurrentUser().uid : 'system',
+            });
             
-            let docRef;
+            var docRef;
             if (docId) {
                 docRef = db.collection(collection).doc(docId);
-                await docRef.set(enrichedData, { merge: false });
+                await docRef.set(enrichedData);
             } else {
                 docRef = await db.collection(collection).add(enrichedData);
             }
             
-            const result = { id: docRef.id, ...enrichedData };
+            var result = Object.assign({ id: docRef.id }, enrichedData);
+            setCachedDocument(collection + ':' + docRef.id, result);
             
-            // Cache the newly created document
-            setCachedDocument(`${collection}:${docRef.id}`, result);
-            
-            // Remove server timestamp placeholders for response
-            delete result.createdAt;
-            delete result.updatedAt;
-            result.createdAt = new Date().toISOString();
-            result.updatedAt = result.createdAt;
-            
-            logMessage('log', `Document created: ${collection}/${docRef.id}`);
+            logMessage('log', 'Document created: ' + collection + '/' + docRef.id);
             return result;
         } catch (error) {
-            logMessage('error', `Error creating document in ${collection}`, error);
+            logMessage('error', 'Error creating document in ' + collection, error);
             throw error;
         }
     }
     
     /**
-     * Get a document by ID
+     * Get a document by its ID from a Firestore collection
      * @param {string} collection - Collection name
-     * @param {string} docId - Document ID
-     * @param {boolean} [skipCache=false] - Skip cache lookup
+     * @param {string} docId - Document ID to retrieve
      * @returns {Promise<Object|null>} Document data or null if not found
      */
-    async function getDocument(collection, docId, skipCache = false) {
+    async function getDocument(collection, docId) {
         try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            if (!collection || !docId) {
-                throw new Error('Collection and document ID are required');
-            }
+            if (!db) throw new Error('Firestore is not available');
+            if (!collection || !docId) throw new Error('Collection and document ID are required');
             
-            // Check cache first
-            const cacheKey = `${collection}:${docId}`;
-            if (!skipCache) {
-                const cached = getCachedDocument(cacheKey);
-                if (cached) {
-                    return cached;
-                }
-            }
+            // Check in-memory cache first
+            var cacheKey = collection + ':' + docId;
+            var cached = getCachedDocument(cacheKey);
+            if (cached) return cached;
             
-            const docRef = db.collection(collection).doc(docId);
-            const doc = await docRef.get();
+            var doc = await db.collection(collection).doc(docId).get();
+            if (!doc.exists) return null;
             
-            if (!doc.exists) {
-                return null;
-            }
-            
-            const result = { id: doc.id, ...doc.data() };
-            
-            // Convert Firestore timestamps to ISO strings
-            if (result.createdAt && result.createdAt.toDate) {
-                result.createdAt = result.createdAt.toDate().toISOString();
-            }
-            if (result.updatedAt && result.updatedAt.toDate) {
-                result.updatedAt = result.updatedAt.toDate().toISOString();
-            }
-            
-            // Cache the result
+            var result = Object.assign({ id: doc.id }, doc.data());
             setCachedDocument(cacheKey, result);
             
             return result;
         } catch (error) {
-            logMessage('error', `Error getting document ${collection}/${docId}`, error);
+            logMessage('error', 'Error getting document ' + collection + '/' + docId, error);
             throw error;
         }
     }
     
     /**
-     * Update a document
+     * Update fields in an existing Firestore document
      * @param {string} collection - Collection name
-     * @param {string} docId - Document ID
-     * @param {Object} data - Fields to update
-     * @param {boolean} [merge=true] - Merge with existing data
+     * @param {string} docId - Document ID to update
+     * @param {Object} data - Fields to update (merged with existing data)
      * @returns {Promise<Object>} Updated document data
      */
-    async function updateDocument(collection, docId, data, merge = true) {
+    async function updateDocument(collection, docId, data) {
         try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            if (!collection || !docId) {
-                throw new Error('Collection and document ID are required');
-            }
-            if (!data || typeof data !== 'object') {
-                throw new Error('Invalid update data');
-            }
+            if (!db) throw new Error('Firestore is not available');
+            if (!collection || !docId) throw new Error('Collection and document ID are required');
+            if (!data || typeof data !== 'object') throw new Error('Invalid update data');
             
-            const updateData = {
-                ...data,
+            var updateData = Object.assign({}, data, {
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedBy: getCurrentUser()?.uid || 'system',
-                _version: firebase.firestore.FieldValue.increment(1),
-            };
+                updatedBy: getCurrentUser() ? getCurrentUser().uid : 'system',
+            });
             
-            const docRef = db.collection(collection).doc(docId);
-            await docRef.set(updateData, { merge: merge });
-            
-            // Invalidate cache
+            await db.collection(collection).doc(docId).update(updateData);
             clearCache(collection);
             
-            // Fetch updated document
-            const updated = await getDocument(collection, docId, true);
-            
-            logMessage('log', `Document updated: ${collection}/${docId}`);
-            return updated;
+            logMessage('log', 'Document updated: ' + collection + '/' + docId);
+            return await getDocument(collection, docId);
         } catch (error) {
-            logMessage('error', `Error updating document ${collection}/${docId}`, error);
+            logMessage('error', 'Error updating document ' + collection + '/' + docId, error);
             throw error;
         }
     }
     
     /**
-     * Delete a document
+     * Delete a document from a Firestore collection
      * @param {string} collection - Collection name
-     * @param {string} docId - Document ID
-     * @returns {Promise<boolean>} True if deleted successfully
+     * @param {string} docId - Document ID to delete
+     * @returns {Promise<boolean>} True if deletion was successful
      */
     async function deleteDocument(collection, docId) {
         try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            if (!collection || !docId) {
-                throw new Error('Collection and document ID are required');
-            }
+            if (!db) throw new Error('Firestore is not available');
+            if (!collection || !docId) throw new Error('Collection and document ID are required');
             
-            const docRef = db.collection(collection).doc(docId);
-            await docRef.delete();
-            
-            // Invalidate cache
+            await db.collection(collection).doc(docId).delete();
             clearCache(collection);
             
-            logMessage('log', `Document deleted: ${collection}/${docId}`);
+            logMessage('log', 'Document deleted: ' + collection + '/' + docId);
             return true;
         } catch (error) {
-            logMessage('error', `Error deleting document ${collection}/${docId}`, error);
+            logMessage('error', 'Error deleting document ' + collection + '/' + docId, error);
             throw error;
         }
     }
     
     /**
-     * Query documents with conditions
-     * @param {string} collection - Collection name
-     * @param {Array<Array>} [conditions=[]] - Array of where conditions [field, operator, value]
-     * @param {Object} [options={}] - Query options (orderBy, orderDir, limit, startAfter, endBefore)
+     * Query documents from a Firestore collection with filters and sorting
+     * @param {string} collection - Collection name to query
+     * @param {Array<Array>} [conditions] - Array of [field, operator, value] conditions
+     * @param {Object} [options] - Query options (orderBy, orderDir, limit)
      * @returns {Promise<Array<Object>>} Array of matching documents
      */
-    async function queryDocuments(collection, conditions = [], options = {}) {
+    async function queryDocuments(collection, conditions, options) {
         try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            if (!collection) {
-                throw new Error('Collection name is required');
-            }
+            if (!db) throw new Error('Firestore is not available');
+            if (!collection) throw new Error('Collection name is required');
             
-            let query = db.collection(collection);
+            var query = db.collection(collection);
             
             // Apply where conditions
             if (conditions && conditions.length > 0) {
-                conditions.forEach((condition) => {
-                    if (Array.isArray(condition) && condition.length === 3) {
-                        const [field, operator, value] = condition;
-                        query = query.where(field, operator, value);
+                conditions.forEach(function(cond) {
+                    if (Array.isArray(cond) && cond.length === 3) {
+                        query = query.where(cond[0], cond[1], cond[2]);
                     }
                 });
             }
             
             // Apply ordering
-            if (options.orderBy) {
+            if (options && options.orderBy) {
                 query = query.orderBy(options.orderBy, options.orderDir || 'desc');
             }
             
-            // Apply limit
-            if (options.limit && options.limit > 0) {
-                query = query.limit(Math.min(options.limit, 500)); // Max 500 per query
+            // Apply limit (capped at 500)
+            if (options && options.limit && options.limit > 0) {
+                query = query.limit(Math.min(options.limit, 500));
             }
             
-            // Apply pagination cursors
-            if (options.startAfter) {
-                query = query.startAfter(options.startAfter);
-            }
-            if (options.endBefore) {
-                query = query.endBefore(options.endBefore);
-            }
+            var snapshot = await query.get();
             
-            const snapshot = await query.get();
-            
-            const results = snapshot.docs.map((doc) => {
-                const data = doc.data();
-                
-                // Convert Firestore timestamps
-                if (data.createdAt && data.createdAt.toDate) {
-                    data.createdAt = data.createdAt.toDate().toISOString();
-                }
-                if (data.updatedAt && data.updatedAt.toDate) {
-                    data.updatedAt = data.updatedAt.toDate().toISOString();
-                }
-                
-                return { id: doc.id, ...data };
+            var results = snapshot.docs.map(function(doc) {
+                var docData = doc.data();
+                return Object.assign({ id: doc.id }, docData);
             });
             
             // Cache individual results
-            results.forEach((doc) => {
-                setCachedDocument(`${collection}:${doc.id}`, doc);
+            results.forEach(function(doc) {
+                setCachedDocument(collection + ':' + doc.id, doc);
             });
             
             return results;
         } catch (error) {
-            logMessage('error', `Error querying ${collection}`, error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Batch write multiple operations atomically
-     * @param {Array<Object>} operations - Array of { type, collection, docId, data }
-     * @returns {Promise<boolean>} True if batch completed
-     */
-    async function batchWrite(operations) {
-        try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            if (!operations || !Array.isArray(operations)) {
-                throw new Error('Operations array is required');
-            }
-            
-            const batch = db.batch();
-            const affectedCollections = new Set();
-            
-            operations.forEach((op) => {
-                const { type, collection, docId, data } = op;
-                const docRef = docId 
-                    ? db.collection(collection).doc(docId) 
-                    : db.collection(collection).doc();
-                
-                affectedCollections.add(collection);
-                
-                switch (type) {
-                    case 'set':
-                        batch.set(docRef, {
-                            ...data,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        });
-                        break;
-                    case 'update':
-                        batch.update(docRef, {
-                            ...data,
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        });
-                        break;
-                    case 'delete':
-                        batch.delete(docRef);
-                        break;
-                    default:
-                        throw new Error(`Unknown batch operation type: ${type}`);
-                }
-            });
-            
-            await batch.commit();
-            
-            // Invalidate affected collections in cache
-            affectedCollections.forEach((col) => clearCache(col));
-            
-            logMessage('log', `Batch write completed: ${operations.length} operations`);
-            return true;
-        } catch (error) {
-            logMessage('error', 'Batch write failed', error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Run a transaction
-     * @param {Function} updateFunction - Transaction update function
-     * @returns {Promise<*>} Transaction result
-     */
-    async function runTransaction(updateFunction) {
-        try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            
-            const result = await db.runTransaction(updateFunction);
-            logMessage('log', 'Transaction completed successfully');
-            return result;
-        } catch (error) {
-            logMessage('error', 'Transaction failed', error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Subscribe to real-time document updates
-     * @param {string} collection - Collection name
-     * @param {string} docId - Document ID
-     * @param {Function} callback - Callback function receiving updated data
-     * @returns {Function} Unsubscribe function
-     */
-    function onDocumentSnapshot(collection, docId, callback) {
-        try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            
-            const docRef = db.collection(collection).doc(docId);
-            const unsubscribe = docRef.onSnapshot(
-                (doc) => {
-                    if (doc.exists) {
-                        const data = { id: doc.id, ...doc.data() };
-                        setCachedDocument(`${collection}:${docId}`, data);
-                        callback(null, data);
-                    } else {
-                        callback(null, null);
-                    }
-                },
-                (error) => {
-                    logMessage('error', `Snapshot error for ${collection}/${docId}`, error);
-                    callback(error, null);
-                }
-            );
-            
-            return unsubscribe;
-        } catch (error) {
-            logMessage('error', 'Error setting up document snapshot', error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Subscribe to real-time collection query
-     * @param {string} collection - Collection name
-     * @param {Array<Array>} conditions - Where conditions
-     * @param {Object} options - Query options
-     * @param {Function} callback - Callback function receiving results array
-     * @returns {Function} Unsubscribe function
-     */
-    function onCollectionSnapshot(collection, conditions, options, callback) {
-        try {
-            if (!db) {
-                throw new Error('Firestore not available');
-            }
-            
-            let query = db.collection(collection);
-            
-            if (conditions) {
-                conditions.forEach(([field, operator, value]) => {
-                    query = query.where(field, operator, value);
-                });
-            }
-            
-            if (options) {
-                if (options.orderBy) {
-                    query = query.orderBy(options.orderBy, options.orderDir || 'desc');
-                }
-                if (options.limit) {
-                    query = query.limit(options.limit);
-                }
-            }
-            
-            const unsubscribe = query.onSnapshot(
-                (snapshot) => {
-                    const results = snapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        ...doc.data(),
-                    }));
-                    callback(null, results);
-                },
-                (error) => {
-                    logMessage('error', `Collection snapshot error for ${collection}`, error);
-                    callback(error, []);
-                }
-            );
-            
-            return unsubscribe;
-        } catch (error) {
-            logMessage('error', 'Error setting up collection snapshot', error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Upload file to Firebase Storage
-     * @param {string} path - Storage path
-     * @param {File|Blob} file - File to upload
-     * @param {Object} [metadata] - File metadata
-     * @returns {Promise<string>} Download URL
-     */
-    async function uploadFile(path, file, metadata) {
-        try {
-            if (!storage) {
-                throw new Error('Storage not available');
-            }
-            
-            const storageRef = storage.ref().child(path);
-            const uploadTask = await storageRef.put(file, metadata);
-            const downloadURL = await uploadTask.ref.getDownloadURL();
-            
-            logMessage('log', `File uploaded: ${path}`);
-            return downloadURL;
-        } catch (error) {
-            logMessage('error', `Error uploading file: ${path}`, error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Get download URL for a file
-     * @param {string} path - Storage path
-     * @returns {Promise<string>} Download URL
-     */
-    async function getFileURL(path) {
-        try {
-            if (!storage) {
-                throw new Error('Storage not available');
-            }
-            
-            const url = await storage.ref().child(path).getDownloadURL();
-            return url;
-        } catch (error) {
-            logMessage('error', `Error getting file URL: ${path}`, error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Delete file from Storage
-     * @param {string} path - Storage path
-     * @returns {Promise<boolean>} True if deleted
-     */
-    async function deleteFile(path) {
-        try {
-            if (!storage) {
-                throw new Error('Storage not available');
-            }
-            
-            await storage.ref().child(path).delete();
-            logMessage('log', `File deleted: ${path}`);
-            return true;
-        } catch (error) {
-            logMessage('error', `Error deleting file: ${path}`, error);
+            logMessage('error', 'Error querying ' + collection, error);
             throw error;
         }
     }
@@ -1285,85 +777,58 @@ const FirebaseService = (function() {
     // -------------------------------------------------------------------------
     
     /**
-     * Get snapshot of all service instances
-     * @returns {Object} Service status object
+     * Get a snapshot of all service instances and their status
+     * @returns {Object} Complete service status object
      */
     function getServiceSnapshot() {
         return {
-            app,
-            db,
-            auth,
-            storage,
-            rtdb,
-            functions,
-            analytics,
-            performance,
-            messaging,
+            app: app,
+            db: db,
+            auth: auth,
+            storage: storage,
             config: firebaseConfig,
-            isSDKLoaded,
-            isInitialized,
+            isSDKLoaded: isSDKLoaded,
+            isInitialized: isInitialized,
             cacheSize: documentCache.size,
         };
     }
     
     /**
-     * Check if all critical services are available
-     * @returns {boolean} True if all critical services ready
+     * Check if all critical services are ready for use
+     * @returns {boolean} True if app, db, auth, and storage are all initialized
      */
     function isServiceReady() {
         return isInitialized && !!app && !!db && !!auth && !!storage;
     }
     
     /**
-     * Get connection status
-     * @returns {Object} Connection status details
-     */
-    function getConnectionStatus() {
-        try {
-            return {
-                online: navigator.onLine,
-                firestore: !!db,
-                auth: !!auth,
-                storage: !!storage,
-                initialized: isInitialized,
-                cachedDocuments: documentCache.size,
-            };
-        } catch (error) {
-            return {
-                online: false,
-                firestore: false,
-                auth: false,
-                storage: false,
-                initialized: false,
-                cachedDocuments: 0,
-                error: error.message,
-            };
-        }
-    }
-    
-    /**
-     * Wait for Firebase to be fully initialized
-     * @param {number} [timeout=10000] - Timeout in milliseconds
+     * Wait for Firebase to complete initialization
+     * @param {number} [timeout] - Maximum wait time in milliseconds (default 10000)
      * @returns {Promise<Object>} Resolves with service snapshot when ready
      */
-    function waitForInit(timeout = 10000) {
-        return new Promise((resolve, reject) => {
+    function waitForInit(timeout) {
+        var maxWait = timeout || 10000;
+        
+        return new Promise(function(resolve, reject) {
+            // If already initialized, resolve immediately
             if (isInitialized) {
                 resolve(getServiceSnapshot());
                 return;
             }
             
-            const timeoutId = setTimeout(() => {
+            // Set timeout for initialization
+            var timeoutId = setTimeout(function() {
                 window.removeEventListener('firebase:initialized', handler);
-                reject(new Error('Firebase initialization timeout'));
-            }, timeout);
+                reject(new Error('Firebase initialization timeout after ' + maxWait + 'ms'));
+            }, maxWait);
             
-            const handler = (event) => {
+            // Listen for initialization event
+            var handler = function(event) {
                 clearTimeout(timeoutId);
-                if (event.detail.success) {
+                if (event.detail && event.detail.success) {
                     resolve(getServiceSnapshot());
                 } else {
-                    reject(new Error(event.detail.error || 'Initialization failed'));
+                    reject(new Error(event.detail ? event.detail.error : 'Initialization failed'));
                 }
             };
             
@@ -1375,7 +840,7 @@ const FirebaseService = (function() {
     // SECTION 8: PUBLIC API
     // -------------------------------------------------------------------------
     
-    /** @type {Object} Public API surface of FirebaseService module */
+    /** @type {Object} Frozen public API for FirebaseService */
     const publicAPI = Object.freeze({
         // Configuration
         config: firebaseConfig,
@@ -1385,52 +850,34 @@ const FirebaseService = (function() {
         get db() { return db; },
         get auth() { return auth; },
         get storage() { return storage; },
-        get rtdb() { return rtdb; },
-        get functions() { return functions; },
-        get analytics() { return analytics; },
-        get performance() { return performance; },
-        get messaging() { return messaging; },
         
-        // Status
-        isInitialized: () => isInitialized,
-        isSDKLoaded: () => isSDKLoaded,
-        isServiceReady,
-        getServiceSnapshot,
-        getConnectionStatus,
-        waitForInit,
+        // Status checks
+        isInitialized: function() { return isInitialized; },
+        isSDKLoaded: function() { return isSDKLoaded; },
+        isServiceReady: isServiceReady,
+        getServiceSnapshot: getServiceSnapshot,
+        waitForInit: waitForInit,
         
         // Initialization
-        initializeAll,
+        initializeAll: initializeAll,
         
-        // Auth
-        getCurrentUser,
-        getIdToken,
-        signOut,
+        // Authentication helpers
+        getCurrentUser: getCurrentUser,
+        signOut: signOut,
         
-        // CRUD
-        createDocument,
-        getDocument,
-        updateDocument,
-        deleteDocument,
-        queryDocuments,
-        batchWrite,
-        runTransaction,
+        // CRUD operations
+        createDocument: createDocument,
+        getDocument: getDocument,
+        updateDocument: updateDocument,
+        deleteDocument: deleteDocument,
+        queryDocuments: queryDocuments,
         
-        // Real-time
-        onDocumentSnapshot,
-        onCollectionSnapshot,
+        // Cache management
+        clearCache: clearCache,
+        getCachedDocument: getCachedDocument,
         
-        // Storage
-        uploadFile,
-        getFileURL,
-        deleteFile,
-        
-        // Cache
-        clearCache,
-        getCachedDocument,
-        
-        // Utility
-        queueOperation,
+        // Operation queue
+        queueOperation: queueOperation,
     });
     
     return publicAPI;
@@ -1441,40 +888,32 @@ const FirebaseService = (function() {
 // AUTO-INITIALIZATION
 // =============================================================================
 
-// Initialize Firebase when the module loads
 if (typeof window !== 'undefined') {
-    // Wait for DOM to be ready
+    // Start initialization when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            FirebaseService.initializeAll().catch((error) => {
+        document.addEventListener('DOMContentLoaded', function() {
+            FirebaseService.initializeAll().catch(function(error) {
                 console.error('[FirebaseService] Auto-initialization failed:', error);
             });
         });
     } else {
-        // DOM already loaded
-        FirebaseService.initializeAll().catch((error) => {
+        // DOM already loaded - initialize immediately
+        FirebaseService.initializeAll().catch(function(error) {
             console.error('[FirebaseService] Auto-initialization failed:', error);
         });
     }
 }
 
 // =============================================================================
-// EXPORTS - Dual export strategy
+// EXPORTS - Global namespace ONLY (no ES module export)
 // =============================================================================
 
-// Global namespace export
 if (typeof window !== 'undefined') {
     window.FirebaseService = FirebaseService;
     window.Global = window.Global || {};
     window.Global.FirebaseService = FirebaseService;
 }
 
-// ES Module export
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = FirebaseService;
 }
-
-export {
-    FirebaseService as default,
-    FirebaseService,
-};

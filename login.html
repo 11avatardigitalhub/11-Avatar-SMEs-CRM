@@ -65,12 +65,12 @@
     <link rel="stylesheet" href="src/css/auth.css" />
     
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.firebaseapp.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.cloudfunctions.net wss://*.firebaseapp.com; frame-src 'self' https://*.firebaseapp.com;" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.firebaseapp.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://*.cloudfunctions.net wss://*.firebaseapp.com; frame-src 'self' https://*.firebaseapp.com;" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
     <title>Login - 11 Avatar Digital Hub | Master Revenue CRM</title>
     
-    <!-- Anti-flicker: Hide body until CSS loaded -->
+    <!-- Anti-flicker -->
     <style>
         body { opacity: 0; transition: opacity 0.35s ease; }
         body.loaded { opacity: 1; }
@@ -78,26 +78,17 @@
 </head>
 <body>
     
-    <!-- ==========================================
-         SKIP NAVIGATION LINK (Accessibility)
-         ========================================== -->
-    <a href="#login-form" class="skip-link" aria-label="Skip to login form">
-        Skip to Login Form
-    </a>
+    <!-- Skip Navigation -->
+    <a href="#login-form" class="skip-link" aria-label="Skip to login form">Skip to Login Form</a>
     
     <!-- ==========================================
          MAIN LOGIN CONTAINER
          ========================================== -->
     <main class="auth-container" role="main" aria-labelledby="login-heading">
         
-        <!-- ==========================================
-             LOGIN CARD
-             ========================================== -->
         <section class="auth-card login-card" aria-label="Login form card">
             
-            <!-- ==========================================
-                 BRAND HEADER
-                 ========================================== -->
+            <!-- Brand Header -->
             <header class="auth-header">
                 <a href="index.html" class="auth-logo" aria-label="11 Avatar Digital Hub - Home">
                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true" role="img">
@@ -116,37 +107,27 @@
                 <p class="auth-subtitle">Sign in to access your CRM dashboard</p>
             </header>
             
-            <!-- ==========================================
-                 SESSION EXPIRED / LOGOUT NOTIFICATION
-                 ========================================== -->
+            <!-- Session/Logout Notification -->
             <div id="login-notification" role="status" aria-live="polite" aria-atomic="true" style="display:none;"></div>
             
-            <!-- ==========================================
-                 ERROR MESSAGE CONTAINER
-                 ========================================== -->
+            <!-- Error Message Container -->
             <div id="login-error" class="auth-error" role="alert" aria-live="assertive" aria-atomic="true">
                 <span id="login-error-message"></span>
             </div>
             
-            <!-- ==========================================
-                 LOCKOUT WARNING CONTAINER
-                 ========================================== -->
+            <!-- Lockout Warning Container -->
             <div id="login-lockout" class="auth-error" role="alert" aria-live="assertive" style="display:none;border-left-color:#F59E0B;background:rgba(245,158,11,0.08);color:#F59E0B;">
                 <span id="login-lockout-message"></span>
                 <span id="login-lockout-timer" style="font-weight:700;"></span>
             </div>
             
-            <!-- ==========================================
-                 LOGIN FORM
-                 ========================================== -->
-            <form id="login-form" class="auth-form" novalidate autocomplete="on" method="POST" aria-label="Login form">
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form" novalidate autocomplete="on" aria-label="Login form">
                 
-                <!-- Hidden CSRF Protection Token -->
+                <!-- Hidden CSRF Token -->
                 <input type="hidden" id="login-csrf" name="csrf_token" value="" />
                 
-                <!-- ==========================================
-                     EMAIL FIELD
-                     ========================================== -->
+                <!-- Email Field -->
                 <div class="input-group">
                     <span class="input-icon" aria-hidden="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -170,9 +151,7 @@
                     <div id="login-email-error" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 
-                <!-- ==========================================
-                     PASSWORD FIELD
-                     ========================================== -->
+                <!-- Password Field -->
                 <div class="input-group">
                     <span class="input-icon" aria-hidden="true">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -210,9 +189,7 @@
                     <div id="login-password-error" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 
-                <!-- ==========================================
-                     REMEMBER ME & FORGOT PASSWORD
-                     ========================================== -->
+                <!-- Remember Me & Forgot Password -->
                 <div class="auth-options-row">
                     <label class="remember-me" for="login-remember">
                         <input 
@@ -229,9 +206,7 @@
                     </a>
                 </div>
                 
-                <!-- ==========================================
-                     SUBMIT BUTTON
-                     ========================================== -->
+                <!-- Submit Button -->
                 <button 
                     type="submit" 
                     id="login-submit" 
@@ -243,14 +218,10 @@
                     <span class="spinner" aria-hidden="true"></span>
                 </button>
                 
-                <!-- ==========================================
-                     DIVIDER
-                     ========================================== -->
+                <!-- Divider -->
                 <div class="auth-divider" aria-hidden="true">or continue with</div>
                 
-                <!-- ==========================================
-                     GOOGLE LOGIN BUTTON
-                     ========================================== -->
+                <!-- Google Login Button -->
                 <button 
                     type="button" 
                     id="login-google" 
@@ -268,9 +239,7 @@
                 
             </form>
             
-            <!-- ==========================================
-                 FOOTER LINKS
-                 ========================================== -->
+            <!-- Footer Links -->
             <footer class="auth-footer">
                 <p>
                     Don't have an account? 
@@ -279,9 +248,7 @@
                 <a href="index.html" class="auth-back-link" aria-label="Back to home page">← Back to Home</a>
             </footer>
             
-            <!-- ==========================================
-                 SECURITY NOTE
-                 ========================================== -->
+            <!-- Security Note -->
             <div class="security-note" aria-label="Security information">
                 <span class="note-icon" aria-hidden="true">🔒</span>
                 <p class="note-text">
@@ -296,9 +263,7 @@
         
     </main>
     
-    <!-- ==========================================
-         LOADING OVERLAY (Hidden by default)
-         ========================================== -->
+    <!-- Loading Overlay -->
     <div id="login-loading-overlay" class="loading-overlay" role="alert" aria-busy="true" aria-label="Signing in, please wait" style="display:none;">
         <div class="loading-spinner-large" aria-hidden="true"></div>
         <p class="loading-text">Signing you in securely...</p>
@@ -308,7 +273,7 @@
          SCRIPTS
          ========================================== -->
     
-    <!-- Firebase SDKs (Compat mode for broader browser support) -->
+    <!-- Firebase SDKs (Compat mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     
@@ -318,148 +283,82 @@
     <script src="src/js/auth/auth.js"></script>
     <script src="src/js/auth/login.js"></script>
     
-    <!-- ==========================================
-         INLINE INITIALIZATION (Minimal bootstrap)
-         ========================================== -->
+    <!-- Inline Bootstrap -->
     <script>
-        /**
-         * @fileoverview Login Page Bootstrap
-         * @description Minimal inline script to initialize login page components.
-         *              Heavy logic resides in src/js/auth/login.js (LoginController).
-         * @version 3.0.0
-         */
         'use strict';
-        
         (function() {
-            
-            /**
-             * Generate CSRF token for form protection
-             * @returns {string} Random token
-             */
             function generateCSRFToken() {
                 try {
-                    const array = new Uint32Array(8);
+                    var array = new Uint32Array(8);
                     crypto.getRandomValues(array);
                     return Array.from(array, function(dec) {
                         return ('0' + dec.toString(16)).slice(-8);
                     }).join('');
-                } catch (error) {
+                } catch (e) {
                     return Date.now().toString(36) + Math.random().toString(36).substr(2);
                 }
             }
             
-            /**
-             * Parse URL parameters from hash fragment
-             * @returns {URLSearchParams} Parsed parameters
-             */
             function getHashParams() {
                 try {
                     var hash = window.location.hash;
-                    var queryIndex = hash.indexOf('?');
-                    if (queryIndex > -1) {
-                        return new URLSearchParams(hash.substring(queryIndex + 1));
-                    }
-                    return new URLSearchParams();
-                } catch (error) {
-                    return new URLSearchParams();
-                }
+                    var idx = hash.indexOf('?');
+                    return idx > -1 ? new URLSearchParams(hash.substring(idx + 1)) : new URLSearchParams();
+                } catch (e) { return new URLSearchParams(); }
             }
             
-            /**
-             * Show notification message (success/info)
-             * @param {string} message - Message to display
-             * @param {string} type - 'success' or 'info'
-             */
             function showNotification(message, type) {
-                var notification = document.getElementById('login-notification');
-                if (!notification) return;
-                
+                var el = document.getElementById('login-notification');
+                if (!el) return;
                 var isSuccess = type === 'success';
-                notification.style.display = 'block';
-                notification.style.background = isSuccess 
-                    ? 'rgba(16,185,129,0.08)' 
-                    : 'rgba(59,130,246,0.08)';
-                notification.style.borderLeftColor = isSuccess ? '#10B981' : '#3B82F6';
-                notification.style.color = isSuccess ? '#10B981' : '#3B82F6';
-                notification.style.borderRadius = '10px';
-                notification.style.padding = '14px 18px';
-                notification.style.marginBottom = '24px';
-                notification.style.borderLeft = '4px solid';
-                notification.style.animation = 'fadeInUp 0.3s ease';
-                notification.textContent = message;
-                
-                // Auto-hide after 8 seconds
-                setTimeout(function() {
-                    notification.style.display = 'none';
-                }, 8000);
+                el.style.display = 'block';
+                el.style.background = isSuccess ? 'rgba(16,185,129,0.08)' : 'rgba(59,130,246,0.08)';
+                el.style.borderLeftColor = isSuccess ? '#10B981' : '#3B82F6';
+                el.style.color = isSuccess ? '#10B981' : '#3B82F6';
+                el.style.borderRadius = '10px';
+                el.style.padding = '14px 18px';
+                el.style.marginBottom = '24px';
+                el.style.borderLeft = '4px solid';
+                el.style.animation = 'fadeInUp 0.3s ease';
+                el.textContent = message;
+                setTimeout(function() { el.style.display = 'none'; }, 8000);
             }
             
-            // -----------------------------------------------------------------
-            // DOM READY HANDLER
-            // -----------------------------------------------------------------
             function onDOMReady() {
-                // Remove anti-flicker
                 document.body.classList.add('loaded');
                 
-                // Set CSRF token
                 var csrfInput = document.getElementById('login-csrf');
-                if (csrfInput) {
-                    csrfInput.value = generateCSRFToken();
-                }
+                if (csrfInput) csrfInput.value = generateCSRFToken();
                 
-                // Check for redirect reasons in URL hash
                 var params = getHashParams();
                 var reason = params.get('reason');
                 
                 if (reason === 'session_expired') {
                     setTimeout(function() {
-                        var errorContainer = document.getElementById('login-error');
-                        var errorMessage = document.getElementById('login-error-message');
-                        if (errorContainer && errorMessage) {
-                            errorMessage.textContent = '⏰ Your session has expired. Please sign in again to continue.';
-                            errorContainer.classList.add('show');
+                        var ec = document.getElementById('login-error');
+                        var em = document.getElementById('login-error-message');
+                        if (ec && em) {
+                            em.textContent = '⏰ Your session has expired. Please sign in again.';
+                            ec.classList.add('show');
                         }
                     }, 400);
                 } else if (reason === 'logout') {
-                    setTimeout(function() {
-                        showNotification('✅ You have been logged out successfully.', 'success');
-                    }, 400);
+                    setTimeout(function() { showNotification('✅ Logged out successfully.', 'success'); }, 400);
                 } else if (reason === 'password_reset') {
-                    setTimeout(function() {
-                        showNotification('✅ Your password has been reset successfully. Please sign in with your new password.', 'success');
-                    }, 400);
+                    setTimeout(function() { showNotification('✅ Password reset. Please sign in.', 'success'); }, 400);
                 } else if (reason === 'email_verified') {
-                    setTimeout(function() {
-                        showNotification('✅ Your email has been verified. You can now sign in.', 'success');
-                    }, 400);
+                    setTimeout(function() { showNotification('✅ Email verified. You can sign in.', 'success'); }, 400);
                 }
                 
-                // Focus email field after animations
                 var emailInput = document.getElementById('login-email');
-                if (emailInput) {
-                    setTimeout(function() {
-                        emailInput.focus();
-                    }, 700);
-                }
-                
-                // Log initialization
-                if (window.Constants && window.Constants.APP && window.Constants.APP.DEBUG) {
-                    console.log(
-                        '%c[Login Page] %cReady %cv' + window.Constants.APP.VERSION,
-                        'color: #FFD700; font-weight: bold;',
-                        'color: #10B981;',
-                        'color: #888;'
-                    );
-                }
+                if (emailInput) setTimeout(function() { emailInput.focus(); }, 700);
             }
             
-            // Execute when DOM is ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', onDOMReady);
             } else {
                 onDOMReady();
             }
-            
         })();
     </script>
     
