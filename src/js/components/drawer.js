@@ -977,4 +977,7 @@ if (typeof window !== 'undefined') {
     window.Global.Drawer.instances = window.Global.Drawer.instances || new Map();
     window.Global.Drawer.Drawer = Drawer;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

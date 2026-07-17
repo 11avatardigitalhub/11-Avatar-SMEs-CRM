@@ -14,7 +14,11 @@
  * Simulates complete user journeys through the application
  */
 const E2E_CONFIG = {
+<<<<<<< HEAD
     baseURL: 'https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM',
+=======
+    baseURL: 'https://11avatardigitalhub.github.io/lead2revenue',
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
     apiBaseURL: 'https://11avatar-api.11avatardigitalhub.workers.dev',
     timeout: 30000,
     retryCount: 2,
@@ -1106,4 +1110,7 @@ export {
     assert, testResults, E2ETestRunner, MockAPIServer, 
     E2E_CONFIG, setupMockAPIRoutes 
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

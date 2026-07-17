@@ -1466,4 +1466,7 @@ if (typeof window !== 'undefined') {
     window.Global.Kanban.instances = window.Global.Kanban.instances || new Map();
     window.Global.Kanban.KanbanBoard = KanbanBoard;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

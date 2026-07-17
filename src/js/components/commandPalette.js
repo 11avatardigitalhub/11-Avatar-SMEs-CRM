@@ -1282,4 +1282,7 @@ if (typeof window !== 'undefined') {
     window.Global.CommandPalette.instances = window.Global.CommandPalette.instances || new Map();
     window.Global.CommandPalette.CommandPalette = CommandPalette;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

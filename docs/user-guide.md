@@ -44,7 +44,11 @@ This comprehensive user guide will help you navigate and master the **11 Avatar 
 
 ### Creating Your Account
 
+<<<<<<< HEAD
 1. Visit **[https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/](https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/)**
+=======
+1. Visit **[https://11avatardigitalhub.github.io/lead2revenue/](https://11avatardigitalhub.github.io/lead2revenue/)**
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
 2. Click on **"Get Started Free"** or **"Register"**
 3. Fill in your details:
    - Full Name
@@ -689,9 +693,16 @@ A: UPI payments are instant. Bank transfers typically reconcile within 1-2 busin
 - **Support Email:** support@11avatardigitalhub.cloud
 - **Knowledge Base:** https://11avatardigitalhub.cloud/guides
 - **Video Tutorials:** https://youtube.com/@11avatardigitalhub
+<<<<<<< HEAD
 - **Community Forum:** https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/discussions
+=======
+- **Community Forum:** https://github.com/11avatardigitalhub/lead2revenue/discussions
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
 
 ---
 
 **Document Version:** 2.0.0 | **Last Updated:** July 16, 2026
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

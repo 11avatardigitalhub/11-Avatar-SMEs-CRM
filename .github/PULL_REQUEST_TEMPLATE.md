@@ -237,4 +237,7 @@ Task 2 (tracked in issue #)
 
 Thank you for contributing to 11 Avatar Digital Hub! 🚀
 A maintainer will review your PR within 2-3 business days.
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

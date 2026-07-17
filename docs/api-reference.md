@@ -587,4 +587,7 @@ Support Email: support@11avatardigitalhub.cloud
 Status Page: https://status.11avatardigitalhub.cloud
 
 SDK & Examples: https://github.com/11avatardigitalhub/api-examples
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

@@ -1389,4 +1389,7 @@ if (typeof window !== 'undefined') {
     window.Global.ColorPicker.instances = window.Global.ColorPicker.instances || new Map();
     window.Global.ColorPicker.ColorPicker = ColorPicker;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

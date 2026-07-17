@@ -1255,4 +1255,7 @@ if (typeof window !== 'undefined') {
     window.Global.InfiniteScroll.instances = window.Global.InfiniteScroll.instances || new Map();
     window.Global.InfiniteScroll.InfiniteScroll = InfiniteScroll;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

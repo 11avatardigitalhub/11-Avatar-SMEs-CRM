@@ -865,4 +865,7 @@ document.head.appendChild(registerStyles);
 
 export default registerController;
 console.log('📝 Register Controller ready');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

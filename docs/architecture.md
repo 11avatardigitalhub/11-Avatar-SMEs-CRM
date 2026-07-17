@@ -72,7 +72,11 @@ text
 ---
 
 ## 📁 Project Structure
+<<<<<<< HEAD
 11-Avatar-SMEs-CRM/
+=======
+lead2revenue/
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
 ├── public/ # Public-facing static pages (Dark Theme)
 │ ├── index.html # Landing page
 │ ├── login.html # Login page
@@ -526,4 +530,7 @@ For architecture questions or suggestions:
 - **CTO:** Hina - info@11avatardigitalhub.cloud
 - **VP Engineering:** Pooja - support@11avatardigitalhub.cloud
 - **Documentation:** info@11avatardigitalhub.cloud
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

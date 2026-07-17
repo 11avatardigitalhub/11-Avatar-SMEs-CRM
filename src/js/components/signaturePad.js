@@ -1018,4 +1018,7 @@ if (typeof window !== 'undefined') {
     window.Global.SignaturePad.instances = window.Global.SignaturePad.instances || new Map();
     window.Global.SignaturePad.SignaturePad = SignaturePad;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

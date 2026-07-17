@@ -825,4 +825,7 @@ console.log('🏗️ App core initialized, waiting for DOM...');
 // ==========================================
 // END OF CORE APPLICATION
 // ==========================================
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

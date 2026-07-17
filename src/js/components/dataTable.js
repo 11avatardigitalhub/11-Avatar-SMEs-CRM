@@ -1089,4 +1089,7 @@ if (typeof window !== 'undefined') {
     window.Global.DataTable.instances = window.Global.DataTable.instances || new Map();
     window.Global.DataTable.DataTable = DataTable;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

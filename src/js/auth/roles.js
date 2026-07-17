@@ -770,4 +770,7 @@ window.roles = roleManager;
 export default roleManager;
 
 console.log('👥 Role Manager ready');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

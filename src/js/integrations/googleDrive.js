@@ -534,4 +534,7 @@ const googleDriveIntegration = new GoogleDriveIntegration();
 export { googleDriveIntegration, GoogleDriveIntegration };
 export default googleDriveIntegration;
 if (typeof window !== 'undefined') { window.Global = window.Global || {}; window.Global.Drive = googleDriveIntegration; }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

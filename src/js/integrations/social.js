@@ -535,4 +535,7 @@ const socialIntegration = new SocialIntegration();
 export { socialIntegration, SocialIntegration };
 export default socialIntegration;
 if (typeof window !== 'undefined') { window.Global = window.Global || {}; window.Global.Social = socialIntegration; }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

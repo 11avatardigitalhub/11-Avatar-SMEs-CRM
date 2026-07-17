@@ -221,4 +221,7 @@ class AvatarStack {
 export { AvatarStack };
 export default AvatarStack;
 if (typeof window !== 'undefined') { window.Global = window.Global || {}; window.Global.AvatarStack = window.Global.AvatarStack || {}; window.Global.AvatarStack.instances = window.Global.AvatarStack.instances || new Map(); window.Global.AvatarStack.AvatarStack = AvatarStack; }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

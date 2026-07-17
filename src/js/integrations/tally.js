@@ -539,4 +539,7 @@ const tallyIntegration = new TallyIntegration();
 export { tallyIntegration, TallyIntegration };
 export default tallyIntegration;
 if (typeof window !== 'undefined') { window.Global = window.Global || {}; window.Global.Tally = tallyIntegration; }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a

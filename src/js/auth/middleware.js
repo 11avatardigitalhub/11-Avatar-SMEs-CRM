@@ -775,4 +775,7 @@ window.middleware = middlewareManager;
 export default middlewareManager;
 
 console.log('🛡️ Auth Middleware ready');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8f1d8beec953e283a49ae0dfcde747a14c5c459a
