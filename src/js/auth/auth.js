@@ -1,663 +1,392 @@
-/* ==========================================
-   11 AVATAR DIGITAL HUB
-   Authentication System - Complete Auth Module
-   Version: 2.0 Enterprise
-   ==========================================
-   Purpose:
-   - Email/Password authentication
-   - Google OAuth authentication
-   - Phone number authentication
-   - Registration with email verification
-   - Password reset flow
-   - Session management
-   - Token refresh
-   - Multi-tab session sync
-   - Login attempt limiting
-   - Brute force protection
-   - Remember me functionality
-   - Account linking
-   - Profile management
-   - Role-based access after login
-   ==========================================
-   Security Features:
-   - Password strength validation
-   - Rate limiting (5 attempts per 15 min)
-   - Session timeout (30 min inactivity)
-   - Token auto-refresh
-   - Secure logout
-   - Cross-tab synchronization
-   ========================================== */
+/**
+ * @fileoverview 11 Avatar SMEs CRM - Enterprise Authentication Manager
+ * @description Complete authentication system with Email/Password, Google OAuth,
+ *              session management, token refresh, brute-force protection,
+ *              cross-tab sync, idle timeout, and role-based access control.
+ *              Integrates with FirebaseService and Constants modules.
+ * @module auth/auth
+ * @version 3.0.0
+ * @author 11 Avatar Digital Hub
+ * @license Proprietary - All Rights Reserved
+ * @copyright 2024-2026 11 Avatar Digital Hub
+ *
+ * @requires FirebaseService (window.FirebaseService)
+ * @requires Constants (window.Constants)
+ *
+ * @exports window.AuthManager - Global namespace
+ * @exports window.auth - Convenience alias
+ */
 
-// ==========================================
-// AUTH MANAGER CLASS
-// ==========================================
-class AuthManager {
+'use strict';
+
+// =============================================================================
+// AUTH MANAGER - Self-executing IIFE
+// =============================================================================
+const AuthManager = (function() {
+
+    // -------------------------------------------------------------------------
+    // SECTION 1: CONFIGURATION
+    // -------------------------------------------------------------------------
+    
+    /** @constant {Object} DEFAULT_CONFIG - Auth system configuration */
+    const DEFAULT_CONFIG = Object.freeze({
+        // Login security
+        maxLoginAttempts: 5,
+        loginLockoutDuration: 15 * 60 * 1000, // 15 minutes
+        
+        // Session
+        sessionTimeout: 30 * 60 * 1000,       // 30 minutes idle
+        rememberMeDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+        tokenRefreshBuffer: 5 * 60 * 1000,    // Refresh 5 min before expiry
+        
+        // Password policy
+        minPasswordLength: 8,
+        requireUppercase: true,
+        requireLowercase: true,
+        requireNumber: true,
+        requireSpecialChar: true,
+        
+        // Providers
+        providers: {
+            email: true,
+            google: true,
+            phone: false,
+        },
+        
+        // Verification
+        emailVerificationRequired: true,
+        verificationLinkExpiry: 24 * 60 * 60 * 1000, // 24 hours
+        
+        // Security
+        twoFactorEnabled: false,
+        forceLogoutOnPasswordChange: true,
+        idleTimeoutWarning: 60 * 1000, // Warn 1 minute before timeout
+    });
+    
+    /** @type {Object} Active configuration (can be modified at runtime) */
+    let config = Object.assign({}, DEFAULT_CONFIG);
+
+    // -------------------------------------------------------------------------
+    // SECTION 2: STATE
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Internal state */
+    const state = {
+        /** @type {firebase.User|null} Current Firebase user */
+        user: null,
+        
+        /** @type {Object|null} User profile from Firestore */
+        userProfile: null,
+        
+        /** @type {boolean} Whether user is authenticated */
+        isAuthenticated: false,
+        
+        /** @type {boolean} Whether email is verified */
+        isEmailVerified: false,
+        
+        /** @type {boolean} Whether auth is still loading */
+        authLoading: true,
+        
+        /** @type {string|null} Last auth error message */
+        authError: null,
+        
+        /** @type {number} Consecutive failed login attempts */
+        loginAttempts: 0,
+        
+        /** @type {number|null} Timestamp of last failed attempt */
+        lastLoginAttempt: null,
+        
+        /** @type {number|null} Timestamp when lockout ends */
+        lockoutUntil: null,
+        
+        /** @type {number|null} Session start timestamp */
+        sessionStartTime: null,
+        
+        /** @type {number} Last user activity timestamp */
+        lastActivityTime: Date.now(),
+        
+        /** @type {boolean} Whether remember me is active */
+        rememberMe: false,
+        
+        /** @type {string|null} Current tenant ID */
+        tenantId: null,
+    };
+    
+    /** @type {Array<Function>} Registered auth state change listeners */
+    const authListeners = [];
+    
+    /** @type {Function|null} Firebase auth state unsubscribe function */
+    let unsubscribeAuth = null;
+    
+    /** @type {number|null} Session check interval ID */
+    let sessionTimer = null;
+    
+    /** @type {number|null} Idle warning timeout ID */
+    let idleWarningTimeout = null;
+    
+    /** @type {number|null} Token refresh timeout ID */
+    let tokenRefreshTimeout = null;
+
+    // -------------------------------------------------------------------------
+    // SECTION 3: UTILITY FUNCTIONS
+    // -------------------------------------------------------------------------
     
     /**
-     * Initialize the Authentication Manager
+     * Get current timestamp as ISO string (fallback if Firebase is unavailable)
+     * @returns {string} ISO 8601 timestamp
      */
-    constructor() {
-        // Configuration
-        this.config = {
-            // Login
-            maxLoginAttempts: 5,
-            loginLockoutDuration: 15 * 60 * 1000, // 15 minutes
-            sessionTimeout: 30 * 60 * 1000,       // 30 minutes
-            rememberMeDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
-            
-            // Password
-            minPasswordLength: 8,
-            requireUppercase: true,
-            requireLowercase: true,
-            requireNumber: true,
-            requireSpecialChar: true,
-            
-            // Providers
-            providers: {
+    function getTimestamp() {
+        try {
+            // Try Firebase server timestamp first
+            if (typeof firebase !== 'undefined' && 
+                firebase.firestore && 
+                firebase.firestore.FieldValue &&
+                firebase.firestore.FieldValue.serverTimestamp) {
+                return firebase.firestore.FieldValue.serverTimestamp();
+            }
+        } catch (error) {
+            // Fallback
+        }
+        return new Date().toISOString();
+    }
+    
+    /**
+     * Generate a unique ID (fallback if Firebase unavailable)
+     * @returns {string} Unique identifier
+     */
+    function generateId() {
+        try {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+        } catch (error) {
+            // Fallback
+        }
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    }
+    
+    /**
+     * Get default user preferences
+     * @returns {Object} Default preferences object
+     */
+    function getDefaultPreferences() {
+        return {
+            theme: 'light',
+            language: 'en-IN',
+            timezone: 'Asia/Kolkata',
+            dateFormat: 'DD/MM/YYYY',
+            currency: 'INR',
+            notifications: {
                 email: true,
-                google: true,
-                phone: false
+                push: true,
+                sms: false,
+                inApp: true,
             },
-            
-            // Verification
-            emailVerificationRequired: true,
-            verificationLinkExpiry: 24 * 60 * 60 * 1000, // 24 hours
-            
-            // Security
-            twoFactorEnabled: false,
-            forceLogoutOnPasswordChange: true
+            dashboard: {
+                defaultView: 'overview',
+                widgets: ['stats', 'pipeline', 'tasks', 'activities'],
+            },
+            accessibility: {
+                fontSize: 'medium',
+                highContrast: false,
+                reduceMotion: false,
+            },
+        };
+    }
+    
+    /**
+     * Get default role-based permissions
+     * @param {string} role - Role short name
+     * @returns {Array<string>} Array of permission strings
+     */
+    function getDefaultPermissions(role) {
+        const permissionsMap = {
+            'super_admin': ['*'],
+            'admin': [
+                'manage_users', 'manage_roles', 'manage_teams',
+                'manage_leads', 'manage_clients', 'manage_deals',
+                'manage_invoices', 'manage_payments', 'manage_tasks',
+                'manage_projects', 'manage_reports', 'manage_settings',
+                'manage_integrations', 'manage_whatsapp', 'manage_email',
+                'manage_sms', 'manage_gst', 'export_data', 'import_data',
+                'view_audit_logs', 'manage_billing', 'manage_subscription',
+            ],
+            'manager': [
+                'view_users', 'manage_team',
+                'manage_leads', 'manage_clients', 'manage_deals',
+                'view_invoices', 'create_invoices', 'manage_tasks',
+                'manage_projects', 'view_reports', 'manage_whatsapp',
+                'manage_email', 'export_data', 'import_data',
+            ],
+            'sales_lead': [
+                'view_team', 'manage_leads', 'manage_clients',
+                'manage_deals', 'view_invoices', 'manage_tasks',
+                'view_reports', 'manage_whatsapp', 'manage_email',
+                'export_data',
+            ],
+            'sales_executive': [
+                'view_assigned_leads', 'manage_assigned_leads',
+                'view_assigned_clients', 'manage_assigned_clients',
+                'view_assigned_deals', 'manage_assigned_deals',
+                'manage_tasks', 'manage_whatsapp', 'manage_email',
+            ],
+            'support_agent': [
+                'view_assigned_clients', 'manage_tasks',
+                'manage_whatsapp', 'manage_email',
+                'view_tickets', 'manage_tickets',
+            ],
+            'accountant': [
+                'view_invoices', 'manage_invoices', 'manage_payments',
+                'manage_gst', 'view_reports', 'export_data',
+            ],
+            'viewer': [
+                'view_assigned_leads', 'view_assigned_clients',
+                'view_assigned_deals', 'view_invoices',
+                'view_reports', 'view_tasks',
+            ],
         };
         
-        // State
-        this.state = {
-            user: null,
-            userProfile: null,
-            isAuthenticated: false,
-            isEmailVerified: false,
-            authLoading: true,
-            authError: null,
-            loginAttempts: 0,
-            lastLoginAttempt: null,
-            lockoutUntil: null,
-            sessionStartTime: null,
-            lastActivityTime: Date.now(),
-            rememberMe: false
-        };
-        
-        // Listeners
-        this._authListeners = [];
-        this._sessionTimer = null;
-        this._activityTimer = null;
-        
-        // Auth state observer unsubscribe
-        this._unsubscribeAuth = null;
-        
-        // Bind methods
-        this._handleAuthStateChange = this._handleAuthStateChange.bind(this);
-        this._handleActivity = this._handleActivity.bind(this);
-        this._checkSessionTimeout = this._checkSessionTimeout.bind(this);
-        
-        // Initialize
-        this._init();
+        return permissionsMap[role] || permissionsMap['viewer'];
     }
     
     /**
-     * Initialize the auth manager
-     * @private
+     * Check if FirebaseService has a specific method
+     * @param {string} methodName - Method name to check
+     * @returns {boolean} True if method exists
      */
-    async _init() {
-        console.log('🔐 Initializing Auth Manager...');
-        
+    function hasFirebaseMethod(methodName) {
         try {
-            // Load saved state
-            this._loadState();
-            
-            // Listen for Firebase auth state changes
-            this._unsubscribeAuth = FirebaseService.auth.onAuthStateChanged(
-                this._handleAuthStateChange,
-                (error) => {
-                    console.error('❌ Auth state change error:', error);
-                    this.state.authError = error.message;
-                    this.state.authLoading = false;
-                    this._notifyListeners();
-                }
-            );
-            
-            // Setup session management
-            this._setupSessionManagement();
-            
-            // Setup cross-tab sync
-            this._setupCrossTabSync();
-            
-            // Restore session if remembered
-            await this._restoreSession();
-            
-            console.log('✅ Auth Manager initialized');
-            
+            return window.FirebaseService && 
+                   typeof window.FirebaseService[methodName] === 'function';
         } catch (error) {
-            console.error('❌ Auth Manager initialization failed:', error);
-            this.state.authError = error.message;
-            this.state.authLoading = false;
-            this._notifyListeners();
-        }
-    }
-    
-    // ==========================================
-    // AUTH STATE HANDLER
-    // ==========================================
-    
-    /**
-     * Handle Firebase auth state changes
-     * @private
-     */
-    async _handleAuthStateChange(user) {
-        console.log('🔐 Auth state changed:', user ? `User: ${user.email}` : 'No user');
-        
-        this.state.authLoading = true;
-        
-        try {
-            if (user) {
-                // User is signed in
-                this.state.user = user;
-                this.state.isAuthenticated = true;
-                this.state.isEmailVerified = user.emailVerified;
-                this.state.sessionStartTime = Date.now();
-                this.state.lastActivityTime = Date.now();
-                
-                // Fetch user profile from Firestore
-                this.state.userProfile = await FirebaseService.getCurrentUserProfile();
-                
-                // Update last login
-                await FirebaseService.updateDocument('users', user.uid, {
-                    lastLogin: FirebaseService.timestamp(),
-                    loginCount: firebase.firestore.FieldValue.increment(1)
-                }).catch(() => {}); // Silent fail
-                
-                // Get fresh token
-                const token = await user.getIdToken(true);
-                
-                // Store session
-                this._saveSession(user, token);
-                
-                // Start session timeout
-                this._startSessionTimeout();
-                
-                // Track activity
-                this._startActivityTracking();
-                
-                // Emit event
-                window.EventBus?.emit('auth:login', {
-                    user: {
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: user.displayName,
-                        photoURL: user.photoURL,
-                        emailVerified: user.emailVerified
-                    },
-                    profile: this.state.userProfile,
-                    token
-                });
-                
-                console.log('🔐 User authenticated:', user.email);
-                console.log('🔐 Role:', this.state.userProfile?.role || 'Not set');
-                
-            } else {
-                // User is signed out
-                const wasAuthenticated = this.state.isAuthenticated;
-                
-                this.state.user = null;
-                this.state.userProfile = null;
-                this.state.isAuthenticated = false;
-                this.state.isEmailVerified = false;
-                this.state.sessionStartTime = null;
-                
-                // Clear session
-                this._clearSession();
-                
-                // Stop timers
-                this._stopSessionTimeout();
-                this._stopActivityTracking();
-                
-                // Emit event
-                if (wasAuthenticated) {
-                    window.EventBus?.emit('auth:logout', {
-                        reason: 'user_signed_out'
-                    });
-                }
-                
-                console.log('🔐 User signed out');
-            }
-        } catch (error) {
-            console.error('❌ Error handling auth state change:', error);
-            this.state.authError = error.message;
-        } finally {
-            this.state.authLoading = false;
-            this._notifyListeners();
-        }
-    }
-    
-    // ==========================================
-    // REGISTRATION
-    // ==========================================
-    
-    /**
-     * Register a new user with email and password
-     * @param {Object} userData - Registration data
-     * @returns {Promise<Object>} Registration result
-     */
-    async register(userData) {
-        const {
-            email,
-            password,
-            confirmPassword,
-            displayName,
-            phone = null,
-            role = 'client_owner',
-            clientId = null,
-            acceptTerms = false
-        } = userData;
-        
-        // Validate inputs
-        const validation = this._validateRegistration(userData);
-        if (!validation.valid) {
-            throw this._createAuthError('VALIDATION', validation.message);
-        }
-        
-        // Check if terms accepted
-        if (!acceptTerms) {
-            throw this._createAuthError('TERMS', 'You must accept the Terms of Service and Privacy Policy');
-        }
-        
-        try {
-            // Create Firebase auth user
-            const userCredential = await FirebaseService.auth.createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            
-            // Update display name
-            await user.updateProfile({ displayName });
-            
-            // Create user profile in Firestore
-            const profileData = {
-                uid: user.uid,
-                email: email,
-                displayName: displayName,
-                phone: phone || '',
-                role: role,
-                clientId: clientId,
-                photoURL: '',
-                emailVerified: false,
-                permissions: Constants.ROLE_PERMISSIONS[role] || [],
-                createdAt: FirebaseService.timestamp(),
-                updatedAt: FirebaseService.timestamp(),
-                lastLogin: FirebaseService.timestamp(),
-                loginCount: 1,
-                status: 'active',
-                onboardingComplete: false,
-                preferences: Constants.DEFAULT_SETTINGS
-            };
-            
-            await FirebaseService.createDocument('users', profileData);
-            
-            // Send email verification
-            if (this.config.emailVerificationRequired) {
-                await this.sendVerificationEmail();
-            }
-            
-            console.log('✅ User registered:', email);
-            
-            window.EventBus?.emit('auth:register', {
-                user: { uid: user.uid, email, displayName },
-                role
-            });
-            
-            return {
-                success: true,
-                user: {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    emailVerified: user.emailVerified
-                },
-                verificationSent: this.config.emailVerificationRequired
-            };
-            
-        } catch (error) {
-            console.error('❌ Registration failed:', error);
-            throw this._normalizeAuthError(error);
-        }
-    }
-    
-    // ==========================================
-    // LOGIN
-    // ==========================================
-    
-    /**
-     * Login with email and password
-     * @param {Object} credentials - Login credentials
-     * @returns {Promise<Object>} Login result
-     */
-    async login(credentials) {
-        const { email, password, rememberMe = false } = credentials;
-        
-        // Validate inputs
-        if (!email || !password) {
-            throw this._createAuthError('VALIDATION', 'Email and password are required');
-        }
-        
-        // Check lockout
-        if (this._isLockedOut()) {
-            const remainingTime = Math.ceil((this.state.lockoutUntil - Date.now()) / 60000);
-            throw this._createAuthError(
-                'LOCKOUT',
-                `Too many login attempts. Please try again in ${remainingTime} minute(s).`
-            );
-        }
-        
-        try {
-            // Set persistence based on remember me
-            const persistence = rememberMe
-                ? firebase.auth.Auth.Persistence.LOCAL
-                : firebase.auth.Auth.Persistence.SESSION;
-            
-            await FirebaseService.auth.setPersistence(persistence);
-            
-            // Sign in
-            const userCredential = await FirebaseService.auth.signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            
-            // Reset login attempts on success
-            this.state.loginAttempts = 0;
-            this.state.lastLoginAttempt = null;
-            this.state.lockoutUntil = null;
-            this.state.rememberMe = rememberMe;
-            
-            // Save state
-            this._saveState();
-            
-            console.log('✅ Login successful:', email);
-            
-            return {
-                success: true,
-                user: {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    emailVerified: user.emailVerified,
-                    photoURL: user.photoURL
-                },
-                isNewUser: userCredential.additionalUserInfo?.isNewUser || false
-            };
-            
-        } catch (error) {
-            // Track failed attempt
-            this.state.loginAttempts++;
-            this.state.lastLoginAttempt = Date.now();
-            
-            // Check if should lockout
-            if (this.state.loginAttempts >= this.config.maxLoginAttempts) {
-                this.state.lockoutUntil = Date.now() + this.config.loginLockoutDuration;
-                console.warn('🔒 Account locked due to too many attempts');
-            }
-            
-            this._saveState();
-            
-            console.error('❌ Login failed:', error);
-            throw this._normalizeAuthError(error);
-        }
-    }
-    
-    /**
-     * Login with Google
-     * @returns {Promise<Object>} Login result
-     */
-    async loginWithGoogle() {
-        try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            
-            // Add scopes
-            provider.addScope('profile');
-            provider.addScope('email');
-            
-            // Set custom parameters
-            provider.setCustomParameters({
-                prompt: 'select_account'
-            });
-            
-            const result = await FirebaseService.auth.signInWithPopup(provider);
-            const user = result.user;
-            
-            // Check if new user
-            const isNewUser = result.additionalUserInfo?.isNewUser || false;
-            
-            if (isNewUser) {
-                // Create profile for new Google users
-                const profileData = {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    phone: user.phoneNumber || '',
-                    role: 'client_owner',
-                    clientId: null,
-                    photoURL: user.photoURL || '',
-                    emailVerified: true,
-                    permissions: Constants.ROLE_PERMISSIONS['client_owner'] || [],
-                    createdAt: FirebaseService.timestamp(),
-                    updatedAt: FirebaseService.timestamp(),
-                    lastLogin: FirebaseService.timestamp(),
-                    loginCount: 1,
-                    status: 'active',
-                    onboardingComplete: false,
-                    provider: 'google'
-                };
-                
-                await FirebaseService.createDocument('users', profileData);
-            }
-            
-            console.log('✅ Google login successful:', user.email);
-            
-            return {
-                success: true,
-                user: {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName,
-                    photoURL: user.photoURL,
-                    emailVerified: user.emailVerified
-                },
-                isNewUser
-            };
-            
-        } catch (error) {
-            console.error('❌ Google login failed:', error);
-            throw this._normalizeAuthError(error);
-        }
-    }
-    
-    // ==========================================
-    // EMAIL VERIFICATION
-    // ==========================================
-    
-    /**
-     * Send email verification
-     */
-    async sendVerificationEmail() {
-        try {
-            const user = FirebaseService.getCurrentUser();
-            
-            if (!user) {
-                throw this._createAuthError('NO_USER', 'No user is currently signed in');
-            }
-            
-            if (user.emailVerified) {
-                return { success: true, alreadyVerified: true };
-            }
-            
-            await user.sendEmailVerification();
-            
-            console.log('📧 Verification email sent to:', user.email);
-            
-            return { success: true, email: user.email };
-            
-        } catch (error) {
-            console.error('❌ Failed to send verification email:', error);
-            throw this._normalizeAuthError(error);
-        }
-    }
-    
-    /**
-     * Check if email is verified
-     */
-    async checkEmailVerification() {
-        try {
-            const user = FirebaseService.getCurrentUser();
-            
-            if (!user) return false;
-            
-            // Reload user to get latest state
-            await user.reload();
-            
-            this.state.isEmailVerified = user.emailVerified;
-            this._notifyListeners();
-            
-            return user.emailVerified;
-            
-        } catch (error) {
-            console.error('❌ Failed to check email verification:', error);
             return false;
         }
     }
     
-    // ==========================================
-    // PASSWORD MANAGEMENT
-    // ==========================================
-    
     /**
-     * Send password reset email
-     * @param {string} email - User email
+     * Safely emit an event via EventBus if available
+     * @param {string} eventName - Event name
+     * @param {Object} data - Event data
      */
-    async forgotPassword(email) {
+    function emitEvent(eventName, data) {
         try {
-            if (!email) {
-                throw this._createAuthError('VALIDATION', 'Email is required');
+            if (window.EventBus && typeof window.EventBus.emit === 'function') {
+                window.EventBus.emit(eventName, data);
             }
-            
-            await FirebaseService.auth.sendPasswordResetEmail(email, {
-                url: window.location.origin + '/login',
-                handleCodeInApp: false
-            });
-            
-            console.log('📧 Password reset email sent to:', email);
-            
-            return { success: true, email };
-            
+            // Also dispatch as DOM custom event
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent(eventName, { detail: data }));
+            }
         } catch (error) {
-            console.error('❌ Failed to send password reset:', error);
-            throw this._normalizeAuthError(error);
+            // Silent - events are non-critical
         }
     }
     
     /**
-     * Reset password with code
-     * @param {string} code - Verification code
-     * @param {string} newPassword - New password
+     * Log message with module prefix
+     * @param {string} level - 'log', 'warn', 'error'
+     * @param {string} message - Log message
+     * @param {*} [data] - Optional data
      */
-    async resetPassword(code, newPassword) {
+    function log(level, message, data) {
         try {
-            const validation = this._validatePassword(newPassword);
-            if (!validation.valid) {
-                throw this._createAuthError('VALIDATION', validation.message);
+            const isDebug = window.Constants && 
+                           window.Constants.APP && 
+                           window.Constants.APP.DEBUG;
+            
+            if (!isDebug && level === 'log') return;
+            
+            const prefix = '[AuthManager]';
+            switch (level) {
+                case 'error':
+                    console.error(prefix, message, data || '');
+                    break;
+                case 'warn':
+                    console.warn(prefix, message, data || '');
+                    break;
+                default:
+                    console.log(prefix, message, data || '');
+                    break;
             }
-            
-            await FirebaseService.auth.confirmPasswordReset(code, newPassword);
-            
-            console.log('✅ Password reset successful');
-            
-            return { success: true };
-            
         } catch (error) {
-            console.error('❌ Password reset failed:', error);
-            throw this._normalizeAuthError(error);
+            // Silent
         }
     }
     
     /**
-     * Change password (when already logged in)
-     * @param {string} currentPassword - Current password
-     * @param {string} newPassword - New password
+     * Normalize Firebase error into standardized format
+     * @param {Error|Object} error - Raw error object
+     * @returns {Error} Standardized error
      */
-    async changePassword(currentPassword, newPassword) {
-        try {
-            const user = FirebaseService.getCurrentUser();
-            
-            if (!user) {
-                throw this._createAuthError('NO_USER', 'No user is currently signed in');
-            }
-            
-            // Validate new password
-            const validation = this._validatePassword(newPassword);
-            if (!validation.valid) {
-                throw this._createAuthError('VALIDATION', validation.message);
-            }
-            
-            // Re-authenticate
-            const credential = firebase.auth.EmailAuthProvider.credential(
-                user.email,
-                currentPassword
-            );
-            
-            await user.reauthenticateWithCredential(credential);
-            
-            // Update password
-            await user.updatePassword(newPassword);
-            
-            console.log('✅ Password changed successfully');
-            
-            return { success: true };
-            
-        } catch (error) {
-            console.error('❌ Password change failed:', error);
-            throw this._normalizeAuthError(error);
+    function normalizeError(error) {
+        const errorMap = {
+            'auth/email-already-in-use': { code: 'EMAIL_EXISTS', message: 'This email is already registered. Please login instead.' },
+            'auth/invalid-email': { code: 'INVALID_EMAIL', message: 'Please enter a valid email address.' },
+            'auth/operation-not-allowed': { code: 'DISABLED', message: 'This login method is not currently enabled.' },
+            'auth/weak-password': { code: 'WEAK_PASSWORD', message: 'Password is too weak. Please use a stronger password.' },
+            'auth/user-disabled': { code: 'USER_DISABLED', message: 'This account has been disabled. Please contact support@11avatardigitalhub.cloud.' },
+            'auth/user-not-found': { code: 'USER_NOT_FOUND', message: 'No account found with this email. Please register first.' },
+            'auth/wrong-password': { code: 'WRONG_PASSWORD', message: 'Incorrect password. Please try again.' },
+            'auth/invalid-credential': { code: 'INVALID_CREDENTIAL', message: 'Invalid email or password. Please try again.' },
+            'auth/too-many-requests': { code: 'TOO_MANY_REQUESTS', message: 'Too many requests. Please wait and try again.' },
+            'auth/network-request-failed': { code: 'NETWORK_ERROR', message: 'Network error. Please check your internet connection.' },
+            'auth/popup-closed-by-user': { code: 'POPUP_CLOSED', message: 'Sign-in popup was closed.' },
+            'auth/cancelled-popup-request': { code: 'POPUP_CANCELLED', message: 'Sign-in cancelled.' },
+            'auth/popup-blocked': { code: 'POPUP_BLOCKED', message: 'Pop-up was blocked. Please allow popups for this site.' },
+            'auth/requires-recent-login': { code: 'REAUTH_REQUIRED', message: 'Please re-enter your password to continue.' },
+            'auth/account-exists-with-different-credential': { code: 'CREDENTIAL_CONFLICT', message: 'An account already exists with this email using a different sign-in method.' },
+        };
+        
+        const mapped = errorMap[error.code];
+        if (mapped) {
+            const normalized = new Error(mapped.message);
+            normalized.code = mapped.code;
+            normalized.originalCode = error.code;
+            normalized.timestamp = new Date().toISOString();
+            return normalized;
         }
+        
+        const fallback = new Error(error.message || 'An unexpected authentication error occurred.');
+        fallback.code = error.code || 'AUTH_ERROR';
+        fallback.originalCode = error.code;
+        fallback.timestamp = new Date().toISOString();
+        return fallback;
     }
     
     /**
      * Validate password strength
      * @param {string} password - Password to validate
-     * @returns {Object} Validation result
+     * @returns {Object} { valid: boolean, message: string, strength: string }
      */
-    _validatePassword(password) {
-        const { minPasswordLength, requireUppercase, requireLowercase, requireNumber, requireSpecialChar } = this.config;
+    function validatePasswordStrength(password) {
+        const { minPasswordLength, requireUppercase, requireLowercase, requireNumber, requireSpecialChar } = config;
         
-        if (!password || password.length < minPasswordLength) {
-            return { valid: false, message: `Password must be at least ${minPasswordLength} characters` };
+        if (!password || typeof password !== 'string') {
+            return { valid: false, message: 'Password is required.', strength: 'none' };
+        }
+        
+        if (password.length < minPasswordLength) {
+            return { valid: false, message: 'Password must be at least ' + minPasswordLength + ' characters.', strength: 'weak' };
         }
         
         if (requireUppercase && !/[A-Z]/.test(password)) {
-            return { valid: false, message: 'Password must contain at least one uppercase letter' };
+            return { valid: false, message: 'Password must contain at least one uppercase letter.', strength: 'weak' };
         }
         
         if (requireLowercase && !/[a-z]/.test(password)) {
-            return { valid: false, message: 'Password must contain at least one lowercase letter' };
+            return { valid: false, message: 'Password must contain at least one lowercase letter.', strength: 'weak' };
         }
         
         if (requireNumber && !/[0-9]/.test(password)) {
-            return { valid: false, message: 'Password must contain at least one number' };
+            return { valid: false, message: 'Password must contain at least one number.', strength: 'weak' };
         }
         
-        if (requireSpecialChar && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            return { valid: false, message: 'Password must contain at least one special character' };
+        if (requireSpecialChar && !/[!@#$%^&*()_,.?":{}|<>]/.test(password)) {
+            return { valid: false, message: 'Password must contain at least one special character.', strength: 'weak' };
         }
         
-        return { valid: true, strength: this._calculatePasswordStrength(password) };
-    }
-    
-    /**
-     * Calculate password strength score
-     * @private
-     */
-    _calculatePasswordStrength(password) {
+        // Calculate strength score
         let score = 0;
-        
         if (password.length >= 8) score++;
         if (password.length >= 12) score++;
         if (password.length >= 16) score++;
@@ -666,598 +395,1422 @@ class AuthManager {
         if (/[0-9]/.test(password)) score++;
         if (/[^A-Za-z0-9]/.test(password)) score++;
         
-        if (score <= 3) return 'weak';
-        if (score <= 5) return 'medium';
-        return 'strong';
-    }
-    
-    // ==========================================
-    // SESSION MANAGEMENT
-    // ==========================================
-    
-    /**
-     * Setup session management
-     * @private
-     */
-    _setupSessionManagement() {
-        // Check session timeout every minute
-        this._sessionTimer = setInterval(this._checkSessionTimeout, 60000);
+        let strength = 'weak';
+        if (score >= 5) strength = 'medium';
+        if (score >= 6) strength = 'strong';
+        
+        return { valid: true, message: '', strength: strength };
     }
     
     /**
-     * Start session timeout
-     * @private
+     * Check if user is currently locked out
+     * @returns {boolean} True if locked out
      */
-    _startSessionTimeout() {
-        this.state.sessionStartTime = Date.now();
-        this._saveState();
+    function isLockedOut() {
+        if (!state.lockoutUntil) return false;
+        
+        if (Date.now() >= state.lockoutUntil) {
+            // Lockout expired
+            state.lockoutUntil = null;
+            state.loginAttempts = 0;
+            saveStateToStorage();
+            return false;
+        }
+        
+        return true;
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 4: FIRESTORE USER PROFILE
+    // -------------------------------------------------------------------------
     
     /**
-     * Stop session timeout
-     * @private
+     * Fetch user profile from Firestore
+     * @param {string} uid - User ID
+     * @returns {Promise<Object|null>} User profile or null
      */
-    _stopSessionTimeout() {
-        this.state.sessionStartTime = null;
-    }
-    
-    /**
-     * Check if session has timed out
-     * @private
-     */
-    _checkSessionTimeout() {
-        if (!this.state.isAuthenticated) return;
-        if (!this.state.rememberMe && this.state.sessionStartTime) {
-            const elapsed = Date.now() - this.state.lastActivityTime;
+    async function fetchUserProfile(uid) {
+        try {
+            if (!uid) return null;
             
-            if (elapsed > this.config.sessionTimeout) {
-                console.warn('⏰ Session timeout - logging out');
-                this.logout('session_timeout');
+            // Try FirebaseService first
+            if (hasFirebaseMethod('getDocument')) {
+                const profile = await window.FirebaseService.getDocument('users', uid);
+                return profile;
             }
-        }
-    }
-    
-    /**
-     * Start activity tracking
-     * @private
-     */
-    _startActivityTracking() {
-        const events = ['mousedown', 'keydown', 'touchstart', 'scroll', 'mousemove'];
-        
-        events.forEach(event => {
-            document.addEventListener(event, this._handleActivity, { passive: true });
-        });
-    }
-    
-    /**
-     * Stop activity tracking
-     * @private
-     */
-    _stopActivityTracking() {
-        const events = ['mousedown', 'keydown', 'touchstart', 'scroll', 'mousemove'];
-        
-        events.forEach(event => {
-            document.removeEventListener(event, this._handleActivity);
-        });
-    }
-    
-    /**
-     * Handle user activity
-     * @private
-     */
-    _handleActivity() {
-        this.state.lastActivityTime = Date.now();
-    }
-    
-    /**
-     * Save session to storage
-     * @private
-     */
-    _saveSession(user, token) {
-        if (!this.state.rememberMe) return;
-        
-        try {
-            const session = {
-                uid: user.uid,
-                email: user.email,
-                token: token,
-                timestamp: Date.now()
-            };
             
-            localStorage.setItem('11avatar_session', JSON.stringify(session));
-        } catch (error) {
-            console.warn('⚠️ Failed to save session:', error.message);
-        }
-    }
-    
-    /**
-     * Clear session from storage
-     * @private
-     */
-    _clearSession() {
-        localStorage.removeItem('11avatar_session');
-    }
-    
-    /**
-     * Restore session
-     * @private
-     */
-    async _restoreSession() {
-        try {
-            const saved = localStorage.getItem('11avatar_session');
-            
-            if (saved) {
-                const session = JSON.parse(saved);
-                const elapsed = Date.now() - session.timestamp;
-                
-                // Check if session is still valid (within remember me duration)
-                if (elapsed < this.config.rememberMeDuration) {
-                    console.log('🔄 Restoring session for:', session.email);
-                    // Firebase will handle the actual session restore
-                } else {
-                    this._clearSession();
+            // Direct Firestore fallback
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                const doc = await firebase.firestore().collection('users').doc(uid).get();
+                if (doc.exists) {
+                    return { id: doc.id, ...doc.data() };
                 }
             }
+            
+            return null;
         } catch (error) {
-            this._clearSession();
+            log('error', 'Failed to fetch user profile:', error);
+            return null;
         }
     }
     
-    // ==========================================
-    // LOGOUT
-    // ==========================================
-    
     /**
-     * Logout current user
-     * @param {string} reason - Reason for logout
+     * Create user profile in Firestore
+     * @param {string} uid - User ID
+     * @param {Object} profileData - Profile data
+     * @returns {Promise<Object>} Created profile
      */
-    async logout(reason = 'user_initiated') {
+    async function createUserProfile(uid, profileData) {
         try {
-            console.log('👋 Logging out...');
+            const data = {
+                uid: uid,
+                email: profileData.email || '',
+                displayName: profileData.displayName || '',
+                phone: profileData.phone || '',
+                role: profileData.role || 'viewer',
+                clientId: profileData.clientId || null,
+                photoURL: profileData.photoURL || '',
+                emailVerified: profileData.emailVerified || false,
+                permissions: getDefaultPermissions(profileData.role || 'viewer'),
+                createdAt: getTimestamp(),
+                updatedAt: getTimestamp(),
+                lastLogin: getTimestamp(),
+                loginCount: 1,
+                status: 'active',
+                onboardingComplete: false,
+                provider: profileData.provider || 'email',
+                preferences: getDefaultPreferences(),
+                tenantId: profileData.tenantId || null,
+            };
             
-            // Stop timers
-            this._stopSessionTimeout();
-            this._stopActivityTracking();
+            // Try FirebaseService first
+            if (hasFirebaseMethod('createDocument')) {
+                return await window.FirebaseService.createDocument('users', data, uid);
+            }
             
-            // Clear session
-            this._clearSession();
+            // Direct Firestore fallback
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                await firebase.firestore().collection('users').doc(uid).set(data);
+                return { id: uid, ...data };
+            }
             
-            // Sign out from Firebase
-            await FirebaseService.signOut();
-            
-            console.log('✅ Logged out successfully');
-            
+            throw new Error('No Firestore service available');
         } catch (error) {
-            console.error('❌ Logout failed:', error);
-            // Force clear state even if Firebase fails
-            this._handleAuthStateChange(null);
+            log('error', 'Failed to create user profile:', error);
+            throw error;
         }
     }
     
-    // ==========================================
-    // CROSS-TAB SYNCHRONIZATION
-    // ==========================================
-    
     /**
-     * Setup cross-tab synchronization
-     * @private
+     * Update user profile in Firestore
+     * @param {string} uid - User ID
+     * @param {Object} updates - Fields to update
+     * @returns {Promise<void>}
      */
-    _setupCrossTabSync() {
-        window.addEventListener('storage', (event) => {
-            if (event.key === '11avatar_auth_state') {
-                try {
-                    const newState = JSON.parse(event.newValue);
-                    
-                    if (newState && newState.isAuthenticated !== this.state.isAuthenticated) {
-                        console.log('🔄 Auth state changed in another tab');
-                        
-                        if (newState.isAuthenticated) {
-                            // Another tab logged in
-                            this._handleAuthStateChange(newState.user);
-                        } else {
-                            // Another tab logged out
-                            this._handleAuthStateChange(null);
-                        }
-                    }
-                } catch {}
+    async function updateUserProfile(uid, updates) {
+        try {
+            const data = {
+                ...updates,
+                updatedAt: getTimestamp(),
+            };
+            
+            if (hasFirebaseMethod('updateDocument')) {
+                await window.FirebaseService.updateDocument('users', uid, data);
+                return;
             }
-        });
+            
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                await firebase.firestore().collection('users').doc(uid).update(data);
+                return;
+            }
+        } catch (error) {
+            log('error', 'Failed to update user profile:', error);
+        }
     }
     
-    // ==========================================
-    // VALIDATION
-    // ==========================================
+    /**
+     * Update last login timestamp
+     * @param {string} uid - User ID
+     */
+    async function updateLastLogin(uid) {
+        try {
+            const updates = { lastLogin: getTimestamp() };
+            
+            // Increment login count if available
+            if (typeof firebase !== 'undefined' && 
+                firebase.firestore && 
+                firebase.firestore.FieldValue &&
+                firebase.firestore.FieldValue.increment) {
+                updates.loginCount = firebase.firestore.FieldValue.increment(1);
+            }
+            
+            if (hasFirebaseMethod('updateDocument')) {
+                await window.FirebaseService.updateDocument('users', uid, updates);
+            } else if (typeof firebase !== 'undefined' && firebase.firestore) {
+                await firebase.firestore().collection('users').doc(uid).update(updates);
+            }
+        } catch (error) {
+            // Non-critical - silent fail
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 5: AUTH STATE HANDLER
+    // -------------------------------------------------------------------------
     
     /**
-     * Validate registration data
-     * @private
+     * Handle Firebase auth state changes
+     * @param {firebase.User|null} user - Firebase user or null
+     * @returns {Promise<void>}
      */
-    _validateRegistration(data) {
-        const { email, password, confirmPassword, displayName } = data;
+    async function handleAuthStateChange(user) {
+        log('log', 'Auth state changed:', user ? user.email : 'No user');
         
+        state.authLoading = true;
+        
+        try {
+            if (user) {
+                // USER SIGNED IN
+                state.user = user;
+                state.isAuthenticated = true;
+                state.isEmailVerified = user.emailVerified;
+                state.sessionStartTime = Date.now();
+                state.lastActivityTime = Date.now();
+                state.tenantId = user.tenantId || null;
+                
+                // Fetch or create profile
+                let profile = await fetchUserProfile(user.uid);
+                
+                if (!profile) {
+                    // New user - create profile
+                    profile = await createUserProfile(user.uid, {
+                        email: user.email,
+                        displayName: user.displayName || '',
+                        phone: user.phoneNumber || '',
+                        photoURL: user.photoURL || '',
+                        emailVerified: user.emailVerified,
+                        provider: user.providerData[0]?.providerId || 'email',
+                    });
+                }
+                
+                state.userProfile = profile;
+                
+                // Update last login
+                await updateLastLogin(user.uid);
+                
+                // Start session timers
+                startSessionTimeout();
+                startActivityTracking();
+                
+                // Schedule token refresh
+                scheduleTokenRefresh(user);
+                
+                // Emit login event
+                emitEvent('auth:login', {
+                    user: {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName,
+                        photoURL: user.photoURL,
+                        emailVerified: user.emailVerified,
+                    },
+                    profile: profile,
+                    tenantId: state.tenantId,
+                });
+                
+                log('log', 'User authenticated:', user.email, 'Role:', profile?.role);
+                
+            } else {
+                // USER SIGNED OUT
+                const wasAuthenticated = state.isAuthenticated;
+                
+                state.user = null;
+                state.userProfile = null;
+                state.isAuthenticated = false;
+                state.isEmailVerified = false;
+                state.sessionStartTime = null;
+                state.tenantId = null;
+                
+                // Clear timers
+                stopSessionTimeout();
+                stopActivityTracking();
+                clearTokenRefresh();
+                clearIdleWarning();
+                
+                // Clear session storage
+                clearSession();
+                
+                // Emit logout event
+                if (wasAuthenticated) {
+                    emitEvent('auth:logout', {
+                        reason: 'user_signed_out',
+                    });
+                }
+                
+                log('log', 'User signed out');
+            }
+        } catch (error) {
+            log('error', 'Error in auth state handler:', error);
+            state.authError = error.message;
+        } finally {
+            state.authLoading = false;
+            notifyListeners();
+        }
+    }
+    
+    /**
+     * Schedule proactive token refresh
+     * @param {firebase.User} user - Firebase user
+     */
+    function scheduleTokenRefresh(user) {
+        clearTokenRefresh();
+        
+        user.getIdTokenResult()
+            .then(function(idTokenResult) {
+                const expirationTime = new Date(idTokenResult.expirationTime).getTime();
+                const refreshTime = expirationTime - config.tokenRefreshBuffer;
+                const delay = Math.max(0, refreshTime - Date.now());
+                
+                log('log', 'Token refresh scheduled in', Math.round(delay / 1000), 'seconds');
+                
+                tokenRefreshTimeout = setTimeout(async function() {
+                    try {
+                        if (state.user) {
+                            const newToken = await state.user.getIdToken(true);
+                            log('log', 'Token refreshed proactively');
+                            
+                            // Schedule next refresh
+                            scheduleTokenRefresh(state.user);
+                        }
+                    } catch (error) {
+                        log('warn', 'Proactive token refresh failed:', error);
+                    }
+                }, delay);
+            })
+            .catch(function(error) {
+                log('warn', 'Failed to get token expiry:', error);
+            });
+    }
+    
+    /**
+     * Clear token refresh timeout
+     */
+    function clearTokenRefresh() {
+        if (tokenRefreshTimeout) {
+            clearTimeout(tokenRefreshTimeout);
+            tokenRefreshTimeout = null;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 6: REGISTRATION
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Register a new user
+     * @param {Object} userData - Registration data
+     * @returns {Promise<Object>} Registration result
+     */
+    async function register(userData) {
+        const { email, password, confirmPassword, displayName, phone, role, clientId, acceptTerms } = userData;
+        
+        // Validate required fields
         if (!email || !password || !displayName) {
-            return { valid: false, message: 'All required fields must be filled' };
+            throw normalizeError({ code: '', message: 'All required fields must be filled.' });
         }
         
         // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         if (!emailRegex.test(email)) {
-            return { valid: false, message: 'Please enter a valid email address' };
+            throw normalizeError({ code: 'auth/invalid-email', message: 'Please enter a valid email address.' });
         }
         
         // Validate password
-        const passwordValidation = this._validatePassword(password);
+        const passwordValidation = validatePasswordStrength(password);
         if (!passwordValidation.valid) {
-            return passwordValidation;
+            throw normalizeError({ code: 'auth/weak-password', message: passwordValidation.message });
         }
         
         // Check passwords match
         if (password !== confirmPassword) {
-            return { valid: false, message: 'Passwords do not match' };
+            throw normalizeError({ code: '', message: 'Passwords do not match.' });
         }
         
         // Validate display name
         if (displayName.length < 2) {
-            return { valid: false, message: 'Name must be at least 2 characters' };
+            throw normalizeError({ code: '', message: 'Name must be at least 2 characters.' });
         }
         
-        return { valid: true };
+        // Check terms
+        if (!acceptTerms) {
+            throw normalizeError({ code: '', message: 'You must accept the Terms of Service and Privacy Policy.' });
+        }
+        
+        try {
+            // Check Firebase auth availability
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                throw new Error('Authentication service is not available.');
+            }
+            
+            // Create Firebase auth user
+            const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            // Update display name
+            await user.updateProfile({ displayName: displayName });
+            
+            // Create Firestore profile
+            await createUserProfile(user.uid, {
+                email: email,
+                displayName: displayName,
+                phone: phone || '',
+                role: role || 'viewer',
+                clientId: clientId || null,
+                photoURL: '',
+                emailVerified: false,
+                provider: 'email',
+            });
+            
+            // Send verification email
+            if (config.emailVerificationRequired) {
+                await user.sendEmailVerification().catch(function(err) {
+                    log('warn', 'Failed to send verification email:', err);
+                });
+            }
+            
+            log('log', 'User registered:', email);
+            
+            emitEvent('auth:register', {
+                user: { uid: user.uid, email, displayName },
+                role: role || 'viewer',
+            });
+            
+            return {
+                success: true,
+                user: {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    emailVerified: user.emailVerified,
+                },
+                verificationSent: config.emailVerificationRequired,
+            };
+            
+        } catch (error) {
+            log('error', 'Registration failed:', error);
+            throw normalizeError(error);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 7: LOGIN
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Login with email and password
+     * @param {Object} credentials - { email, password, rememberMe }
+     * @returns {Promise<Object>} Login result
+     */
+    async function login(credentials) {
+        const { email, password, rememberMe = false } = credentials || {};
+        
+        // Validate inputs
+        if (!email || !password) {
+            throw normalizeError({ code: '', message: 'Email and password are required.' });
+        }
+        
+        // Check lockout
+        if (isLockedOut()) {
+            const remainingMinutes = Math.ceil((state.lockoutUntil - Date.now()) / 60000);
+            throw normalizeError({ 
+                code: '', 
+                message: 'Too many login attempts. Please try again in ' + remainingMinutes + ' minute(s).' 
+            });
+        }
+        
+        try {
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                throw new Error('Authentication service is not available.');
+            }
+            
+            // Set persistence
+            const persistence = rememberMe
+                ? firebase.auth.Auth.Persistence.LOCAL
+                : firebase.auth.Auth.Persistence.SESSION;
+            
+            await firebase.auth().setPersistence(persistence);
+            
+            // Sign in
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            // Reset attempts on success
+            state.loginAttempts = 0;
+            state.lastLoginAttempt = null;
+            state.lockoutUntil = null;
+            state.rememberMe = rememberMe;
+            
+            saveStateToStorage();
+            
+            log('log', 'Login successful:', email);
+            
+            return {
+                success: true,
+                user: {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    emailVerified: user.emailVerified,
+                    photoURL: user.photoURL,
+                },
+                isNewUser: userCredential.additionalUserInfo?.isNewUser || false,
+            };
+            
+        } catch (error) {
+            // Track failed attempt
+            state.loginAttempts++;
+            state.lastLoginAttempt = Date.now();
+            
+            if (state.loginAttempts >= config.maxLoginAttempts) {
+                state.lockoutUntil = Date.now() + config.loginLockoutDuration;
+                log('warn', 'Account locked due to too many attempts');
+            }
+            
+            saveStateToStorage();
+            
+            log('error', 'Login failed:', error);
+            throw normalizeError(error);
+        }
     }
     
-    // ==========================================
-    // PROFILE MANAGEMENT
-    // ==========================================
+    /**
+     * Login with Google OAuth
+     * @returns {Promise<Object>} Login result
+     */
+    async function loginWithGoogle() {
+        try {
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                throw new Error('Authentication service is not available.');
+            }
+            
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+            provider.setCustomParameters({ prompt: 'select_account' });
+            
+            const result = await firebase.auth().signInWithPopup(provider);
+            const user = result.user;
+            const isNewUser = result.additionalUserInfo?.isNewUser || false;
+            
+            if (isNewUser) {
+                // Create profile for new Google users
+                await createUserProfile(user.uid, {
+                    email: user.email,
+                    displayName: user.displayName || '',
+                    phone: user.phoneNumber || '',
+                    photoURL: user.photoURL || '',
+                    emailVerified: true,
+                    role: 'viewer',
+                    provider: 'google',
+                });
+            }
+            
+            state.rememberMe = true; // Google sign-in persists
+            saveStateToStorage();
+            
+            log('log', 'Google login successful:', user.email);
+            
+            return {
+                success: true,
+                user: {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    emailVerified: user.emailVerified,
+                },
+                isNewUser: isNewUser,
+            };
+            
+        } catch (error) {
+            log('error', 'Google login failed:', error);
+            throw normalizeError(error);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 8: EMAIL VERIFICATION
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Send email verification
+     * @returns {Promise<Object>}
+     */
+    async function sendVerificationEmail() {
+        try {
+            const user = state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+            
+            if (!user) {
+                throw normalizeError({ code: '', message: 'No user is currently signed in.' });
+            }
+            
+            if (user.emailVerified) {
+                return { success: true, alreadyVerified: true };
+            }
+            
+            await user.sendEmailVerification();
+            
+            log('log', 'Verification email sent to:', user.email);
+            
+            return { success: true, email: user.email };
+            
+        } catch (error) {
+            log('error', 'Failed to send verification email:', error);
+            throw normalizeError(error);
+        }
+    }
+    
+    /**
+     * Check if email is verified
+     * @returns {Promise<boolean>}
+     */
+    async function checkEmailVerification() {
+        try {
+            const user = state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+            
+            if (!user) return false;
+            
+            await user.reload();
+            state.isEmailVerified = user.emailVerified;
+            notifyListeners();
+            
+            return user.emailVerified;
+            
+        } catch (error) {
+            log('error', 'Failed to check email verification:', error);
+            return false;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 9: PASSWORD MANAGEMENT
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Send password reset email
+     * @param {string} email - User email
+     * @returns {Promise<Object>}
+     */
+    async function forgotPassword(email) {
+        try {
+            if (!email) {
+                throw normalizeError({ code: '', message: 'Email is required.' });
+            }
+            
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                throw new Error('Authentication service is not available.');
+            }
+            
+            await firebase.auth().sendPasswordResetEmail(email, {
+                url: window.location.origin + '/login.html?reason=password_reset',
+                handleCodeInApp: false,
+            });
+            
+            log('log', 'Password reset email sent to:', email);
+            
+            return { success: true, email: email };
+            
+        } catch (error) {
+            log('error', 'Failed to send password reset:', error);
+            throw normalizeError(error);
+        }
+    }
+    
+    /**
+     * Confirm password reset with code
+     * @param {string} code - Verification code from email
+     * @param {string} newPassword - New password
+     * @returns {Promise<Object>}
+     */
+    async function resetPassword(code, newPassword) {
+        try {
+            const validation = validatePasswordStrength(newPassword);
+            if (!validation.valid) {
+                throw normalizeError({ code: '', message: validation.message });
+            }
+            
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                throw new Error('Authentication service is not available.');
+            }
+            
+            await firebase.auth().confirmPasswordReset(code, newPassword);
+            
+            log('log', 'Password reset successful');
+            
+            return { success: true };
+            
+        } catch (error) {
+            log('error', 'Password reset failed:', error);
+            throw normalizeError(error);
+        }
+    }
+    
+    /**
+     * Change password (when logged in)
+     * @param {string} currentPassword - Current password
+     * @param {string} newPassword - New password
+     * @returns {Promise<Object>}
+     */
+    async function changePassword(currentPassword, newPassword) {
+        try {
+            const user = state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+            
+            if (!user) {
+                throw normalizeError({ code: '', message: 'No user is currently signed in.' });
+            }
+            
+            const validation = validatePasswordStrength(newPassword);
+            if (!validation.valid) {
+                throw normalizeError({ code: '', message: validation.message });
+            }
+            
+            // Re-authenticate
+            const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+            await user.reauthenticateWithCredential(credential);
+            
+            // Update password
+            await user.updatePassword(newPassword);
+            
+            log('log', 'Password changed successfully');
+            
+            return { success: true };
+            
+        } catch (error) {
+            log('error', 'Password change failed:', error);
+            throw normalizeError(error);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 10: SESSION MANAGEMENT
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Start session timeout monitoring
+     */
+    function startSessionTimeout() {
+        stopSessionTimeout();
+        
+        // Check every 30 seconds
+        sessionTimer = setInterval(checkSessionTimeout, 30000);
+    }
+    
+    /**
+     * Stop session timeout monitoring
+     */
+    function stopSessionTimeout() {
+        if (sessionTimer) {
+            clearInterval(sessionTimer);
+            sessionTimer = null;
+        }
+    }
+    
+    /**
+     * Check if session has timed out due to inactivity
+     */
+    function checkSessionTimeout() {
+        if (!state.isAuthenticated) return;
+        if (state.rememberMe) return; // Remember me bypasses timeout
+        
+        const idleTime = Date.now() - state.lastActivityTime;
+        
+        // Show warning before timeout
+        if (idleTime >= (config.sessionTimeout - config.idleTimeoutWarning) && 
+            idleTime < config.sessionTimeout) {
+            if (!idleWarningTimeout) {
+                emitEvent('auth:idleWarning', {
+                    message: 'Your session will expire soon due to inactivity.',
+                    remainingSeconds: Math.ceil((config.sessionTimeout - idleTime) / 1000),
+                });
+            }
+        }
+        
+        // Force logout on timeout
+        if (idleTime >= config.sessionTimeout) {
+            log('warn', 'Session timeout - logging out due to inactivity');
+            logout('session_timeout');
+        }
+    }
+    
+    /**
+     * Clear idle warning
+     */
+    function clearIdleWarning() {
+        idleWarningTimeout = null;
+    }
+    
+    /**
+     * Start activity tracking for idle detection
+     */
+    function startActivityTracking() {
+        stopActivityTracking();
+        
+        const activityEvents = ['mousedown', 'keydown', 'touchstart', 'scroll', 'mousemove'];
+        
+        activityEvents.forEach(function(eventName) {
+            document.addEventListener(eventName, handleUserActivity, { passive: true });
+        });
+        
+        // Also track visibility change
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+    
+    /**
+     * Stop activity tracking
+     */
+    function stopActivityTracking() {
+        const activityEvents = ['mousedown', 'keydown', 'touchstart', 'scroll', 'mousemove'];
+        
+        activityEvents.forEach(function(eventName) {
+            document.removeEventListener(eventName, handleUserActivity);
+        });
+        
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }
+    
+    /**
+     * Handle user activity - update last activity timestamp
+     */
+    function handleUserActivity() {
+        state.lastActivityTime = Date.now();
+        clearIdleWarning();
+    }
+    
+    /**
+     * Handle page visibility change
+     */
+    function handleVisibilityChange() {
+        if (document.visibilityState === 'visible') {
+            state.lastActivityTime = Date.now();
+            // Refresh token when user returns
+            if (state.user) {
+                state.user.getIdToken(true).catch(function() {
+                    // Silent
+                });
+            }
+        }
+    }
+    
+    /**
+     * Save session data to storage
+     */
+    function saveSession(user, token) {
+        try {
+            if (!state.rememberMe) return;
+            
+            const session = {
+                uid: user.uid,
+                email: user.email,
+                token: token,
+                timestamp: Date.now(),
+            };
+            
+            localStorage.setItem('11avatar_session', JSON.stringify(session));
+        } catch (error) {
+            // Storage may be full
+        }
+    }
+    
+    /**
+     * Clear session data from storage
+     */
+    function clearSession() {
+        try {
+            localStorage.removeItem('11avatar_session');
+            sessionStorage.removeItem('11avatar_auth_state');
+        } catch (error) {
+            // Silent
+        }
+    }
+    
+    /**
+     * Save state to storage for cross-tab sync
+     */
+    function saveStateToStorage() {
+        try {
+            const data = {
+                loginAttempts: state.loginAttempts,
+                lastLoginAttempt: state.lastLoginAttempt,
+                lockoutUntil: state.lockoutUntil,
+                rememberMe: state.rememberMe,
+                tenantId: state.tenantId,
+            };
+            
+            sessionStorage.setItem('11avatar_auth_state', JSON.stringify(data));
+        } catch (error) {
+            // Silent
+        }
+    }
+    
+    /**
+     * Load state from storage
+     */
+    function loadStateFromStorage() {
+        try {
+            const saved = sessionStorage.getItem('11avatar_auth_state');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.loginAttempts = data.loginAttempts || 0;
+                state.lastLoginAttempt = data.lastLoginAttempt || null;
+                state.lockoutUntil = data.lockoutUntil || null;
+                state.rememberMe = data.rememberMe || false;
+                state.tenantId = data.tenantId || null;
+            }
+        } catch (error) {
+            // Silent
+        }
+    }
+    
+    /**
+     * Setup cross-tab synchronization
+     */
+    function setupCrossTabSync() {
+        window.addEventListener('storage', function(event) {
+            if (event.key === '11avatar_session') {
+                try {
+                    const sessionData = JSON.parse(event.newValue);
+                    if (sessionData && sessionData.uid) {
+                        log('log', 'Session restored from another tab');
+                    }
+                } catch (error) {
+                    // Silent
+                }
+            }
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 11: LOGOUT
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Logout current user
+     * @param {string} [reason='user_initiated'] - Reason for logout
+     * @returns {Promise<void>}
+     */
+    async function logout(reason) {
+        const logoutReason = reason || 'user_initiated';
+        
+        try {
+            log('log', 'Logging out, reason:', logoutReason);
+            
+            // Stop all timers
+            stopSessionTimeout();
+            stopActivityTracking();
+            clearTokenRefresh();
+            clearIdleWarning();
+            
+            // Clear session
+            clearSession();
+            
+            // Sign out from Firebase
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                await firebase.auth().signOut();
+            }
+            
+            // Also try FirebaseService
+            if (hasFirebaseMethod('signOut')) {
+                await window.FirebaseService.signOut().catch(function() {
+                    // Silent
+                });
+            }
+            
+            log('log', 'Logged out successfully');
+            
+        } catch (error) {
+            log('error', 'Logout error:', error);
+            // Force state reset even if Firebase fails
+            handleAuthStateChange(null);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 12: PROFILE MANAGEMENT
+    // -------------------------------------------------------------------------
     
     /**
      * Update user profile
-     * @param {Object} profileData - Profile data to update
+     * @param {Object} profileData - Fields to update
+     * @returns {Promise<Object>}
      */
-    async updateProfile(profileData) {
+    async function updateProfile(profileData) {
         try {
-            const user = FirebaseService.getCurrentUser();
+            const user = state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
             
             if (!user) {
-                throw this._createAuthError('NO_USER', 'No user is currently signed in');
+                throw normalizeError({ code: '', message: 'No user is currently signed in.' });
             }
             
             const { displayName, photoURL, phone } = profileData;
             
             // Update Firebase auth profile
-            const updates = {};
-            if (displayName) updates.displayName = displayName;
-            if (photoURL) updates.photoURL = photoURL;
+            const authUpdates = {};
+            if (displayName !== undefined) authUpdates.displayName = displayName;
+            if (photoURL !== undefined) authUpdates.photoURL = photoURL;
             
-            if (Object.keys(updates).length > 0) {
-                await user.updateProfile(updates);
+            if (Object.keys(authUpdates).length > 0) {
+                await user.updateProfile(authUpdates);
             }
             
             // Update Firestore profile
             const firestoreUpdates = {};
-            if (displayName) firestoreUpdates.displayName = displayName;
-            if (photoURL) firestoreUpdates.photoURL = photoURL;
-            if (phone) firestoreUpdates.phone = phone;
+            if (displayName !== undefined) firestoreUpdates.displayName = displayName;
+            if (photoURL !== undefined) firestoreUpdates.photoURL = photoURL;
+            if (phone !== undefined) firestoreUpdates.phone = phone;
             
             if (Object.keys(firestoreUpdates).length > 0) {
-                await FirebaseService.updateDocument('users', user.uid, firestoreUpdates);
+                await updateUserProfile(user.uid, firestoreUpdates);
             }
             
-            // Refresh profile
-            this.state.userProfile = await FirebaseService.getCurrentUserProfile();
-            this._notifyListeners();
+            // Refresh local profile
+            state.userProfile = await fetchUserProfile(user.uid);
+            notifyListeners();
             
-            console.log('✅ Profile updated');
+            log('log', 'Profile updated');
             
             return { success: true };
             
         } catch (error) {
-            console.error('❌ Profile update failed:', error);
-            throw this._normalizeAuthError(error);
+            log('error', 'Profile update failed:', error);
+            throw normalizeError(error);
         }
     }
     
     /**
      * Upload profile photo
      * @param {File} file - Image file
+     * @returns {Promise<Object>}
      */
-    async uploadProfilePhoto(file) {
+    async function uploadProfilePhoto(file) {
         try {
-            const user = FirebaseService.getCurrentUser();
+            const user = state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
             
             if (!user) {
-                throw this._createAuthError('NO_USER', 'No user is currently signed in');
+                throw normalizeError({ code: '', message: 'No user is currently signed in.' });
             }
             
             // Validate file type
             const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
             if (!allowedTypes.includes(file.type)) {
-                throw this._createAuthError('VALIDATION', 'Please upload a valid image file (JPEG, PNG, WebP, GIF)');
+                throw normalizeError({ code: '', message: 'Please upload a valid image (JPEG, PNG, WebP, GIF).' });
             }
             
-            // Validate file size (max 2MB)
+            // Validate size (max 2MB)
             if (file.size > 2 * 1024 * 1024) {
-                throw this._createAuthError('VALIDATION', 'Profile photo must be less than 2MB');
+                throw normalizeError({ code: '', message: 'Profile photo must be less than 2MB.' });
             }
             
             // Upload to storage
-            const path = `avatars/${user.uid}/${Date.now()}_${file.name}`;
-            const result = await window.API.uploadFile(path, file);
+            const path = 'avatars/' + user.uid + '/' + Date.now() + '_' + file.name;
             
-            // Update profile with photo URL
-            await this.updateProfile({ photoURL: result.downloadURL });
+            let downloadURL;
             
-            console.log('✅ Profile photo uploaded');
+            if (hasFirebaseMethod('uploadFile')) {
+                downloadURL = await window.FirebaseService.uploadFile(path, file);
+            } else if (typeof firebase !== 'undefined' && firebase.storage) {
+                const storageRef = firebase.storage().ref().child(path);
+                const snapshot = await storageRef.put(file);
+                downloadURL = await snapshot.ref.getDownloadURL();
+            } else {
+                throw new Error('Storage service not available.');
+            }
             
-            return { success: true, photoURL: result.downloadURL };
+            // Update profile with new photo URL
+            await updateProfile({ photoURL: downloadURL });
+            
+            log('log', 'Profile photo uploaded');
+            
+            return { success: true, photoURL: downloadURL };
             
         } catch (error) {
-            console.error('❌ Profile photo upload failed:', error);
-            throw this._normalizeAuthError(error);
+            log('error', 'Profile photo upload failed:', error);
+            throw normalizeError(error);
         }
     }
-    
-    // ==========================================
-    // ACCOUNT MANAGEMENT
-    // ==========================================
+
+    // -------------------------------------------------------------------------
+    // SECTION 13: ACCOUNT MANAGEMENT
+    // -------------------------------------------------------------------------
     
     /**
      * Delete user account
-     * @param {string} password - Current password for re-authentication
+     * @param {string} [password] - Current password for re-authentication
+     * @returns {Promise<Object>}
      */
-    async deleteAccount(password) {
+    async function deleteAccount(password) {
         try {
-            const user = FirebaseService.getCurrentUser();
+            const user = state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
             
             if (!user) {
-                throw this._createAuthError('NO_USER', 'No user is currently signed in');
+                throw normalizeError({ code: '', message: 'No user is currently signed in.' });
             }
             
-            // Re-authenticate
-            if (password) {
+            // Re-authenticate if password provided
+            if (password && user.email) {
                 const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
                 await user.reauthenticateWithCredential(credential);
             }
             
             // Delete Firestore profile
-            await FirebaseService.deleteDocument('users', user.uid);
+            if (hasFirebaseMethod('deleteDocument')) {
+                await window.FirebaseService.deleteDocument('users', user.uid);
+            } else if (typeof firebase !== 'undefined' && firebase.firestore) {
+                await firebase.firestore().collection('users').doc(user.uid).delete();
+            }
             
-            // Delete Firebase auth user
+            // Delete auth user
             await user.delete();
             
-            console.log('✅ Account deleted');
+            log('log', 'Account deleted');
             
             return { success: true };
             
         } catch (error) {
-            console.error('❌ Account deletion failed:', error);
-            throw this._normalizeAuthError(error);
+            log('error', 'Account deletion failed:', error);
+            throw normalizeError(error);
         }
     }
-    
-    // ==========================================
-    // UTILITY METHODS
-    // ==========================================
-    
-    /**
-     * Check if user is locked out
-     * @private
-     */
-    _isLockedOut() {
-        if (!this.state.lockoutUntil) return false;
-        
-        if (Date.now() >= this.state.lockoutUntil) {
-            this.state.lockoutUntil = null;
-            this.state.loginAttempts = 0;
-            this._saveState();
-            return false;
-        }
-        
-        return true;
-    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 14: LISTENERS & NOTIFICATIONS
+    // -------------------------------------------------------------------------
     
     /**
-     * Add auth state listener
-     * @param {Function} listener - Callback function
+     * Register auth state change listener
+     * @param {Function} listener - Callback receiving state object
      * @returns {Function} Unsubscribe function
      */
-    onAuthStateChange(listener) {
-        this._authListeners.push(listener);
+    function onAuthStateChange(listener) {
+        if (typeof listener !== 'function') {
+            return function() {};
+        }
+        
+        authListeners.push(listener);
         
         // Call immediately with current state
-        listener(this.state);
+        try {
+            listener(getState());
+        } catch (error) {
+            // Silent
+        }
         
-        return () => {
-            const index = this._authListeners.indexOf(listener);
-            if (index > -1) this._authListeners.splice(index, 1);
+        // Return unsubscribe function
+        return function() {
+            const index = authListeners.indexOf(listener);
+            if (index > -1) {
+                authListeners.splice(index, 1);
+            }
         };
     }
     
     /**
-     * Notify all auth state listeners
-     * @private
+     * Notify all registered listeners of state change
      */
-    _notifyListeners() {
-        this._authListeners.forEach(listener => {
+    function notifyListeners() {
+        const currentState = getState();
+        
+        authListeners.forEach(function(listener) {
             try {
-                listener(this.state);
+                listener(currentState);
             } catch (error) {
-                console.error('❌ Error in auth listener:', error);
+                log('error', 'Error in auth listener:', error);
             }
         });
         
         // Save state for cross-tab sync
-        this._saveState();
+        saveStateToStorage();
     }
-    
-    /**
-     * Save auth state to storage
-     * @private
-     */
-    _saveState() {
-        try {
-            const state = {
-                loginAttempts: this.state.loginAttempts,
-                lastLoginAttempt: this.state.lastLoginAttempt,
-                lockoutUntil: this.state.lockoutUntil,
-                rememberMe: this.state.rememberMe
-            };
-            
-            localStorage.setItem('11avatar_auth_state', JSON.stringify(state));
-        } catch {}
-    }
-    
-    /**
-     * Load auth state from storage
-     * @private
-     */
-    _loadState() {
-        try {
-            const saved = localStorage.getItem('11avatar_auth_state');
-            
-            if (saved) {
-                const state = JSON.parse(saved);
-                this.state.loginAttempts = state.loginAttempts || 0;
-                this.state.lastLoginAttempt = state.lastLoginAttempt || null;
-                this.state.lockoutUntil = state.lockoutUntil || null;
-                this.state.rememberMe = state.rememberMe || false;
-            }
-        } catch {}
-    }
-    
-    /**
-     * Create a standardized auth error
-     * @private
-     */
-    _createAuthError(code, message) {
-        const error = new Error(message);
-        error.code = code;
-        error.timestamp = new Date().toISOString();
-        return error;
-    }
-    
-    /**
-     * Normalize Firebase auth errors
-     * @private
-     */
-    _normalizeAuthError(error) {
-        const errorMap = {
-            'auth/email-already-in-use': { code: 'EMAIL_EXISTS', message: 'This email is already registered. Please login instead.' },
-            'auth/invalid-email': { code: 'INVALID_EMAIL', message: 'Please enter a valid email address.' },
-            'auth/operation-not-allowed': { code: 'DISABLED', message: 'This login method is not currently enabled.' },
-            'auth/weak-password': { code: 'WEAK_PASSWORD', message: 'Password is too weak. Please use a stronger password.' },
-            'auth/user-disabled': { code: 'USER_DISABLED', message: 'This account has been disabled. Please contact support.' },
-            'auth/user-not-found': { code: 'USER_NOT_FOUND', message: 'No account found with this email. Please register first.' },
-            'auth/wrong-password': { code: 'WRONG_PASSWORD', message: 'Incorrect password. Please try again.' },
-            'auth/invalid-credential': { code: 'INVALID_CREDENTIAL', message: 'Invalid email or password. Please try again.' },
-            'auth/too-many-requests': { code: 'TOO_MANY_REQUESTS', message: 'Too many requests. Please wait a moment and try again.' },
-            'auth/network-request-failed': { code: 'NETWORK_ERROR', message: 'Network error. Please check your internet connection.' },
-            'auth/popup-closed-by-user': { code: 'POPUP_CLOSED', message: 'Sign-in popup was closed. Please try again.' },
-            'auth/cancelled-popup-request': { code: 'POPUP_CANCELLED', message: 'Sign-in cancelled.' },
-            'auth/popup-blocked': { code: 'POPUP_BLOCKED', message: 'Sign-in popup was blocked. Please allow popups for this site.' },
-            'auth/requires-recent-login': { code: 'REAUTH_REQUIRED', message: 'Please re-enter your password to continue.' }
-        };
-        
-        const mapped = errorMap[error.code];
-        
-        if (mapped) {
-            return this._createAuthError(mapped.code, mapped.message);
-        }
-        
-        return this._createAuthError(
-            error.code || 'AUTH_ERROR',
-            error.message || 'An unexpected authentication error occurred'
-        );
-    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 15: PUBLIC GETTERS
+    // -------------------------------------------------------------------------
     
     /**
      * Get current auth state
-     * @returns {Object}
+     * @returns {Object} Current state snapshot
      */
-    getState() {
-        return { ...this.state };
+    function getState() {
+        return {
+            user: state.user ? {
+                uid: state.user.uid,
+                email: state.user.email,
+                displayName: state.user.displayName,
+                photoURL: state.user.photoURL,
+                emailVerified: state.user.emailVerified,
+                phoneNumber: state.user.phoneNumber,
+            } : null,
+            userProfile: state.userProfile ? Object.assign({}, state.userProfile) : null,
+            isAuthenticated: state.isAuthenticated,
+            isEmailVerified: state.isEmailVerified,
+            authLoading: state.authLoading,
+            authError: state.authError,
+            loginAttempts: state.loginAttempts,
+            isLockedOut: isLockedOut(),
+            sessionStartTime: state.sessionStartTime,
+            lastActivityTime: state.lastActivityTime,
+            rememberMe: state.rememberMe,
+            tenantId: state.tenantId,
+        };
+    }
+    
+    /**
+     * Get current user
+     * @returns {firebase.User|null}
+     */
+    function getCurrentUser() {
+        return state.user || (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || null;
+    }
+    
+    /**
+     * Get current user profile
+     * @returns {Object|null}
+     */
+    function getCurrentUserProfile() {
+        return state.userProfile;
     }
     
     /**
      * Check if user has specific role
+     * @param {string} role - Role to check
+     * @returns {boolean}
      */
-    hasRole(role) {
-        return this.state.userProfile?.role === role;
+    function hasRole(role) {
+        return state.userProfile?.role === role;
     }
     
     /**
      * Check if user has specific permission
+     * @param {string} permission - Permission to check
+     * @returns {boolean}
      */
-    hasPermission(permission) {
-        const permissions = this.state.userProfile?.permissions || [];
-        return permissions.includes(permission) || permissions.includes('all');
+    function hasPermission(permission) {
+        if (!state.userProfile?.permissions) return false;
+        const permissions = state.userProfile.permissions;
+        return permissions.includes(permission) || permissions.includes('*') || permissions.includes('all');
     }
     
     /**
-     * Get authentication status
+     * Get authentication status summary
      * @returns {Object}
      */
-    getStatus() {
+    function getStatus() {
         return {
-            isAuthenticated: this.state.isAuthenticated,
-            isLoading: this.state.authLoading,
-            isEmailVerified: this.state.isEmailVerified,
-            user: this.state.user ? {
-                uid: this.state.user.uid,
-                email: this.state.user.email,
-                displayName: this.state.user.displayName
+            isAuthenticated: state.isAuthenticated,
+            isLoading: state.authLoading,
+            isEmailVerified: state.isEmailVerified,
+            user: state.user ? {
+                uid: state.user.uid,
+                email: state.user.email,
+                displayName: state.user.displayName,
             } : null,
-            role: this.state.userProfile?.role || null,
-            loginAttempts: this.state.loginAttempts,
-            isLockedOut: this._isLockedOut()
+            role: state.userProfile?.role || null,
+            loginAttempts: state.loginAttempts,
+            isLockedOut: isLockedOut(),
         };
     }
     
     /**
-     * Debug: Print auth state to console
+     * Update configuration at runtime
+     * @param {Object} newConfig - Config values to update
      */
-    debug() {
-        console.group('🔐 Auth Manager Debug');
-        console.log('State:', this.getStatus());
-        console.log('Config:', this.config);
-        console.log('Listeners:', this._authListeners.length);
-        console.groupEnd();
+    function updateConfig(newConfig) {
+        try {
+            if (newConfig && typeof newConfig === 'object') {
+                Object.assign(config, newConfig);
+                log('log', 'Config updated');
+            }
+        } catch (error) {
+            log('error', 'Config update failed:', error);
+        }
     }
     
     /**
-     * Destroy the auth manager
+     * Debug - print current state to console
      */
-    destroy() {
-        if (this._unsubscribeAuth) {
-            this._unsubscribeAuth();
+    function debug() {
+        console.group('🔐 Auth Manager Debug');
+        console.log('State:', getStatus());
+        console.log('Config:', Object.assign({}, config));
+        console.log('Listeners:', authListeners.length);
+        console.log('Session Timer Active:', !!sessionTimer);
+        console.log('Token Refresh Scheduled:', !!tokenRefreshTimeout);
+        console.groupEnd();
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 16: INITIALIZATION & DESTRUCTION
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Initialize the Auth Manager
+     * @returns {Promise<void>}
+     */
+    async function init() {
+        try {
+            log('log', 'Initializing Auth Manager...');
+            
+            // Load saved state
+            loadStateFromStorage();
+            
+            // Setup cross-tab sync
+            setupCrossTabSync();
+            
+            // Listen for Firebase auth state changes
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                unsubscribeAuth = firebase.auth().onAuthStateChanged(
+                    handleAuthStateChange,
+                    function(error) {
+                        log('error', 'Auth state observer error:', error);
+                        state.authError = error.message;
+                        state.authLoading = false;
+                        notifyListeners();
+                    }
+                );
+            } else {
+                log('warn', 'Firebase Auth not available - waiting for SDK');
+                // Retry after delay
+                setTimeout(function() {
+                    if (typeof firebase !== 'undefined' && firebase.auth) {
+                        unsubscribeAuth = firebase.auth().onAuthStateChanged(handleAuthStateChange);
+                    }
+                }, 2000);
+            }
+            
+            log('log', 'Auth Manager initialized');
+            
+        } catch (error) {
+            log('error', 'Auth Manager initialization failed:', error);
+            state.authError = error.message;
+            state.authLoading = false;
+            notifyListeners();
         }
-        
-        if (this._sessionTimer) {
-            clearInterval(this._sessionTimer);
+    }
+    
+    /**
+     * Destroy the Auth Manager and clean up
+     */
+    function destroy() {
+        try {
+            if (unsubscribeAuth) {
+                unsubscribeAuth();
+                unsubscribeAuth = null;
+            }
+            
+            stopSessionTimeout();
+            stopActivityTracking();
+            clearTokenRefresh();
+            clearIdleWarning();
+            
+            authListeners.length = 0;
+            
+            log('log', 'Auth Manager destroyed');
+        } catch (error) {
+            // Silent during cleanup
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 17: PUBLIC API
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Public API surface */
+    const publicAPI = Object.freeze({
+        // Configuration
+        config: config,
+        updateConfig: updateConfig,
         
-        this._stopActivityTracking();
-        this._authListeners = [];
+        // Initialization
+        init: init,
+        destroy: destroy,
         
-        console.log('🔐 Auth Manager destroyed');
+        // Authentication
+        register: register,
+        login: login,
+        loginWithGoogle: loginWithGoogle,
+        logout: logout,
+        
+        // Email verification
+        sendVerificationEmail: sendVerificationEmail,
+        checkEmailVerification: checkEmailVerification,
+        
+        // Password management
+        forgotPassword: forgotPassword,
+        resetPassword: resetPassword,
+        changePassword: changePassword,
+        validatePasswordStrength: validatePasswordStrength,
+        
+        // Profile
+        updateProfile: updateProfile,
+        uploadProfilePhoto: uploadProfilePhoto,
+        deleteAccount: deleteAccount,
+        
+        // State & listeners
+        getState: getState,
+        getStatus: getStatus,
+        getCurrentUser: getCurrentUser,
+        getCurrentUserProfile: getCurrentUserProfile,
+        onAuthStateChange: onAuthStateChange,
+        
+        // Role & permissions
+        hasRole: hasRole,
+        hasPermission: hasPermission,
+        
+        // Lockout
+        isLockedOut: isLockedOut,
+        
+        // Debug
+        debug: debug,
+    });
+    
+    return publicAPI;
+    
+})(); // End of AuthManager IIFE
+
+// =============================================================================
+// AUTO-INITIALIZATION
+// =============================================================================
+
+if (typeof window !== 'undefined') {
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            AuthManager.init().catch(function(error) {
+                console.error('[AuthManager] Auto-init failed:', error);
+            });
+        });
+    } else {
+        AuthManager.init().catch(function(error) {
+            console.error('[AuthManager] Auto-init failed:', error);
+        });
     }
 }
 
-// ==========================================
-// CREATE & EXPORT AUTH MANAGER INSTANCE
-// ==========================================
-const authManager = new AuthManager();
+// =============================================================================
+// EXPORTS
+// =============================================================================
 
-// Make available globally
-window.AuthManager = authManager;
-window.auth = authManager; // Convenience alias
+if (typeof window !== 'undefined') {
+    window.AuthManager = AuthManager;
+    window.auth = AuthManager; // Convenience alias
+    window.Global = window.Global || {};
+    window.Global.AuthManager = AuthManager;
+}
 
-// Export for module usage
-export default authManager;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AuthManager;
+}
 
-console.log('🔐 Auth Manager ready');
-console.log('🔐 Status:', authManager.getStatus());
-
-// ==========================================
-// END OF AUTH MANAGER
-// ==========================================
-
-
+export {
+    AuthManager as default,
+    AuthManager,
+};

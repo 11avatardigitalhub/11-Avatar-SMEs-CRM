@@ -1,470 +1,445 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="public">
+<html lang="en-IN" data-theme="public">
 <head>
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - 404 Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- SEO & Indexing -->
+    <meta name="description" content="Page not found - 11 Avatar Digital Hub. The page you are looking for does not exist or has been moved." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Page Not Found - 11 Avatar Digital Hub" />
+    <meta property="og:description" content="The page you are looking for does not exist." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/404.html" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/404.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#0A0A0A" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="Page not found - 11 Avatar Digital Hub. The page you are looking for does not exist or has been moved." />
-    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
     
-    <meta property="og:title" content="Page Not Found - 11 Avatar Digital Hub" />
-    <meta property="og:description" content="The page you are looking for does not exist." />
-    
-
-    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/404" />
-
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/svg+xml" href="assets/images/logo-icon.svg" />
-    <link rel="apple-touch-icon" href="assets/images/icons/icon-192.png" />
-    
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="src/css/main.css" />
     
     <title>404 - Page Not Found | 11 Avatar Digital Hub</title>
     
+    <!-- Anti-flicker + Page Styles -->
     <style>
-        body{opacity:0;transition:opacity 0.3s ease}
-        body.loaded{opacity:1}
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
         
-        .error-container{
-            min-height:100vh;
-            min-height:100dvh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-            background:linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%);
-            position:relative;
-            overflow:hidden;
+        .error-page-wrap {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%);
+            position: relative;
+            overflow: hidden;
         }
         
-        .error-container::before{
-            content:'';
-            position:absolute;
-            top:-300px;
-            right:-300px;
-            width:800px;
-            height:800px;
-            background:radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%);
-            pointer-events:none;
+        .error-page-wrap::before {
+            content: '';
+            position: absolute;
+            top: -300px;
+            right: -300px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%);
+            pointer-events: none;
         }
         
-        .error-container::after{
-            content:'';
-            position:absolute;
-            bottom:-200px;
-            left:-200px;
-            width:600px;
-            height:600px;
-            background:radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
-            pointer-events:none;
+        .error-page-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            left: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212,175,55,0.03) 0%, transparent 70%);
+            pointer-events: none;
         }
         
-        .error-content{
-            text-align:center;
-            position:relative;
-            z-index:1;
-            max-width:600px;
-            width:100%;
-            animation:fadeUp 0.6s ease;
+        .error-content-box {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            width: 100%;
+            animation: errorFadeUp 0.6s ease;
         }
         
-        .error-code{
-            font-size:clamp(6rem, 15vw, 12rem);
-            font-weight:900;
-            line-height:1;
-            background:linear-gradient(135deg, #D4AF37 0%, #E8C95A 50%, #B8960F 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-            margin-bottom:8px;
-            letter-spacing:-4px;
-            text-shadow:0 0 80px rgba(212,175,55,0.15);
+        @keyframes errorFadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .error-icon{
-            font-size:clamp(3rem, 8vw, 5rem);
-            margin-bottom:24px;
-            animation:pulse 2s ease-in-out infinite;
+        @keyframes errorPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
         }
         
-        .error-title{
-            font-size:clamp(1.5rem, 3vw, 2rem);
-            font-weight:800;
-            color:#FFFFFF;
-            margin-bottom:12px;
-            font-family:'Poppins', sans-serif;
+        @keyframes errorFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
-        .error-message{
-            font-size:1.05rem;
-            color:#AAAAAA;
-            line-height:1.7;
-            margin-bottom:32px;
-            max-width:450px;
-            margin-left:auto;
-            margin-right:auto;
+        .error-code-display {
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #D4AF37 0%, #E8C95A 50%, #B8960F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -4px;
         }
         
-        .error-actions{
-            display:flex;
-            gap:16px;
-            justify-content:center;
-            flex-wrap:wrap;
-            margin-bottom:40px;
+        .error-icon-display {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 24px;
+            animation: errorFloat 3s ease-in-out infinite;
         }
         
-        .error-suggestions{
-            background:rgba(26,26,26,0.7);
-            backdrop-filter:blur(16px);
-            -webkit-backdrop-filter:blur(16px);
-            border:1px solid rgba(255,255,255,0.06);
-            border-radius:16px;
-            padding:24px;
-            text-align:left;
-            margin-top:24px;
+        .error-heading {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+            font-family: 'Poppins', sans-serif;
         }
         
-        .error-suggestions h3{
-            font-size:0.95rem;
-            color:#D4AF37;
-            margin-bottom:16px;
-            font-weight:600;
-            display:flex;
-            align-items:center;
-            gap:8px;
+        .error-description {
+            font-size: 1.05rem;
+            color: #AAAAAA;
+            line-height: 1.7;
+            margin-bottom: 32px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        .suggestion-list{
-            display:flex;
-            flex-direction:column;
-            gap:10px;
+        .error-actions-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
         }
         
-        .suggestion-link{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            padding:10px 14px;
-            border-radius:10px;
-            color:#CCCCCC;
-            text-decoration:none;
-            font-size:0.95rem;
-            transition:all 0.2s ease;
-            min-height:44px;
+        .error-suggestions-card {
+            background: rgba(26,26,26,0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: left;
+            margin-top: 24px;
         }
         
-        .suggestion-link:hover{
-            background:rgba(212,175,55,0.08);
-            color:#D4AF37;
+        .error-suggestions-card h3 {
+            font-size: 0.95rem;
+            color: #D4AF37;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .suggestion-link .icon{
-            font-size:1.3rem;
-            width:28px;
-            text-align:center;
-            flex-shrink:0;
+        .error-suggestion-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #CCCCCC;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            min-height: 44px;
         }
         
-        .search-box{
-            display:flex;
-            gap:8px;
-            max-width:400px;
-            margin:0 auto 24px;
+        .error-suggestion-link:hover {
+            background: rgba(212,175,55,0.08);
+            color: #D4AF37;
         }
         
-        .search-box input{
-            flex:1;
-            background:#1E1E1E;
-            border:1.5px solid rgba(255,255,255,0.08);
-            border-radius:12px;
-            padding:12px 16px;
-            font-size:0.95rem;
-            color:#FFFFFF;
-            outline:none;
-            min-height:48px;
-            transition:all 0.3s ease;
+        .error-suggestion-icon {
+            font-size: 1.3rem;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
         }
         
-        .search-box input:focus{
-            border-color:#D4AF37;
-            box-shadow:0 0 0 3px rgba(212,175,55,0.1);
+        .error-help-text {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 24px;
         }
         
-        .search-box button{
-            min-width:48px;
-            height:48px;
-            border-radius:12px;
-            background:linear-gradient(135deg, #D4AF37, #E8C95A);
-            border:none;
-            color:#0A0A0A;
-            font-size:1.2rem;
-            cursor:pointer;
-            transition:all 0.3s ease;
-            display:flex;
-            align-items:center;
-            justify-content:center;
+        .error-help-text a {
+            color: #D4AF37;
+            text-decoration: none;
         }
         
-        .search-box button:hover{
-            transform:translateY(-1px);
-            box-shadow:0 4px 16px rgba(212,175,55,0.3);
+        .error-timer-text {
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 16px;
         }
         
-        @keyframes fadeUp{
-            from{opacity:0;transform:translateY(20px)}
-            to{opacity:1;transform:translateY(0)}
-        }
-        
-        @keyframes pulse{
-            0%,100%{opacity:1;transform:scale(1)}
-            50%{opacity:0.7;transform:scale(1.05)}
-        }
-        
-        @keyframes float{
-            0%,100%{transform:translateY(0)}
-            50%{transform:translateY(-10px)}
-        }
-        
-        @media(max-width:480px){
-            .error-content{padding:0 10px}
-            .error-suggestions{padding:16px}
-            .error-actions{flex-direction:column;align-items:stretch}
-            .error-actions .btn{width:100%;justify-content:center}
+        @media (max-width: 480px) {
+            .error-content-box { padding: 0 10px; }
+            .error-suggestions-card { padding: 16px; }
+            .error-actions-row { flex-direction: column; align-items: stretch; }
+            .error-actions-row .btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <div class="error-container" role="main" aria-label="Page not found">
-        <div class="error-content">
+    
+    <!-- Skip Navigation -->
+    <a href="#error-main" class="skip-link">Skip to content</a>
+    
+    <!-- ==========================================
+         404 PAGE
+         ========================================== -->
+    <main class="error-page-wrap" role="main" aria-labelledby="error-heading" id="error-main">
+        <div class="error-content-box">
             
             <!-- Animated Icon -->
-            <div class="error-icon" aria-hidden="true" style="animation:float 3s ease-in-out infinite">🔍</div>
+            <div class="error-icon-display" aria-hidden="true">🔍</div>
             
             <!-- Error Code -->
-            <div class="error-code" aria-hidden="true">404</div>
+            <div class="error-code-display" aria-hidden="true">404</div>
             
             <!-- Title -->
-            <h1 class="error-title">Page Not Found</h1>
+            <h1 class="error-heading" id="error-heading">Page Not Found</h1>
             
             <!-- Message -->
-            <p class="error-message">
+            <p class="error-description">
                 Oops! The page you're looking for doesn't exist or has been moved. 
                 It might have been removed, renamed, or is temporarily unavailable.
             </p>
             
-            <!-- Search Box -->
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="Search for pages..." 
-                    aria-label="Search pages"
-                    onkeydown="if(event.key==='Enter')searchPages()"
-                />
-                <button onclick="searchPages()" aria-label="Search" title="Search">
-                    🔍
-                </button>
-            </div>
-            
             <!-- Action Buttons -->
-            <div class="error-actions">
-                <a href="/" class="btn btn-primary btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
+            <div class="error-actions-row">
+                <a href="index.html" class="btn btn-primary btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
                     🏠 Back to Home
                 </a>
-
-                <a href="#/dashboard" class="btn btn-outline btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
-
+                <a href="login.html" class="btn btn-outline btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
                     📊 Go to Dashboard
                 </a>
-                <button class="btn btn-ghost btn-lg" onclick="history.back()" style="min-height:52px;padding:14px 28px;font-size:1rem">
+                <button type="button" id="btn-go-back" class="btn btn-ghost btn-lg" style="min-height:52px;padding:14px 28px;font-size:1rem">
                     ← Go Back
                 </button>
             </div>
             
             <!-- Suggestions -->
-            <div class="error-suggestions">
+            <div class="error-suggestions-card">
                 <h3>💡 You might be looking for:</h3>
-                <div class="suggestion-list">
-                    <a href="/" class="suggestion-link">
-                        <span class="icon">🏠</span>
+                <div>
+                    <a href="index.html" class="error-suggestion-link">
+                        <span class="error-suggestion-icon">🏠</span>
                         <span>Home Page — Learn about 11 Avatar Digital Hub</span>
                     </a>
-
-                    <a href="#/login" class="suggestion-link">
-                        <span class="icon">🔐</span>
+                    <a href="login.html" class="error-suggestion-link">
+                        <span class="error-suggestion-icon">🔐</span>
                         <span>Login — Access your CRM dashboard</span>
                     </a>
-                    <a href="#/register" class="suggestion-link">
-                        <span class="icon">🚀</span>
+                    <a href="register.html" class="error-suggestion-link">
+                        <span class="error-suggestion-icon">🚀</span>
                         <span>Register — Create your free account</span>
                     </a>
-                    <a href="#/dashboard" class="suggestion-link">
-                        <span class="icon">📊</span>
-                        <span>Dashboard — View your business overview</span>
+                    <a href="features.html" class="error-suggestion-link">
+                        <span class="error-suggestion-icon">⭐</span>
+                        <span>Features — Explore all CRM modules</span>
                     </a>
-                    <a href="#/leads" class="suggestion-link">
-
-                        <span class="icon">📋</span>
-                        <span>Leads — Manage your leads pipeline</span>
+                    <a href="pricing.html" class="error-suggestion-link">
+                        <span class="error-suggestion-icon">💰</span>
+                        <span>Pricing — View plans and pricing</span>
                     </a>
                 </div>
             </div>
             
             <!-- Help Text -->
-            <p style="color:#666;font-size:0.85rem;margin-top:24px">
+            <p class="error-help-text">
                 If you believe this is an error, please contact us at 
-                <a href="mailto:11avatardigitalhub@gmail.com" style="color:#D4AF37;text-decoration:none">11avatardigitalhub@gmail.com</a>
+                <a href="mailto:support@11avatardigitalhub.cloud">support@11avatardigitalhub.cloud</a>
             </p>
             
             <!-- Auto-redirect info -->
-            <p style="color:#555;font-size:0.8rem;margin-top:16px" id="redirect-timer">
+            <p class="error-timer-text" id="redirect-timer">
                 Redirecting to home page in <span id="countdown">15</span> seconds...
             </p>
         </div>
-    </div>
+    </main>
     
-    
-    
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
     <script>
-        // ==========================================
-        // 404 PAGE LOGIC
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.classList.add('loaded');
+        /**
+         * @fileoverview 404 Page Controller
+         * @description Handles auto-redirect countdown with user interaction
+         *              detection, go-back navigation, and error logging.
+         * @version 3.0.0
+         */
+        'use strict';
+        
+        (function() {
             
-            // Auto-redirect countdown
-            let secondsLeft = 15;
-            const countdownEl = document.getElementById('countdown');
-            const timerEl = document.getElementById('redirect-timer');
+            var secondsLeft = 15;
+            var countdownInterval = null;
+            var isCancelled = false;
             
-            const countdownInterval = setInterval(() => {
-                secondsLeft--;
+            var countdownEl = document.getElementById('countdown');
+            var timerEl = document.getElementById('redirect-timer');
+            var backBtn = document.getElementById('btn-go-back');
+            
+            /**
+             * Cancel auto-redirect when user interacts
+             */
+            function cancelRedirect() {
+                if (isCancelled) return;
+                isCancelled = true;
                 
-                if (countdownEl) {
-                    countdownEl.textContent = secondsLeft;
-                }
-                
-                if (secondsLeft <= 0) {
+                if (countdownInterval) {
                     clearInterval(countdownInterval);
-                    
-                    if (timerEl) {
-                        timerEl.textContent = 'Redirecting now...';
-                        timerEl.style.color = '#D4AF37';
-                    }
-                    
-                    // Redirect to home
-                    setTimeout(() => {
-                        window.location.href = '/';
-                    }, 500);
+                    countdownInterval = null;
                 }
-            }, 1000);
-            
-            // Cancel redirect if user interacts
-            const cancelRedirect = () => {
-                clearInterval(countdownInterval);
                 
                 if (timerEl) {
                     timerEl.textContent = 'Auto-redirect cancelled';
                     timerEl.style.color = '#888';
                 }
-            };
-            
-            // Watch for user interaction
-            ['click', 'keydown', 'scroll', 'touchstart'].forEach(event => {
-                document.addEventListener(event, cancelRedirect, { once: true });
-            });
-            
-            // Search functionality
-            window.searchPages = function() {
-                const query = document.getElementById('search-input')?.value?.trim()?.toLowerCase();
-                
-                if (!query) return;
-                
-                // Common page mappings
-                const pageMap = {
-                    'home': '/',
-
-                    'login': '/#/login',
-                    'register': '/#/register',
-                    'signin': '/#/login',
-                    'signup': '/#/register',
-                    'dashboard': '/#/dashboard',
-                    'leads': '/#/leads',
-                    'pipeline': '/#/pipeline',
-                    'clients': '/#/clients',
-                    'revenue': '/#/revenue',
-                    'projects': '/#/projects',
-                    'whatsapp': '/#/whatsapp',
-                    'reports': '/#/reports',
-                    'settings': '/#/settings',
-                    'invoices': '/#/invoices',
-                    'tasks': '/#/tasks',
-                    'profile': '/#/profile',
-                    'admin': '/#/admin',
-
-                    'pricing': '/#pricing',
-                    'features': '/#features',
-                    'faq': '/#faq',
-                    'contact': '/#contact',
-                    'forgot': '/#/forgot-password',
-                    'password': '/#/forgot-password',
-                    'reset': '/#/forgot-password'
-                };
-                
-                // Check for exact match
-                if (pageMap[query]) {
-                    window.location.href = pageMap[query];
-                    return;
-                }
-                
-                // Check for partial match
-                for (const [key, url] of Object.entries(pageMap)) {
-                    if (key.includes(query) || query.includes(key)) {
-                        window.location.href = url;
-                        return;
-                    }
-                }
-                
-                // No match found - show feedback
-                const input = document.getElementById('search-input');
-                if (input) {
-                    input.style.borderColor = '#EF4444';
-                    input.placeholder = 'No matching page found. Try: home, login, dashboard...';
-                    input.value = '';
-                    
-                    setTimeout(() => {
-                        input.style.borderColor = 'rgba(255,255,255,0.08)';
-                        input.placeholder = 'Search for pages...';
-                    }, 3000);
-                }
-            };
-            
-            // Log 404 error
-            console.warn('404 - Page Not Found:', window.location.href);
-            
-            // Track in analytics if available
-            if (window.FirebaseService && window.FirebaseService.createDocument) {
-                try {
-                    FirebaseService.createDocument('activityLogs', {
-                        type: '404_error',
-                        url: window.location.href,
-                        referrer: document.referrer || 'direct',
-                        userAgent: navigator.userAgent,
-                        timestamp: new Date().toISOString()
-                    }).catch(() => {});
-                } catch(e) {}
             }
             
-            console.log('✅ 404 page ready');
-        });
+            /**
+             * Start countdown timer
+             */
+            function startCountdown() {
+                countdownInterval = setInterval(function() {
+                    secondsLeft--;
+                    
+                    if (countdownEl) {
+                        countdownEl.textContent = secondsLeft;
+                    }
+                    
+                    if (secondsLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+                        
+                        if (timerEl) {
+                            timerEl.textContent = 'Redirecting now...';
+                            timerEl.style.color = '#D4AF37';
+                        }
+                        
+                        setTimeout(function() {
+                            window.location.href = 'index.html';
+                        }, 500);
+                    }
+                }, 1000);
+            }
+            
+            /**
+             * Go back button handler
+             */
+            function goBack() {
+                cancelRedirect();
+                if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+            
+            /**
+             * Log 404 error
+             */
+            function log404Error() {
+                try {
+                    // Log to console
+                    console.warn('[404] Page not found:', window.location.href, 'Referrer:', document.referrer || 'direct');
+                    
+                    // Log to Firestore if available
+                    if (window.FirebaseService && typeof window.FirebaseService.createDocument === 'function') {
+                        window.FirebaseService.createDocument('error_logs', {
+                            type: '404_error',
+                            url: window.location.href,
+                            referrer: document.referrer || 'direct',
+                            userAgent: navigator.userAgent,
+                            timestamp: new Date().toISOString(),
+                        }).catch(function() {
+                            // Silent
+                        });
+                    }
+                } catch (e) {
+                    // Silent
+                }
+            }
+            
+            /**
+             * Initialize page
+             */
+            function init() {
+                // Attach event listeners
+                if (backBtn) {
+                    backBtn.addEventListener('click', goBack);
+                }
+                
+                // Watch for user interaction to cancel redirect
+                ['click', 'keydown', 'scroll', 'touchstart'].forEach(function(eventName) {
+                    document.addEventListener(eventName, cancelRedirect, { once: true });
+                });
+                
+                // Start countdown
+                startCountdown();
+                
+                // Log error
+                log404Error();
+                
+                // Mark loaded
+                document.body.classList.add('loaded');
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+            
+        })();
     </script>
+    
 </body>
 </html>
-
-

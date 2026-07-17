@@ -1,324 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Join 11 Avatar Digital Hub - Explore career opportunities in SaaS, CRM, and digital innovation">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Join 11 Avatar Digital Hub - Explore career opportunities in SaaS, CRM, and digital innovation. We're hiring!" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="theme-color" content="#0A0A0A" />
     
-    <title>Careers - 11 Avatar Digital Hub</title>
+    <meta property="og:title" content="Careers - 11 Avatar Digital Hub | Join Our Team" />
+    <meta property="og:description" content="Build the future of digital CRM. Join our passionate team." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/careers.html" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/careers.html" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/landing.css" />
+    
+    <title>Careers - 11 Avatar Digital Hub | Join Our Team</title>
     
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
-            --radius: 16px; --radius-sm: 10px; --radius-xs: 6px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; min-height: 100vh; }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gold); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
-
-        /* Hero Section */
-        .hero { text-align: center; padding: 80px 0 60px; position: relative; }
-        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%); pointer-events: none; }
-        .hero-badge { display: inline-block; padding: 8px 20px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); border-radius: 24px; font-size: 14px; color: var(--gold-light); margin-bottom: 20px; font-weight: 500; }
-        .hero-badge i { margin-right: 6px; }
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 52px; font-weight: 800; margin-bottom: 16px; line-height: 1.2; background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 50%, var(--gold-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--text-muted); font-size: 19px; max-width: 650px; margin: 0 auto 32px; }
-        .hero-stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin-top: 24px; }
-        .hero-stat { text-align: center; }
-        .hero-stat .stat-number { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 700; color: var(--gold); display: block; }
-        .hero-stat .stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Why Join Section */
-        .section { padding: 64px 0; }
-        .section-title { text-align: center; margin-bottom: 48px; }
-        .section-title h2 { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 8px; }
-        .section-title p { color: var(--text-muted); font-size: 17px; }
-
-        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .benefit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); transition: var(--transition); position: relative; overflow: hidden; }
-        .benefit-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-dark)); transform: scaleX(0); transition: transform 0.3s ease; }
-        .benefit-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(212,175,55,0.2); }
-        .benefit-card:hover::before { transform: scaleX(1); }
-        .benefit-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; background: rgba(212,175,55,0.1); color: var(--gold); }
-        .benefit-card h3 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 8px; }
-        .benefit-card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
-
-        /* Openings Section */
-        .openings-list { display: flex; flex-direction: column; gap: 16px; }
-        .opening-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--shadow); transition: var(--transition); display: flex; align-items: center; gap: 24px; cursor: pointer; flex-wrap: wrap; }
-        .opening-card:hover { border-color: rgba(212,175,55,0.3); transform: translateX(4px); }
-        .opening-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-        .opening-info { flex: 1; min-width: 200px; }
-        .opening-info h3 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 4px; }
-        .opening-info .dept { font-size: 13px; color: var(--gold); font-weight: 500; }
-        .opening-meta { display: flex; gap: 16px; flex-wrap: wrap; }
-        .opening-meta span { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-        .opening-meta span i { color: var(--gold); font-size: 12px; }
-        .opening-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-        .opening-tag { padding: 4px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 16px; font-size: 12px; color: var(--text-muted); }
-        .opening-apply { flex-shrink: 0; }
-        .opening-apply .btn { display: inline-block; padding: 12px 28px; background: var(--gold); color: #000; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: var(--transition); }
-        .opening-apply .btn:hover { background: var(--gold-dark); color: #fff; }
-
-        /* Culture Section */
-        .culture-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
-        .culture-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; transition: var(--transition); }
-        .culture-card:hover { border-color: rgba(212,175,55,0.2); }
-        .culture-card .emoji { font-size: 40px; margin-bottom: 12px; display: block; }
-        .culture-card h4 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 6px; }
-        .culture-card p { color: var(--text-muted); font-size: 13px; }
-
-        /* CTA */
-        .cta-section { text-align: center; padding: 64px 0; background: linear-gradient(180deg, transparent, rgba(212,175,55,0.03), transparent); }
-        .cta-section h2 { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 700; margin-bottom: 12px; }
-        .cta-section p { color: var(--text-muted); margin-bottom: 28px; font-size: 17px; }
-        .cta-section .btn-large { display: inline-block; padding: 16px 40px; background: var(--gold); color: #000; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 16px; transition: var(--transition); }
-        .cta-section .btn-large:hover { background: var(--gold-dark); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,175,55,0.3); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
+        
+        .careers-hero { text-align: center; padding: 80px 0 60px; position: relative; }
+        .careers-hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%); pointer-events: none; }
+        .careers-badge { display: inline-block; padding: 8px 20px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); border-radius: 24px; font-size: 14px; color: #E8C95A; margin-bottom: 20px; font-weight: 500; }
+        .careers-hero h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; margin-bottom: 16px; line-height: 1.2; background: linear-gradient(135deg, #E8C95A, #B8960F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .careers-hero p { color: #888; font-size: 19px; max-width: 650px; margin: 0 auto 32px; }
+        .careers-stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin-top: 24px; }
+        .careers-stat { text-align: center; }
+        .careers-stat-num { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 700; color: #D4AF37; display: block; }
+        .careers-stat-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .careers-section { padding: 64px 0; }
+        .careers-section-title { text-align: center; margin-bottom: 48px; }
+        .careers-section-title h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.8rem, 3vw, 2.25rem); font-weight: 700; margin-bottom: 8px; color: #fff; }
+        .careers-section-title p { color: #888; font-size: 17px; }
+        
+        .careers-benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .careers-benefit-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 32px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .careers-benefit-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.2); }
+        .careers-benefit-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; background: rgba(212,175,55,0.1); color: #D4AF37; }
+        .careers-benefit-card h3 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 8px; color: #fff; }
+        .careers-benefit-card p { color: #888; font-size: 14px; line-height: 1.6; }
+        
+        .careers-openings { display: flex; flex-direction: column; gap: 16px; }
+        .careers-opening-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px 32px; transition: all 0.3s ease; display: flex; align-items: center; gap: 24px; cursor: pointer; flex-wrap: wrap; }
+        .careers-opening-card:hover { border-color: rgba(212,175,55,0.3); transform: translateX(4px); }
+        .careers-opening-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .careers-opening-info { flex: 1; min-width: 200px; }
+        .careers-opening-info h3 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 4px; color: #fff; }
+        .careers-opening-dept { font-size: 13px; color: #D4AF37; font-weight: 500; display: block; }
+        .careers-opening-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #888; }
+        .careers-opening-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .careers-opening-tag { padding: 4px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; font-size: 12px; color: #888; }
+        .careers-opening-btn { flex-shrink: 0; }
+        
+        .careers-culture { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .careers-culture-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s ease; }
+        .careers-culture-card:hover { border-color: rgba(212,175,55,0.2); }
+        .careers-culture-emoji { font-size: 40px; margin-bottom: 12px; display: block; }
+        .careers-culture-card h4 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 6px; color: #fff; }
+        .careers-culture-card p { color: #888; font-size: 13px; }
+        
+        .careers-cta { text-align: center; padding: 64px 0; }
+        .careers-cta h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; color: #fff; }
+        .careers-cta p { color: #888; margin-bottom: 24px; }
+        
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            .hero { padding: 48px 0 40px; }
-            .hero h1 { font-size: 34px; }
-            .hero p { font-size: 16px; }
-            .hero-stats { gap: 24px; }
-            .hero-stat .stat-number { font-size: 28px; }
-            .section-title h2 { font-size: 28px; }
-            .opening-card { padding: 20px; flex-direction: column; align-items: flex-start; }
-            .opening-apply { width: 100%; }
-            .opening-apply .btn { display: block; text-align: center; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 28px; }
-            .section-title h2 { font-size: 24px; }
-            .benefits-grid { grid-template-columns: 1fr; }
+            .careers-hero { padding: 48px 0 40px; }
+            .careers-stats { gap: 24px; }
+            .careers-stat-num { font-size: 28px; }
+            .careers-opening-card { padding: 20px; flex-direction: column; align-items: flex-start; }
+            .careers-opening-btn { width: 100%; }
+            .careers-opening-btn .btn { display: block; text-align: center; }
         }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to Careers</a>
-
+    
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#D4AF37"/><text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text></svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/login.html">Login</a>
-            <a href="/careers.html" class="active">Careers</a>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="careers.html" class="active">Careers</a>
+            <a href="contact.html">Contact</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main id="main-content" role="main">
-        <!-- Hero -->
-        <section class="hero">
-            <div class="container">
-                <span class="hero-badge"><i class="fas fa-rocket"></i> We're Hiring!</span>
-                <h1>Build the Future of<br>Digital CRM</h1>
+    
+    <main id="main-content" class="main-content" role="main">
+        <div class="container" style="max-width:1100px">
+            
+            <section class="careers-hero">
+                <span class="careers-badge">🚀 We're Hiring!</span>
+                <h1>Build the Future of Digital CRM</h1>
                 <p>Join a passionate team building next-generation SaaS products that empower businesses across India and beyond.</p>
-                <div class="hero-stats">
-                    <div class="hero-stat"><span class="stat-number">50+</span><span class="stat-label">Team Members</span></div>
-                    <div class="hero-stat"><span class="stat-number">12</span><span class="stat-label">Open Positions</span></div>
-                    <div class="hero-stat"><span class="stat-number">10K+</span><span class="stat-label">Active Users</span></div>
-                    <div class="hero-stat"><span class="stat-number">4.8</span><span class="stat-label">Glassdoor Rating</span></div>
+                <div class="careers-stats">
+                    <div class="careers-stat"><span class="careers-stat-num">50+</span><span class="careers-stat-label">Team Members</span></div>
+                    <div class="careers-stat"><span class="careers-stat-num">12</span><span class="careers-stat-label">Open Positions</span></div>
+                    <div class="careers-stat"><span class="careers-stat-num">10K+</span><span class="careers-stat-label">Active Users</span></div>
+                    <div class="careers-stat"><span class="careers-stat-num">4.8</span><span class="careers-stat-label">Glassdoor Rating</span></div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Why Join Us -->
-        <section class="section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Why Join 11 Avatar?</h2>
-                    <p>We offer more than just a job. Here's what makes us special.</p>
+            </section>
+            
+            <section class="careers-section">
+                <div class="careers-section-title"><h2>Why Join 11 Avatar?</h2><p>We offer more than just a job. Here's what makes us special.</p></div>
+                <div class="careers-benefits">
+                    <div class="careers-benefit-card"><div class="careers-benefit-icon">💰</div><h3>Competitive Compensation</h3><p>Industry-leading salary packages with performance bonuses, ESOPs, and annual appraisals.</p></div>
+                    <div class="careers-benefit-card"><div class="careers-benefit-icon">🏠</div><h3>Remote-First Culture</h3><p>Work from anywhere in India. Home office setup allowance and flexible hours.</p></div>
+                    <div class="careers-benefit-card"><div class="careers-benefit-icon">🎓</div><h3>Learning & Development</h3><p>Annual learning budget of ₹50,000 for courses, certifications, and conferences.</p></div>
+                    <div class="careers-benefit-card"><div class="careers-benefit-icon">❤️</div><h3>Health & Wellness</h3><p>Comprehensive health insurance (₹5 Lakh), mental health support, and gym membership.</p></div>
+                    <div class="careers-benefit-card"><div class="careers-benefit-icon">🏖️</div><h3>Generous Time Off</h3><p>24 paid leaves, 12 sick leaves, parental leave, and company-wide recharge days.</p></div>
+                    <div class="careers-benefit-card"><div class="careers-benefit-icon">👥</div><h3>Amazing Team Culture</h3><p>Quarterly offsites, hackathons, celebrations, and a supportive environment.</p></div>
                 </div>
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-rupee-sign"></i></div>
-                        <h3>Competitive Compensation</h3>
-                        <p>Industry-leading salary packages with performance bonuses, ESOPs for key contributors, and annual appraisals.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-laptop-house"></i></div>
-                        <h3>Remote-First Culture</h3>
-                        <p>Work from anywhere in India. We provide home office setup allowance, high-speed internet reimbursement, and flexible hours.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <h3>Learning & Development</h3>
-                        <p>Annual learning budget of ₹50,000 for courses, certifications, and conferences. Access to premium learning platforms.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-heartbeat"></i></div>
-                        <h3>Health & Wellness</h3>
-                        <p>Comprehensive health insurance for you and your family (₹5 Lakh coverage), mental health support, and gym membership.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-umbrella-beach"></i></div>
-                        <h3>Generous Time Off</h3>
-                        <p>24 paid leaves annually, 12 sick leaves, parental leave (6 months maternity, 1 month paternity), and company-wide recharge days.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-users"></i></div>
-                        <h3>Amazing Team Culture</h3>
-                        <p>Quarterly team offsites, hackathons, festival celebrations, and a supportive environment where everyone grows together.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Open Positions -->
-        <section class="section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Open Positions</h2>
-                    <p>Find your next opportunity and make an impact</p>
-                </div>
-                <div class="openings-list">
-                    <!-- Engineering -->
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: Senior Frontend Developer'">
-                        <div class="opening-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;"><i class="fas fa-code"></i></div>
-                        <div class="opening-info">
-                            <h3>Senior Frontend Developer</h3>
-                            <span class="dept">Engineering · Full-Time · Remote</span>
-                            <div class="opening-tags"><span class="opening-tag">React</span><span class="opening-tag">JavaScript</span><span class="opening-tag">Firebase</span><span class="opening-tag">PWA</span></div>
+            </section>
+            
+            <section class="careers-section">
+                <div class="careers-section-title"><h2>Open Positions</h2><p>Find your next opportunity and make an impact</p></div>
+                <div class="careers-openings">
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;">💻</div>
+                        <div class="careers-opening-info">
+                            <h3>Senior Frontend Developer</h3><span class="careers-opening-dept">Engineering · Full-Time · Remote</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">React</span><span class="careers-opening-tag">JavaScript</span><span class="careers-opening-tag">Firebase</span><span class="careers-opening-tag">PWA</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Remote (India)</span><span><i class="fas fa-briefcase"></i> 3-5 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Senior Frontend Developer" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Remote (India)</span><span>💼 3-5 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Senior Frontend Developer" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
-
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: Backend Developer'">
-                        <div class="opening-icon" style="background:rgba(16,185,129,0.12);color:#10B981;"><i class="fas fa-server"></i></div>
-                        <div class="opening-info">
-                            <h3>Backend Developer (Node.js)</h3>
-                            <span class="dept">Engineering · Full-Time · Remote</span>
-                            <div class="opening-tags"><span class="opening-tag">Node.js</span><span class="opening-tag">Firebase Functions</span><span class="opening-tag">PostgreSQL</span></div>
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(16,185,129,0.12);color:#10B981;">🖥️</div>
+                        <div class="careers-opening-info">
+                            <h3>Backend Developer (Node.js)</h3><span class="careers-opening-dept">Engineering · Full-Time · Remote</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">Node.js</span><span class="careers-opening-tag">Firebase</span><span class="careers-opening-tag">PostgreSQL</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Remote (India)</span><span><i class="fas fa-briefcase"></i> 2-4 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Backend Developer" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Remote (India)</span><span>💼 2-4 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Backend Developer" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
-
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: Full Stack Developer'">
-                        <div class="opening-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;"><i class="fas fa-layer-group"></i></div>
-                        <div class="opening-info">
-                            <h3>Full Stack Developer</h3>
-                            <span class="dept">Engineering · Full-Time · Mumbai</span>
-                            <div class="opening-tags"><span class="opening-tag">React</span><span class="opening-tag">Node.js</span><span class="opening-tag">Cloud Functions</span></div>
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">⚡</div>
+                        <div class="careers-opening-info">
+                            <h3>Full Stack Developer</h3><span class="careers-opening-dept">Engineering · Full-Time · Mumbai</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">React</span><span class="careers-opening-tag">Node.js</span><span class="careers-opening-tag">Cloud</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Mumbai (Hybrid)</span><span><i class="fas fa-briefcase"></i> 2-5 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Full Stack Developer" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Mumbai (Hybrid)</span><span>💼 2-5 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Full Stack Developer" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
-
-                    <!-- Product & Design -->
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: UI/UX Designer'">
-                        <div class="opening-icon" style="background:rgba(236,72,153,0.12);color:#EC4899;"><i class="fas fa-paint-brush"></i></div>
-                        <div class="opening-info">
-                            <h3>UI/UX Designer</h3>
-                            <span class="dept">Design · Full-Time · Remote</span>
-                            <div class="opening-tags"><span class="opening-tag">Figma</span><span class="opening-tag">Design Systems</span><span class="opening-tag">User Research</span></div>
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(236,72,153,0.12);color:#EC4899;">🎨</div>
+                        <div class="careers-opening-info">
+                            <h3>UI/UX Designer</h3><span class="careers-opening-dept">Design · Full-Time · Remote</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">Figma</span><span class="careers-opening-tag">Design Systems</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Remote (India)</span><span><i class="fas fa-briefcase"></i> 2-4 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: UI/UX Designer" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Remote (India)</span><span>💼 2-4 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: UI/UX Designer" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
-
-                    <!-- Sales & Marketing -->
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: Sales Executive'">
-                        <div class="opening-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;"><i class="fas fa-handshake"></i></div>
-                        <div class="opening-info">
-                            <h3>Sales Executive (SaaS)</h3>
-                            <span class="dept">Sales · Full-Time · Mumbai</span>
-                            <div class="opening-tags"><span class="opening-tag">B2B Sales</span><span class="opening-tag">CRM</span><span class="opening-tag">Pipeline</span></div>
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;">🤝</div>
+                        <div class="careers-opening-info">
+                            <h3>Sales Executive (SaaS)</h3><span class="careers-opening-dept">Sales · Full-Time · Mumbai</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">B2B Sales</span><span class="careers-opening-tag">CRM</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Mumbai</span><span><i class="fas fa-briefcase"></i> 1-3 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Sales Executive" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Mumbai</span><span>💼 1-3 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Sales Executive" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
-
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: Digital Marketing Specialist'">
-                        <div class="opening-icon" style="background:rgba(20,184,166,0.12);color:#14B8A6;"><i class="fas fa-bullhorn"></i></div>
-                        <div class="opening-info">
-                            <h3>Digital Marketing Specialist</h3>
-                            <span class="dept">Marketing · Full-Time · Remote</span>
-                            <div class="opening-tags"><span class="opening-tag">SEO</span><span class="opening-tag">Content</span><span class="opening-tag">Social Media</span></div>
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(20,184,166,0.12);color:#14B8A6;">📢</div>
+                        <div class="careers-opening-info">
+                            <h3>Digital Marketing Specialist</h3><span class="careers-opening-dept">Marketing · Full-Time · Remote</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">SEO</span><span class="careers-opening-tag">Content</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Remote (India)</span><span><i class="fas fa-briefcase"></i> 2-3 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Digital Marketing Specialist" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Remote (India)</span><span>💼 2-3 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Digital Marketing Specialist" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
-
-                    <!-- Support -->
-                    <div class="opening-card" onclick="window.location.href='mailto:careers@11avatardigitalhub.cloud?subject=Application: Customer Support Specialist'">
-                        <div class="opening-icon" style="background:rgba(99,102,241,0.12);color:#6366F1;"><i class="fas fa-headset"></i></div>
-                        <div class="opening-info">
-                            <h3>Customer Support Specialist</h3>
-                            <span class="dept">Support · Full-Time · Remote</span>
-                            <div class="opening-tags"><span class="opening-tag">CRM Support</span><span class="opening-tag">Communication</span></div>
+                    <div class="careers-opening-card">
+                        <div class="careers-opening-icon" style="background:rgba(99,102,241,0.12);color:#6366F1;">🎧</div>
+                        <div class="careers-opening-info">
+                            <h3>Customer Support Specialist</h3><span class="careers-opening-dept">Support · Full-Time · Remote</span>
+                            <div class="careers-opening-tags"><span class="careers-opening-tag">CRM Support</span></div>
                         </div>
-                        <div class="opening-meta"><span><i class="fas fa-map-marker-alt"></i> Remote (India)</span><span><i class="fas fa-briefcase"></i> 1-2 Years Exp</span></div>
-                        <div class="opening-apply"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Customer Support Specialist" class="btn">Apply Now</a></div>
+                        <div class="careers-opening-meta"><span>📍 Remote (India)</span><span>💼 1-2 Years Exp</span></div>
+                        <div class="careers-opening-btn"><a href="mailto:careers@11avatardigitalhub.cloud?subject=Application: Customer Support Specialist" class="btn btn-primary btn-sm">Apply Now</a></div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Culture -->
-        <section class="section">
-            <div class="container">
-                <div class="section-title"><h2>Our Culture</h2><p>What makes working at 11 Avatar special</p></div>
-                <div class="culture-grid">
-                    <div class="culture-card"><span class="emoji">🚀</span><h4>Move Fast</h4><p>We ship quickly, iterate based on feedback, and value action over perfection.</p></div>
-                    <div class="culture-card"><span class="emoji">🤝</span><h4>Collaboration First</h4><p>No silos. Engineering, design, sales, and support work together as one team.</p></div>
-                    <div class="culture-card"><span class="emoji">📚</span><h4>Continuous Learning</h4><p>We invest in your growth. Learning is part of the job, not an afterthought.</p></div>
-                    <div class="culture-card"><span class="emoji">🎯</span><h4>Customer Obsessed</h4><p>Every decision starts with "How does this help our customers succeed?"</p></div>
-                    <div class="culture-card"><span class="emoji">🌍</span><h4>Diversity & Inclusion</h4><p>We celebrate diverse perspectives and build an inclusive environment for all.</p></div>
-                    <div class="culture-card"><span class="emoji">🎉</span><h4>Work Hard, Play Hard</h4><p>Quarterly offsites, game nights, and celebrations are part of our DNA.</p></div>
+            </section>
+            
+            <section class="careers-section">
+                <div class="careers-section-title"><h2>Our Culture</h2><p>What makes working at 11 Avatar special</p></div>
+                <div class="careers-culture">
+                    <div class="careers-culture-card"><span class="careers-culture-emoji">🚀</span><h4>Move Fast</h4><p>We ship quickly, iterate based on feedback, and value action over perfection.</p></div>
+                    <div class="careers-culture-card"><span class="careers-culture-emoji">🤝</span><h4>Collaboration First</h4><p>No silos. Engineering, design, sales, and support work together as one team.</p></div>
+                    <div class="careers-culture-card"><span class="careers-culture-emoji">📚</span><h4>Continuous Learning</h4><p>We invest in your growth. Learning is part of the job, not an afterthought.</p></div>
+                    <div class="careers-culture-card"><span class="careers-culture-emoji">🎯</span><h4>Customer Obsessed</h4><p>Every decision starts with "How does this help our customers succeed?"</p></div>
+                    <div class="careers-culture-card"><span class="careers-culture-emoji">🌍</span><h4>Diversity & Inclusion</h4><p>We celebrate diverse perspectives and build an inclusive environment for all.</p></div>
+                    <div class="careers-culture-card"><span class="careers-culture-emoji">🎉</span><h4>Work Hard, Play Hard</h4><p>Quarterly offsites, game nights, and celebrations are part of our DNA.</p></div>
                 </div>
-            </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="cta-section">
-            <div class="container">
+            </section>
+            
+            <section class="careers-cta">
                 <h2>Don't See the Right Role?</h2>
-                <p>We're always looking for talented people. Send us your resume and tell us why you'd be a great fit.</p>
-                <a href="mailto:info@11avatardigitalhub.cloud?subject=General Application - Talent Pool" class="btn-large">
-                    <i class="fas fa-paper-plane"></i> Join Our Talent Pool
-                </a>
-            </div>
-        </section>
+                <p>We're always looking for talented people. Send us your resume!</p>
+                <a href="mailto:careers@11avatardigitalhub.cloud?subject=General Application - Talent Pool" class="btn btn-primary btn-lg">📩 Join Our Talent Pool</a>
+            </section>
+            
+        </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved.</p>
-        <p><a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/careers.html">Careers</a></p>
+    
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:#888;font-size:14px">© <span class="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved.</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                    <a href="careers.html" style="color:#D4AF37;text-decoration:none;font-size:14px">Careers</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </nav>
+            </div>
+        </div>
     </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            document.querySelectorAll('.current-year').forEach(function(el) { el.textContent = new Date().getFullYear(); });
+        });
+    </script>
 </body>
 </html>
-
-

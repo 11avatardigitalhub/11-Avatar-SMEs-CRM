@@ -1,829 +1,924 @@
-/* ==========================================
-   11 AVATAR DIGITAL HUB
-   Core Application Initialization
-   Version: 2.0 Enterprise
-   ==========================================
-   Responsibilities:
-   - App initialization & bootstrap
-   - Global state management
-   - Route handling & navigation
-   - Module loading & orchestration
-   - Event system
-   - Error handling
-   - Offline support
-   - Auto-save & backup
-   ========================================== */
+/**
+ * @fileoverview 11 Avatar SMEs CRM - Core Application Bootstrap
+ * @description Multi-page application bootstrap for GitHub Pages static deployment.
+ *              Handles theme management, auth state monitoring, global event bus,
+ *              offline support, error logging, keyboard shortcuts, and page lifecycle.
+ *              Designed for .html multi-page architecture (NOT SPA).
+ * @module core/app
+ * @version 3.0.0
+ * @author 11 Avatar Digital Hub
+ * @license Proprietary - All Rights Reserved
+ * @copyright 2024-2026 11 Avatar Digital Hub
+ *
+ * @requires FirebaseService (window.FirebaseService) - optional
+ * @requires Constants (window.Constants) - optional
+ * @requires RoutesConfig (window.RoutesConfig) - optional
+ *
+ * @exports window.AppCore - Global namespace
+ */
 
-// ==========================================
-// GLOBAL APP STATE
-// ==========================================
-const AppState = {
-    // User
-    currentUser: null,
-    userProfile: null,
-    isAuthenticated: false,
-    
-    // App
-    initialized: false,
-    currentPage: null,
-    previousPage: null,
-    sidebarOpen: false,
-    theme: 'internal', // 'public' | 'internal'
-    darkMode: false,
-    
-    // Loading
-    loading: false,
-    loadingMessage: '',
-    
-    // Network
-    online: navigator.onLine,
-    
-    // Data cache
-    cache: new Map(),
-    cacheTimeout: 5 * 60 * 1000, // 5 minutes
-    
-    // Pending operations (offline queue)
-    offlineQueue: [],
-    
-    // Modules loaded status
-    modules: {
-        auth: false,
-        leads: false,
-        clients: false,
-        revenue: false,
-        pipeline: false,
-        projects: false,
-        retainers: false,
-        whatsapp: false,
-        reports: false,
-        settings: false
-    },
-    
-    // Metrics
-    metrics: {
-        appLoadTime: null,
-        lastSaveTime: null,
-        lastBackupTime: null,
-        errors: []
-    }
-};
+'use strict';
 
-// ==========================================
-// APP INITIALIZATION
-// ==========================================
-class App {
-    constructor() {
-        this.state = AppState;
-        this.events = new Map();
-        this.modules = new Map();
-        this.startTime = performance.now();
-    }
+// =============================================================================
+// APP CORE - Self-executing IIFE
+// =============================================================================
+const AppCore = (function() {
+
+    // -------------------------------------------------------------------------
+    // SECTION 1: APPLICATION STATE
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Centralized application state */
+    const state = {
+        /** @type {Object|null} Current Firebase user */
+        currentUser: null,
+        
+        /** @type {Object|null} User profile from Firestore */
+        userProfile: null,
+        
+        /** @type {boolean} Whether user is authenticated */
+        isAuthenticated: false,
+        
+        /** @type {boolean} Whether app has fully initialized */
+        initialized: false,
+        
+        /** @type {string} Current page identifier */
+        currentPage: null,
+        
+        /** @type {string} Previous page identifier */
+        previousPage: null,
+        
+        /** @type {string} Current theme: 'public' or 'internal' */
+        theme: 'internal',
+        
+        /** @type {boolean} Whether dark mode is enabled */
+        darkMode: false,
+        
+        /** @type {boolean} Whether sidebar is open */
+        sidebarOpen: false,
+        
+        /** @type {boolean} Whether app is in loading state */
+        loading: false,
+        
+        /** @type {string} Loading message */
+        loadingMessage: '',
+        
+        /** @type {boolean} Whether browser is online */
+        online: typeof navigator !== 'undefined' ? navigator.onLine : true,
+        
+        /** @type {Array} Offline operation queue */
+        offlineQueue: [],
+        
+        /** @type {number} App start timestamp */
+        startTime: typeof performance !== 'undefined' ? performance.now() : Date.now(),
+        
+        /** @type {Object} Application metrics */
+        metrics: {
+            appLoadTime: null,
+            lastSaveTime: null,
+            errors: [],
+        },
+        
+        /** @type {string} Current page's route ID from RoutesConfig */
+        currentRouteId: null,
+    };
+    
+    /** @type {Map} Event listeners registry */
+    const eventRegistry = new Map();
+    
+    /** @type {Array} One-time initialization queue */
+    const initQueue = [];
+    
+    /** @type {boolean} Whether init queue is being processed */
+    let isProcessingQueue = false;
+
+    // -------------------------------------------------------------------------
+    // SECTION 2: UTILITY FUNCTIONS
+    // -------------------------------------------------------------------------
     
     /**
-     * Initialize the application
+     * Log message with module prefix
+     * @param {string} level - 'log', 'warn', 'error'
+     * @param {string} message
+     * @param {*} [data]
      */
-    async init() {
+    function log(level, message, data) {
         try {
-            console.log('🚀 Initializing 11 Avatar Digital Hub...');
-            this.showLoader('Initializing application...');
+            var isDebug = window.Constants && 
+                         window.Constants.APP && 
+                         window.Constants.APP.DEBUG;
             
-            // Step 1: Check environment
-            this.checkEnvironment();
+            if (!isDebug && level === 'log') return;
             
-            // Step 2: Load theme
-            this.initTheme();
-            
-            // Step 3: Setup event listeners
-            this.setupEvents();
-            
-            // Step 4: Check auth state
-            await this.checkAuth();
-            
-            // Step 5: Load user preferences
-            this.loadPreferences();
-            
-            // Step 6: Setup offline support
-            this.setupOfflineSupport();
-            
-            // Step 7: Setup auto-save
-            this.setupAutoSave();
-            
-            // Step 8: Setup keyboard shortcuts
-            this.setupKeyboardShortcuts();
-            
-            // Step 9: Initialize modules
-            await this.initModules();
-            
-            // Step 10: Navigate to start page
-            this.navigateTo(this.getStartPage());
-            
-            // Mark as initialized
-            this.state.initialized = true;
-            this.state.metrics.appLoadTime = performance.now() - this.startTime;
-            
-            this.hideLoader();
-            console.log('✅ App initialized in', Math.round(this.state.metrics.appLoadTime), 'ms');
-            
-            // Dispatch ready event
-            this.emit('app:ready');
-            
-            // Show welcome toast
-            this.toast('Welcome to 11 Avatar Digital Hub!', 'success');
-            
-        } catch (error) {
-            console.error('❌ App initialization failed:', error);
-            this.handleError(error);
-            this.hideLoader();
-            this.showErrorPage(error);
+            var prefix = '[AppCore]';
+            switch (level) {
+                case 'error':
+                    console.error(prefix, message, data || '');
+                    break;
+                case 'warn':
+                    console.warn(prefix, message, data || '');
+                    break;
+                default:
+                    console.log(prefix, message, data || '');
+                    break;
+            }
+        } catch (e) {
+            // Silent
         }
     }
     
     /**
-     * Check browser environment
+     * Get a safe value from Constants module or fallback
+     * @param {string} path - Dot-notation path (e.g., 'UI.THEME.DEFAULT')
+     * @param {*} fallback - Default value if not found
+     * @returns {*} Value or fallback
      */
-    checkEnvironment() {
-        // Check required APIs
-        const required = ['localStorage', 'indexedDB', 'fetch'];
-        const missing = required.filter(api => !window[api]);
-        
-        if (missing.length > 0) {
-            throw new Error(`Browser missing required APIs: ${missing.join(', ')}`);
+    function getConstant(path, fallback) {
+        try {
+            if (!window.Constants) return fallback;
+            
+            var parts = path.split('.');
+            var value = window.Constants;
+            
+            for (var i = 0; i < parts.length; i++) {
+                value = value[parts[i]];
+                if (value === undefined || value === null) return fallback;
+            }
+            
+            return value;
+        } catch (e) {
+            return fallback;
         }
-        
-        // Check if Firebase is available
-        if (!window.FirebaseService) {
-            throw new Error('Firebase service not found. Check firebase.js');
-        }
-        
-        // Check if Constants are available
-        if (!window.Constants) {
-            throw new Error('Constants not found. Check constants.js');
-        }
-        
-        console.log('✅ Environment check passed');
     }
     
     /**
-     * Initialize theme
+     * Get current page route ID from URL
+     * @returns {string} Route ID or 'unknown'
      */
-    initTheme() {
-        const savedTheme = localStorage.getItem('11avatar_theme');
-        const savedDarkMode = localStorage.getItem('11avatar_darkMode');
-        
-        this.state.theme = savedTheme || 'internal';
-        this.state.darkMode = savedDarkMode === 'true';
-        
-        this.applyTheme();
-        console.log('🎨 Theme initialized:', this.state.theme, this.state.darkMode ? 'dark' : 'light');
+    function detectCurrentPage() {
+        try {
+            var path = window.location.pathname;
+            
+            // Extract filename from path
+            var filename = path.split('/').pop() || 'index.html';
+            
+            // Remove .html extension
+            var pageName = filename.replace(/\.html$/, '');
+            
+            // Handle root
+            if (!pageName || pageName === 'index' || path.endsWith('/')) {
+                pageName = 'landing';
+            }
+            
+            // Try RoutesConfig if available
+            if (window.RoutesConfig && typeof window.RoutesConfig.getRouteIdByPath === 'function') {
+                var routeId = window.RoutesConfig.getRouteIdByPath(path);
+                if (routeId) return routeId;
+            }
+            
+            return pageName;
+        } catch (e) {
+            return 'unknown';
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 3: THEME MANAGEMENT
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Initialize theme from storage or defaults
+     */
+    function initTheme() {
+        try {
+            var savedTheme = localStorage.getItem('11avatar_theme');
+            var savedDarkMode = localStorage.getItem('11avatar_darkMode');
+            
+            state.theme = savedTheme || 'internal';
+            state.darkMode = savedDarkMode === 'true';
+            
+            // Override with route-specific theme if RoutesConfig available
+            var routeId = detectCurrentPage();
+            if (window.RoutesConfig && typeof window.RoutesConfig.getRouteTheme === 'function') {
+                var routeTheme = window.RoutesConfig.getRouteTheme(routeId);
+                if (routeTheme) state.theme = routeTheme;
+            }
+            
+            applyTheme();
+            log('log', 'Theme initialized: ' + state.theme + (state.darkMode ? ' (dark)' : ''));
+        } catch (e) {
+            log('error', 'Theme init failed:', e);
+        }
     }
     
     /**
-     * Apply theme to DOM
+     * Apply current theme to DOM
      */
-    applyTheme() {
-        document.documentElement.setAttribute('data-theme', this.state.theme);
-        
-        if (this.state.darkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+    function applyTheme() {
+        try {
+            document.documentElement.setAttribute('data-theme', state.theme);
+            
+            if (state.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            
+            // Save preferences
+            localStorage.setItem('11avatar_theme', state.theme);
+            localStorage.setItem('11avatar_darkMode', String(state.darkMode));
+            
+            // Emit theme change event
+            emit('theme:changed', { theme: state.theme, darkMode: state.darkMode });
+        } catch (e) {
+            // Silent
         }
-        
-        localStorage.setItem('11avatar_theme', this.state.theme);
-        localStorage.setItem('11avatar_darkMode', this.state.darkMode);
     }
     
     /**
      * Toggle dark mode
      */
-    toggleDarkMode() {
-        this.state.darkMode = !this.state.darkMode;
-        this.applyTheme();
-        this.toast(this.state.darkMode ? '🌙 Dark mode enabled' : '☀️ Light mode enabled', 'info');
+    function toggleDarkMode() {
+        state.darkMode = !state.darkMode;
+        applyTheme();
+        log('log', 'Dark mode ' + (state.darkMode ? 'enabled' : 'disabled'));
+        return state.darkMode;
     }
     
     /**
-     * Setup global event listeners
+     * Set theme
+     * @param {string} theme - 'public' or 'internal'
      */
-    setupEvents() {
-        // Network status
-        window.addEventListener('online', () => {
-            this.state.online = true;
-            this.toast('📶 Back online!', 'success');
-            this.processOfflineQueue();
-            this.emit('network:online');
-        });
+    function setTheme(theme) {
+        if (theme === 'public' || theme === 'internal') {
+            state.theme = theme;
+            applyTheme();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 4: AUTH STATE MONITORING
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Initialize auth state listener
+     */
+    function initAuth() {
+        try {
+            // Check if Firebase is available
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                log('warn', 'Firebase Auth not available - skipping auth monitoring');
+                state.initialized = true;
+                emit('app:ready', { authAvailable: false });
+                return;
+            }
+            
+            // Listen for auth state changes
+            firebase.auth().onAuthStateChanged(
+                function(user) {
+                    if (user) {
+                        state.currentUser = user;
+                        state.isAuthenticated = true;
+                        
+                        // Store basic session info
+                        try {
+                            var sessionData = {
+                                uid: user.uid,
+                                email: user.email,
+                                displayName: user.displayName,
+                                emailVerified: user.emailVerified,
+                                lastLogin: new Date().toISOString(),
+                            };
+                            sessionStorage.setItem('auth_user', JSON.stringify(sessionData));
+                        } catch (e) {
+                            // Storage may be full
+                        }
+                        
+                        // Try to fetch profile if FirebaseService available
+                        fetchUserProfile(user.uid);
+                        
+                        log('log', 'User authenticated: ' + user.email);
+                        emit('auth:login', { user: user });
+                    } else {
+                        state.currentUser = null;
+                        state.isAuthenticated = false;
+                        state.userProfile = null;
+                        
+                        try {
+                            sessionStorage.removeItem('auth_user');
+                        } catch (e) {
+                            // Silent
+                        }
+                        
+                        log('log', 'User signed out');
+                        emit('auth:logout', {});
+                    }
+                    
+                    // Mark as initialized after first auth state
+                    if (!state.initialized) {
+                        state.initialized = true;
+                        state.metrics.appLoadTime = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - state.startTime;
+                        emit('app:ready', { authAvailable: true });
+                        processInitQueue();
+                    }
+                },
+                function(error) {
+                    log('error', 'Auth state observer error:', error);
+                    if (!state.initialized) {
+                        state.initialized = true;
+                        emit('app:ready', { authAvailable: false, error: error.message });
+                        processInitQueue();
+                    }
+                }
+            );
+            
+            // Timeout fallback
+            setTimeout(function() {
+                if (!state.initialized) {
+                    state.initialized = true;
+                    state.metrics.appLoadTime = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - state.startTime;
+                    emit('app:ready', { authAvailable: false, timeout: true });
+                    processInitQueue();
+                }
+            }, 8000);
+            
+        } catch (e) {
+            log('error', 'Auth init failed:', e);
+            state.initialized = true;
+            emit('app:ready', { authAvailable: false, error: e.message });
+            processInitQueue();
+        }
+    }
+    
+    /**
+     * Fetch user profile from Firestore
+     * @param {string} uid - User ID
+     */
+    async function fetchUserProfile(uid) {
+        try {
+            // Try FirebaseService
+            if (window.FirebaseService && typeof window.FirebaseService.getDocument === 'function') {
+                var profile = await window.FirebaseService.getDocument('users', uid);
+                if (profile) {
+                    state.userProfile = profile;
+                    log('log', 'User profile loaded, role: ' + (profile.role || 'unknown'));
+                    emit('profile:loaded', { profile: profile });
+                    return;
+                }
+            }
+            
+            // Direct Firestore fallback
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                var doc = await firebase.firestore().collection('users').doc(uid).get();
+                if (doc.exists) {
+                    state.userProfile = { id: doc.id, uid: uid, data: doc.data() };
+                    log('log', 'User profile loaded via Firestore');
+                    emit('profile:loaded', { profile: state.userProfile });
+                }
+            }
+        } catch (e) {
+            log('warn', 'Could not fetch user profile:', e);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 5: EVENT SYSTEM
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Register an event listener
+     * @param {string} event - Event name
+     * @param {Function} callback - Handler function
+     * @returns {Function} Unsubscribe function
+     */
+    function on(event, callback) {
+        if (typeof callback !== 'function') {
+            return function() {};
+        }
         
-        window.addEventListener('offline', () => {
-            this.state.online = false;
-            this.toast('📶 You are offline. Changes will be saved locally.', 'warning');
-            this.emit('network:offline');
-        });
+        if (!eventRegistry.has(event)) {
+            eventRegistry.set(event, []);
+        }
         
-        // Before unload
-        window.addEventListener('beforeunload', () => {
-            this.saveAll();
-            this.emit('app:closing');
-        });
+        eventRegistry.get(event).push(callback);
         
-        // Visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                this.emit('app:resume');
-            } else {
-                this.saveAll();
-                this.emit('app:pause');
+        return function() {
+            off(event, callback);
+        };
+    }
+    
+    /**
+     * Remove an event listener
+     * @param {string} event
+     * @param {Function} callback
+     */
+    function off(event, callback) {
+        if (!eventRegistry.has(event)) return;
+        
+        var listeners = eventRegistry.get(event);
+        var index = listeners.indexOf(callback);
+        if (index > -1) {
+            listeners.splice(index, 1);
+        }
+    }
+    
+    /**
+     * Emit an event to all listeners
+     * @param {string} event - Event name
+     * @param {*} [data={}] - Event payload
+     */
+    function emit(event, data) {
+        if (!eventRegistry.has(event)) return;
+        
+        var listeners = eventRegistry.get(event).slice(); // Copy for safe iteration
+        
+        listeners.forEach(function(callback) {
+            try {
+                callback(data || {});
+            } catch (error) {
+                log('error', 'Error in event handler for "' + event + '":', error);
             }
         });
         
-        // Resize
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                this.emit('app:resize', {
-                    width: window.innerWidth,
-                    height: window.innerHeight
-                });
-            }, 250);
-        });
-        
-        // Error handling
-        window.addEventListener('error', (event) => {
-            this.logError('Uncaught error', event.error);
-        });
-        
-        window.addEventListener('unhandledrejection', (event) => {
-            this.logError('Unhandled promise rejection', event.reason);
-        });
-        
-        console.log('👂 Event listeners setup complete');
+        // Also dispatch as DOM custom event for inter-module communication
+        try {
+            window.dispatchEvent(new CustomEvent('app:' + event, {
+                detail: data || {},
+                bubbles: false,
+            }));
+        } catch (e) {
+            // Silent
+        }
     }
     
     /**
-     * Check authentication state
+     * Register a one-time event listener
+     * @param {string} event
+     * @param {Function} callback
+     * @returns {Function} Unsubscribe function
      */
-    async checkAuth() {
-        return new Promise((resolve) => {
-            const unsubscribe = FirebaseService.auth.onAuthStateChanged(async (user) => {
-                unsubscribe();
-                
-                if (user) {
-                    this.state.currentUser = user;
-                    this.state.isAuthenticated = true;
-                    
-                    try {
-                        this.state.userProfile = await FirebaseService.getCurrentUserProfile();
-                        console.log('👤 User authenticated:', user.email);
-                        console.log('👤 Role:', this.state.userProfile?.role);
-                    } catch (error) {
-                        console.warn('⚠️ Could not fetch user profile:', error);
-                    }
+    function once(event, callback) {
+        var unsubscribe = on(event, function(data) {
+            unsubscribe();
+            callback(data);
+        });
+        return unsubscribe;
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 6: INIT QUEUE
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Queue a function to run after app is ready
+     * @param {Function} fn - Function to execute
+     */
+    function whenReady(fn) {
+        if (state.initialized) {
+            try {
+                fn();
+            } catch (e) {
+                log('error', 'Error in ready callback:', e);
+            }
+        } else {
+            initQueue.push(fn);
+        }
+    }
+    
+    /**
+     * Process the initialization queue
+     */
+    function processInitQueue() {
+        if (isProcessingQueue) return;
+        isProcessingQueue = true;
+        
+        while (initQueue.length > 0) {
+            var fn = initQueue.shift();
+            try {
+                fn();
+            } catch (e) {
+                log('error', 'Error processing init queue:', e);
+            }
+        }
+        
+        isProcessingQueue = false;
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 7: GLOBAL EVENT LISTENERS
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Setup global browser event listeners
+     */
+    function setupGlobalListeners() {
+        try {
+            // Online/Offline
+            window.addEventListener('online', function() {
+                state.online = true;
+                log('log', 'Network: Online');
+                emit('network:online', {});
+                processOfflineQueue();
+            });
+            
+            window.addEventListener('offline', function() {
+                state.online = false;
+                log('log', 'Network: Offline');
+                emit('network:offline', {});
+            });
+            
+            // Page visibility
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    emit('app:resume', {});
                 } else {
-                    this.state.currentUser = null;
-                    this.state.isAuthenticated = false;
-                    this.state.userProfile = null;
-                    console.log('👤 No user authenticated');
+                    emit('app:pause', {});
+                }
+            });
+            
+            // Global error handling
+            window.addEventListener('error', function(event) {
+                logError('Uncaught Error', event.error || event.message);
+            });
+            
+            window.addEventListener('unhandledrejection', function(event) {
+                logError('Unhandled Promise Rejection', event.reason);
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(event) {
+                // Ctrl/Cmd + D = Toggle dark mode
+                if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
+                    event.preventDefault();
+                    toggleDarkMode();
                 }
                 
-                resolve();
+                // Escape = Emit escape event (for closing modals/drawers)
+                if (event.key === 'Escape') {
+                    emit('keyboard:escape', {});
+                }
             });
             
-            // Timeout after 5 seconds
-            setTimeout(() => {
-                console.warn('⚠️ Auth check timeout');
-                resolve();
-            }, 5000);
-        });
+            log('log', 'Global listeners setup complete');
+        } catch (e) {
+            log('error', 'Global listener setup failed:', e);
+        }
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 8: OFFLINE SUPPORT
+    // -------------------------------------------------------------------------
     
     /**
-     * Load user preferences
+     * Setup offline support with service worker
      */
-    loadPreferences() {
+    function setupOfflineSupport() {
         try {
-            const prefs = localStorage.getItem('11avatar_preferences');
-            if (prefs) {
-                const parsed = JSON.parse(prefs);
-                this.state.theme = parsed.theme || this.state.theme;
-                this.state.darkMode = parsed.darkMode || this.state.darkMode;
-                this.state.sidebarOpen = parsed.sidebarOpen || false;
+            if (!('serviceWorker' in navigator)) {
+                log('warn', 'Service Worker not supported');
+                return;
             }
-        } catch (error) {
-            console.warn('⚠️ Could not load preferences');
-        }
-    }
-    
-    /**
-     * Save user preferences
-     */
-    savePreferences() {
-        try {
-            const prefs = {
-                theme: this.state.theme,
-                darkMode: this.state.darkMode,
-                sidebarOpen: this.state.sidebarOpen
-            };
-            localStorage.setItem('11avatar_preferences', JSON.stringify(prefs));
-        } catch (error) {
-            console.warn('⚠️ Could not save preferences');
-        }
-    }
-    
-    /**
-     * Setup offline support
-     */
-    setupOfflineSupport() {
-        // Register service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('👷 Service Worker registered:', registration.scope);
+            
+            // Register service worker with correct scope for GitHub Pages
+            var swPath = getConstant('APP.NAME', '') === '' 
+                ? '/sw.js' 
+                : '/11-Avatar-SMEs-CRM/sw.js';
+            
+            // Try relative path first
+            navigator.serviceWorker.register('sw.js', { scope: './' })
+                .then(function(registration) {
+                    log('log', 'Service Worker registered: ' + registration.scope);
                 })
-                .catch(error => {
-                    console.warn('⚠️ Service Worker registration failed:', error);
+                .catch(function(error) {
+                    log('warn', 'Service Worker registration failed: ' + error.message);
+                    
+                    // Try alternate path
+                    navigator.serviceWorker.register(swPath, { scope: '/' })
+                        .then(function(reg) {
+                            log('log', 'Service Worker registered (alt path): ' + reg.scope);
+                        })
+                        .catch(function() {
+                            // Both failed - non-critical
+                        });
                 });
+        } catch (e) {
+            log('warn', 'Offline support setup failed:', e);
         }
-        
-        // Listen for sync events
-        if ('serviceWorker' in navigator && 'SyncManager' in window) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.sync.register('sync-data');
-            });
-        }
-        
-        console.log('📡 Offline support setup complete');
     }
     
     /**
-     * Process offline queue
+     * Process queued offline operations
      */
-    async processOfflineQueue() {
-        if (this.state.offlineQueue.length === 0) return;
+    async function processOfflineQueue() {
+        if (state.offlineQueue.length === 0) return;
         
-        console.log('📤 Processing offline queue:', this.state.offlineQueue.length, 'items');
+        log('log', 'Processing offline queue: ' + state.offlineQueue.length + ' items');
         
-        const queue = [...this.state.offlineQueue];
-        this.state.offlineQueue = [];
+        var queue = state.offlineQueue.slice();
+        state.offlineQueue = [];
         
-        for (const item of queue) {
+        for (var i = 0; i < queue.length; i++) {
+            var item = queue[i];
             try {
-                await this.executeOfflineItem(item);
-                console.log('✅ Offline item processed:', item.type);
-            } catch (error) {
-                console.error('❌ Offline item failed:', error);
-                this.state.offlineQueue.push(item);
+                if (window.FirebaseService) {
+                    switch (item.type) {
+                        case 'create':
+                            await window.FirebaseService.createDocument(item.collection, item.data, item.docId);
+                            break;
+                        case 'update':
+                            await window.FirebaseService.updateDocument(item.collection, item.docId, item.data);
+                            break;
+                        case 'delete':
+                            await window.FirebaseService.deleteDocument(item.collection, item.docId);
+                            break;
+                    }
+                }
+            } catch (e) {
+                log('error', 'Offline queue item failed:', e);
+                state.offlineQueue.push(item);
             }
         }
         
-        if (this.state.offlineQueue.length === 0) {
-            this.toast('📤 All offline changes synced!', 'success');
+        if (state.offlineQueue.length === 0) {
+            log('log', 'Offline queue processed successfully');
+            emit('offline:queueCleared', {});
         }
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 9: ERROR LOGGING
+    // -------------------------------------------------------------------------
     
     /**
-     * Execute offline queue item
+     * Log an error
+     * @param {string} message - Error description
+     * @param {Error|string} [error] - Error object or message
      */
-    async executeOfflineItem(item) {
-        switch (item.type) {
-            case 'create':
-                await FirebaseService.createDocument(item.collection, item.data);
-                break;
-            case 'update':
-                await FirebaseService.updateDocument(item.collection, item.docId, item.data);
-                break;
-            case 'delete':
-                await FirebaseService.deleteDocument(item.collection, item.docId);
-                break;
-            default:
-                console.warn('Unknown offline item type:', item.type);
-        }
-    }
-    
-    /**
-     * Setup auto-save
-     */
-    setupAutoSave() {
-        // Auto-save every 30 seconds
-        setInterval(() => {
-            this.saveAll();
-        }, 30000);
-        
-        // Save on page hide
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') {
-                this.saveAll();
-            }
-        });
-        
-        console.log('💾 Auto-save setup complete');
-    }
-    
-    /**
-     * Save all data
-     */
-    saveAll() {
-        this.savePreferences();
-        this.state.metrics.lastSaveTime = new Date().toISOString();
-        this.emit('app:save');
-    }
-    
-    /**
-     * Setup keyboard shortcuts
-     */
-    setupKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            // Escape - close modals
-            if (e.key === 'Escape') {
-                this.emit('keyboard:escape');
-            }
-            
-            // Ctrl/Cmd + S - save
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                this.saveAll();
-                this.toast('💾 Saved!', 'success');
-            }
-            
-            // Ctrl/Cmd + K - search
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                this.emit('keyboard:search');
-            }
-            
-            // Ctrl/Cmd + B - toggle sidebar
-            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                e.preventDefault();
-                this.toggleSidebar();
-            }
-            
-            // Ctrl/Cmd + D - toggle dark mode
-            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
-                e.preventDefault();
-                this.toggleDarkMode();
-            }
-        });
-        
-        console.log('⌨️ Keyboard shortcuts setup complete');
-    }
-    
-    /**
-     * Initialize all modules
-     */
-    async initModules() {
-        console.log('📦 Initializing modules...');
-        
-        // Core modules load automatically
-        const coreModules = ['auth', 'leads', 'clients', 'revenue', 'pipeline'];
-        
-        for (const moduleName of coreModules) {
-            try {
-                await this.loadModule(moduleName);
-                this.state.modules[moduleName] = true;
-                console.log(`  ✅ ${moduleName}`);
-            } catch (error) {
-                console.warn(`  ⚠️ ${moduleName}: ${error.message}`);
-            }
-        }
-        
-        console.log('📦 Core modules initialized');
-    }
-    
-    /**
-     * Load a module dynamically
-     */
-    async loadModule(moduleName) {
-        if (this.modules.has(moduleName)) {
-            return this.modules.get(moduleName);
-        }
-        
+    function logError(message, error) {
         try {
-            const module = await import(`../modules/${moduleName}.js`);
-            this.modules.set(moduleName, module.default || module);
-            return this.modules.get(moduleName);
-        } catch (error) {
-            console.error(`Failed to load module: ${moduleName}`, error);
-            throw error;
-        }
-    }
-    
-    /**
-     * Get start page based on auth state
-     */
-    getStartPage() {
-        if (this.state.isAuthenticated) {
-            return 'dashboard';
-        }
-        return 'login';
-    }
-    
-    /**
-     * Navigate to a page
-     */
-    navigateTo(page, params = {}) {
-        this.state.previousPage = this.state.currentPage;
-        this.state.currentPage = page;
-        
-        console.log(`🧭 Navigating to: ${page}`, params);
-        
-        // Close sidebar on mobile
-        if (window.innerWidth < Constants.UI.mobileBreakpoint) {
-            this.closeSidebar();
-        }
-        
-        // Emit navigation event
-        this.emit('navigation:change', { page, params, previous: this.state.previousPage });
-        
-        // Update URL hash
-        window.location.hash = page;
-    }
-    
-    /**
-     * Toggle sidebar
-     */
-    toggleSidebar() {
-        this.state.sidebarOpen = !this.state.sidebarOpen;
-        this.emit('sidebar:toggle', this.state.sidebarOpen);
-        this.savePreferences();
-    }
-    
-    /**
-     * Open sidebar
-     */
-    openSidebar() {
-        this.state.sidebarOpen = true;
-        this.emit('sidebar:open');
-        this.savePreferences();
-    }
-    
-    /**
-     * Close sidebar
-     */
-    closeSidebar() {
-        this.state.sidebarOpen = false;
-        this.emit('sidebar:close');
-        this.savePreferences();
-    }
-    
-    // ==========================================
-    // EVENT SYSTEM
-    // ==========================================
-    
-    /**
-     * Listen for an event
-     */
-    on(event, callback) {
-        if (!this.events.has(event)) {
-            this.events.set(event, []);
-        }
-        this.events.get(event).push(callback);
-        return () => this.off(event, callback);
-    }
-    
-    /**
-     * Remove event listener
-     */
-    off(event, callback) {
-        if (!this.events.has(event)) return;
-        const callbacks = this.events.get(event);
-        const index = callbacks.indexOf(callback);
-        if (index > -1) callbacks.splice(index, 1);
-    }
-    
-    /**
-     * Emit an event
-     */
-    emit(event, data = {}) {
-        if (!this.events.has(event)) return;
-        this.events.get(event).forEach(callback => {
-            try {
-                callback(data);
-            } catch (error) {
-                console.error(`Error in event handler for ${event}:`, error);
+            var errorEntry = {
+                message: message,
+                stack: error && error.stack ? error.stack : null,
+                details: error && error.message ? error.message : String(error || ''),
+                timestamp: new Date().toISOString(),
+                page: state.currentPage || detectCurrentPage(),
+                user: state.currentUser ? state.currentUser.uid : 'anonymous',
+                online: state.online,
+            };
+            
+            state.metrics.errors.push(errorEntry);
+            
+            // Keep only last 50 errors
+            if (state.metrics.errors.length > 50) {
+                state.metrics.errors = state.metrics.errors.slice(-50);
             }
-        });
-    }
-    
-    // ==========================================
-    // UI HELPERS
-    // ==========================================
-    
-    /**
-     * Show loading overlay
-     */
-    showLoader(message = 'Loading...') {
-        this.state.loading = true;
-        this.state.loadingMessage = message;
-        this.emit('loader:show', { message });
-    }
-    
-    /**
-     * Hide loading overlay
-     */
-    hideLoader() {
-        this.state.loading = false;
-        this.state.loadingMessage = '';
-        this.emit('loader:hide');
-    }
-    
-    /**
-     * Show toast notification
-     */
-    toast(message, type = 'info', duration = Constants.UI.toastDuration) {
-        this.emit('toast:show', { message, type, duration });
-        
-        // Fallback if no toast handler
-        if (!this.events.has('toast:show') || this.events.get('toast:show').length === 0) {
-            console.log(`🔔 [${type.toUpperCase()}] ${message}`);
+            
+            console.error('[AppCore] Error:', errorEntry);
+            
+            // Try to persist to Firestore (non-blocking)
+            if (window.FirebaseService && state.isAuthenticated) {
+                window.FirebaseService.createDocument('error_logs', errorEntry)
+                    .catch(function() {
+                        // Silent - don't want error logging to cause errors
+                    });
+            }
+            
+            emit('app:error', errorEntry);
+        } catch (e) {
+            // Last resort
+            console.error('[AppCore] Error in logError:', e);
         }
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 10: UTILITY METHODS
+    // -------------------------------------------------------------------------
     
     /**
-     * Show modal
+     * Check if user has specific permission
+     * @param {string} permission - Permission to check
+     * @returns {boolean}
      */
-    modal(title, content, options = {}) {
-        this.emit('modal:show', { title, content, ...options });
-    }
-    
-    /**
-     * Close modal
-     */
-    closeModal() {
-        this.emit('modal:close');
-    }
-    
-    /**
-     * Confirm dialog
-     */
-    async confirm(message, title = 'Confirm') {
-        return new Promise((resolve) => {
-            this.emit('confirm:show', {
-                title,
-                message,
-                onConfirm: () => resolve(true),
-                onCancel: () => resolve(false)
-            });
-        });
-    }
-    
-    /**
-     * Show error page
-     */
-    showErrorPage(error) {
-        console.error('💥 Application Error:', error);
-        this.navigateTo('error', { error: error.message });
-    }
-    
-    // ==========================================
-    // ERROR HANDLING
-    // ==========================================
-    
-    /**
-     * Handle error
-     */
-    handleError(error) {
-        this.logError(error.message, error);
-        
-        if (error.code === 'permission-denied') {
-            this.toast(Constants.ERRORS.PERMISSION_DENIED, 'error');
-        } else if (error.code === 'unavailable' || error.code === 'network-error') {
-            this.toast(Constants.ERRORS.NETWORK, 'error');
-        } else {
-            this.toast(error.message || 'An unexpected error occurred', 'error');
-        }
-    }
-    
-    /**
-     * Log error
-     */
-    logError(message, error = null) {
-        const errorEntry = {
-            message,
-            stack: error?.stack || null,
-            timestamp: new Date().toISOString(),
-            page: this.state.currentPage,
-            user: this.state.currentUser?.uid || 'anonymous'
-        };
-        
-        this.state.metrics.errors.push(errorEntry);
-        
-        // Keep only last 100 errors
-        if (this.state.metrics.errors.length > 100) {
-            this.state.metrics.errors = this.state.metrics.errors.slice(-100);
-        }
-        
-        // Log to console
-        console.error('📝 Error logged:', errorEntry);
-        
-        // Try to save to Firestore
-        this.saveError(errorEntry).catch(() => {});
-    }
-    
-    /**
-     * Save error to Firestore
-     */
-    async saveError(errorEntry) {
+    function hasPermission(permission) {
         try {
-            await FirebaseService.createDocument('activityLogs', {
-                type: 'error',
-                ...errorEntry
-            });
-        } catch (err) {
-            // Silent fail - don't want error logging to cause more errors
+            if (!state.isAuthenticated || !state.userProfile) return false;
+            
+            // Try RoutesConfig
+            if (window.RoutesConfig && state.currentRouteId) {
+                return window.RoutesConfig.canAccessRoute(state.currentRouteId, state.userProfile);
+            }
+            
+            // Check profile permissions directly
+            var permissions = state.userProfile.permissions || 
+                            (state.userProfile.data && state.userProfile.data.permissions) || 
+                            [];
+            
+            return permissions.indexOf(permission) !== -1 || 
+                   permissions.indexOf('*') !== -1 || 
+                   permissions.indexOf('all') !== -1;
+        } catch (e) {
+            return false;
         }
     }
     
-    // ==========================================
-    // UTILITY HELPERS
-    // ==========================================
+    /**
+     * Check if user has specific role
+     * @param {string} role - Role to check
+     * @returns {boolean}
+     */
+    function hasRole(role) {
+        try {
+            if (!state.userProfile) return false;
+            var userRole = state.userProfile.role || 
+                          (state.userProfile.data && state.userProfile.data.role);
+            return userRole === role;
+        } catch (e) {
+            return false;
+        }
+    }
     
     /**
-     * Get current screen size info
+     * Format currency in Indian format
+     * @param {number} amount
+     * @returns {string} Formatted currency
      */
-    getScreenInfo() {
+    function formatCurrency(amount) {
+        try {
+            return '₹' + Number(amount || 0).toLocaleString('en-IN', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+            });
+        } catch (e) {
+            return '₹' + (amount || 0);
+        }
+    }
+    
+    /**
+     * Format date in Indian format
+     * @param {string|Date} date
+     * @returns {string} Formatted date
+     */
+    function formatDate(date) {
+        try {
+            if (!date) return '';
+            var d = new Date(date);
+            if (isNaN(d.getTime())) return '';
+            
+            return d.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+            });
+        } catch (e) {
+            return String(date);
+        }
+    }
+    
+    /**
+     * Get current screen information
+     * @returns {Object} Screen dimensions
+     */
+    function getScreenInfo() {
         return {
             width: window.innerWidth,
             height: window.innerHeight,
-            isMobile: window.innerWidth < Constants.UI.mobileBreakpoint,
-            isTablet: window.innerWidth >= Constants.UI.mobileBreakpoint && window.innerWidth < Constants.UI.tabletBreakpoint,
-            isDesktop: window.innerWidth >= Constants.UI.tabletBreakpoint
+            isMobile: window.innerWidth < 768,
+            isTablet: window.innerWidth >= 768 && window.innerWidth < 1024,
+            isDesktop: window.innerWidth >= 1024,
         };
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 11: INITIALIZATION
+    // -------------------------------------------------------------------------
     
     /**
-     * Check if user has permission
+     * Initialize the application core
+     * @returns {boolean} True if initialization started
      */
-    hasPermission(permission) {
-        if (!this.state.isAuthenticated || !this.state.userProfile) return false;
+    function init() {
+        try {
+            log('log', 'Initializing AppCore v3.0.0...');
+            
+            // Detect current page
+            state.currentPage = detectCurrentPage();
+            state.currentRouteId = state.currentPage;
+            log('log', 'Current page: ' + state.currentPage);
+            
+            // Initialize theme
+            initTheme();
+            
+            // Setup global listeners
+            setupGlobalListeners();
+            
+            // Setup offline support
+            setupOfflineSupport();
+            
+            // Start auth monitoring (may be async)
+            initAuth();
+            
+            log('log', 'AppCore initialized');
+            return true;
+        } catch (e) {
+            log('error', 'AppCore initialization failed:', e);
+            // Still mark as initialized
+            state.initialized = true;
+            emit('app:ready', { error: e.message });
+            return false;
+        }
+    }
+    
+    /**
+     * Destroy and cleanup
+     */
+    function destroy() {
+        try {
+            eventRegistry.clear();
+            initQueue.length = 0;
+            log('log', 'AppCore destroyed');
+        } catch (e) {
+            // Silent
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 12: PUBLIC API
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Public API surface */
+    const publicAPI = Object.freeze({
+        // State (read-only via getters)
+        get state() { return Object.assign({}, state); },
+        get currentUser() { return state.currentUser; },
+        get userProfile() { return state.userProfile; },
+        get isAuthenticated() { return state.isAuthenticated; },
+        get isInitialized() { return state.initialized; },
+        get currentPage() { return state.currentPage; },
+        get isOnline() { return state.online; },
         
-        const role = this.state.userProfile.role;
-        if (!role) return false;
+        // Theme
+        initTheme: initTheme,
+        applyTheme: applyTheme,
+        toggleDarkMode: toggleDarkMode,
+        setTheme: setTheme,
         
-        const permissions = Constants.ROLE_PERMISSIONS[role];
-        if (!permissions) return false;
+        // Events
+        on: on,
+        off: off,
+        emit: emit,
+        once: once,
+        whenReady: whenReady,
         
-        return permissions.includes(permission) || permissions.includes('all');
-    }
+        // Utilities
+        hasPermission: hasPermission,
+        hasRole: hasRole,
+        formatCurrency: formatCurrency,
+        formatDate: formatDate,
+        getScreenInfo: getScreenInfo,
+        detectCurrentPage: detectCurrentPage,
+        
+        // Error handling
+        logError: logError,
+        
+        // Lifecycle
+        init: init,
+        destroy: destroy,
+    });
     
-    /**
-     * Check if user has role
-     */
-    hasRole(role) {
-        if (!this.state.isAuthenticated || !this.state.userProfile) return false;
-        return this.state.userProfile.role === role;
-    }
+    return publicAPI;
     
-    /**
-     * Get current client ID
-     */
-    getClientId() {
-        if (!this.state.userProfile) return null;
-        return this.state.userProfile.clientId || null;
-    }
-    
-    /**
-     * Format currency (Indian format)
-     */
-    formatCurrency(amount) {
-        const settings = Constants.DEFAULT_SETTINGS;
-        const rounded = settings.roundUp ? Math.round(amount) : amount;
-        return settings.currencySymbol + Number(rounded).toLocaleString('en-IN');
-    }
-    
-    /**
-     * Format date
-     */
-    formatDate(date) {
-        if (!date) return '';
-        const d = new Date(date);
-        return d.toLocaleDateString('en-IN', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
+})(); // End of AppCore IIFE
+
+// =============================================================================
+// AUTO-INITIALIZATION
+// =============================================================================
+
+if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            AppCore.init();
         });
+    } else {
+        AppCore.init();
     }
 }
 
-// ==========================================
-// CREATE & EXPORT APP INSTANCE
-// ==========================================
-const app = new App();
+// =============================================================================
+// EXPORTS
+// =============================================================================
 
-// Make available globally
-window.App = app;
-window.AppState = AppState;
-
-// Initialize app when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => app.init());
-} else {
-    app.init();
+if (typeof window !== 'undefined') {
+    window.AppCore = AppCore;
+    window.App = AppCore; // Backward compatibility alias
+    window.Global = window.Global || {};
+    window.Global.AppCore = AppCore;
 }
 
-console.log('🏗️ App core initialized, waiting for DOM...');
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AppCore;
+}
 
-// ==========================================
-// END OF CORE APPLICATION
-// ==========================================
-
-
+export {
+    AppCore as default,
+    AppCore,
+};

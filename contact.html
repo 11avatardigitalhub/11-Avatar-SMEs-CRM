@@ -1,212 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Contact 11 Avatar Digital Hub - Get in touch for sales, support, or general inquiries">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - Contact Us Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
     
-    <title>Contact Us - 11 Avatar Digital Hub</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SEO & Indexing -->
+    <meta name="description" content="Contact 11 Avatar Digital Hub - Get in touch for sales, support, partnerships, or general inquiries. Mumbai, India." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="copyright" content="© 2024-2026 11 Avatar Digital Hub. All Rights Reserved." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Contact Us - 11 Avatar Digital Hub | Get in Touch" />
+    <meta property="og:description" content="Have a question? Contact 11 Avatar Digital Hub for sales, support, or partnerships." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/contact.html" />
+    <meta property="og:image" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Contact Us - 11 Avatar Digital Hub" />
+    <meta name="twitter:description" content="Get in touch with 11 Avatar Digital Hub." />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/contact.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/landing.css" />
+    
+    <title>Contact Us - 11 Avatar Digital Hub | Get in Touch</title>
     
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --radius: 16px; --radius-sm: 10px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; min-height: 100vh; }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gold); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
-
-        .hero { text-align: center; padding: 72px 0 48px; }
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 44px; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--text-muted); font-size: 18px; max-width: 550px; margin: 0 auto; }
-
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
+        
+        .contact-hero { text-align: center; padding: 72px 0 48px; position: relative; }
+        .contact-hero h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, #E8C95A, #B8960F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .contact-hero p { color: #888; font-size: 18px; max-width: 550px; margin: 0 auto; }
+        
         .contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; margin: 48px 0 80px; }
-
-        /* Contact Cards */
+        
         .contact-cards { display: flex; flex-direction: column; gap: 20px; }
-        .contact-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); transition: var(--transition); display: flex; gap: 18px; align-items: flex-start; cursor: pointer; }
+        .contact-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; transition: all 0.3s ease; display: flex; gap: 18px; align-items: flex-start; cursor: pointer; text-decoration: none; color: inherit; }
         .contact-card:hover { border-color: rgba(212,175,55,0.3); transform: translateX(4px); }
-        .contact-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-        .contact-info h3 { font-family: 'Poppins', sans-serif; font-size: 17px; margin-bottom: 4px; }
-        .contact-info p { color: var(--text-muted); font-size: 14px; margin-bottom: 2px; }
-        .contact-info a { color: var(--gold-light); text-decoration: none; font-size: 14px; font-weight: 500; }
-        .contact-info a:hover { text-decoration: underline; }
-
-        /* Form */
-        .contact-form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); }
-        .contact-form-card h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 8px; }
-        .contact-form-card > p { color: var(--text-muted); margin-bottom: 24px; font-size: 14px; }
-
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-weight: 600; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border); border-radius: var(--radius-sm);
-            color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif;
-            transition: var(--transition); outline: none;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
-        .form-group textarea { resize: vertical; min-height: 120px; }
-        .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; cursor: pointer; }
-        .form-group select option { background: var(--bg-card); color: var(--text); }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .form-row .full-width { grid-column: 1 / -1; }
-
-        .form-actions { display: flex; gap: 12px; margin-top: 24px; }
-        .btn { padding: 14px 32px; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 15px; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; }
-        .btn-primary { background: var(--gold); color: #000; }
-        .btn-primary:hover { background: var(--gold-dark); color: #fff; }
-        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
-        .btn-secondary:hover { border-color: var(--gold); color: var(--text); }
-
-        .success-message { display: none; text-align: center; padding: 48px 24px; }
-        .success-message.show { display: block; }
-        .success-message .check-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(16,185,129,0.15); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px; }
-        .success-message h3 { font-family: 'Poppins', sans-serif; font-size: 22px; margin-bottom: 8px; }
-        .success-message p { color: var(--text-muted); }
-
-        /* Map */
-        .map-section { margin: 0 0 80px; }
-        .map-section h2 { font-family: 'Poppins', sans-serif; font-size: 28px; text-align: center; margin-bottom: 32px; }
-        .map-placeholder { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); height: 350px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 18px; }
-
-        /* Social */
-        .social-section { text-align: center; padding: 48px 0; }
-        .social-section h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 20px; }
-        .social-links { display: flex; justify-content: center; gap: 16px; }
-        .social-link { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; font-size: 18px; transition: var(--transition); }
-        .social-link:hover { border-color: var(--gold); color: var(--gold); background: rgba(212,175,55,0.08); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); }
-        footer p { color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
+        .contact-card-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .contact-card h3 { font-family: 'Poppins', sans-serif; font-size: 17px; margin-bottom: 4px; color: #fff; }
+        .contact-card p { color: #888; font-size: 14px; margin-bottom: 2px; }
+        .contact-card span { color: #D4AF37; font-size: 14px; font-weight: 500; }
+        
+        .contact-form-card { background: rgba(26,26,26,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 36px; }
+        .contact-form-card h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 8px; color: #fff; }
+        .contact-form-card > p { color: #888; margin-bottom: 24px; font-size: 14px; }
+        
+        .contact-map-section { margin: 0 0 80px; }
+        .contact-map-section h2 { font-family: 'Poppins', sans-serif; font-size: 28px; text-align: center; margin-bottom: 32px; color: #fff; }
+        .contact-map-placeholder { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; height: 300px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 16px; text-align: center; line-height: 1.8; }
+        .contact-map-placeholder a { color: #D4AF37; text-decoration: none; }
+        
+        .contact-social { text-align: center; padding: 48px 0; }
+        .contact-social h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 20px; color: #fff; }
+        .contact-social-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .contact-social-link { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; color: #CCC; text-decoration: none; font-size: 18px; transition: all 0.3s ease; }
+        .contact-social-link:hover { border-color: #D4AF37; color: #D4AF37; background: rgba(212,175,55,0.08); }
+        
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
             .contact-layout { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 32px; }
-            .form-row { grid-template-columns: 1fr; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 26px; }
+            .contact-hero { padding: 48px 0 32px; }
             .contact-form-card { padding: 24px 18px; }
         }
     </style>
 </head>
 <body>
+    
     <a href="#main-content" class="skip-link">Skip to Contact Form</a>
-
+    
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect width="36" height="36" rx="10" fill="#D4AF37"/>
+                <text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text>
+            </svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/pricing.html">Pricing</a>
-            <a href="/contact.html" class="active">Contact</a>
-            <a href="/login.html">Login</a>
+            <a href="index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html" class="active">Contact</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main id="main-content" role="main">
-        <div class="container">
+    
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main id="main-content" class="main-content" role="main">
+        <div class="container" style="max-width:1100px">
+            
             <!-- Hero -->
-            <section class="hero">
+            <section class="contact-hero">
                 <h1>Get in Touch</h1>
                 <p>Have a question, need a demo, or want to explore partnership opportunities? We'd love to hear from you.</p>
             </section>
-
+            
             <!-- Contact Layout -->
             <div class="contact-layout">
+                
                 <!-- Info Cards -->
                 <div class="contact-cards">
-                    <div class="contact-card" onclick="window.location.href='mailto:sales@11avatardigitalhub.cloud'">
-                        <div class="contact-icon" style="background:rgba(16,185,129,0.12);color:#10B981;"><i class="fas fa-handshake"></i></div>
-                        <div class="contact-info">
+                    <a href="mailto:sales@11avatardigitalhub.cloud" class="contact-card" aria-label="Email Sales">
+                        <div class="contact-card-icon" style="background:rgba(16,185,129,0.12);color:#10B981;">🤝</div>
+                        <div>
                             <h3>Sales Inquiries</h3>
                             <p>Interested in our platform? Let's discuss how we can help your business.</p>
-                            <a href="mailto:sales@11avatardigitalhub.cloud">sales@11avatardigitalhub.cloud</a>
+                            <span>sales@11avatardigitalhub.cloud</span>
                         </div>
-                    </div>
-                    <div class="contact-card" onclick="window.location.href='mailto:support@11avatardigitalhub.cloud'">
-                        <div class="contact-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;"><i class="fas fa-headset"></i></div>
-                        <div class="contact-info">
+                    </a>
+                    <a href="mailto:support@11avatardigitalhub.cloud" class="contact-card" aria-label="Email Support">
+                        <div class="contact-card-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;">🎧</div>
+                        <div>
                             <h3>Technical Support</h3>
                             <p>Need help with the platform? Our support team is ready to assist.</p>
-                            <a href="mailto:support@11avatardigitalhub.cloud">support@11avatardigitalhub.cloud</a>
+                            <span>support@11avatardigitalhub.cloud</span>
                         </div>
-                    </div>
-                    <div class="contact-card" onclick="window.location.href='mailto:partners@11avatardigitalhub.cloud'">
-                        <div class="contact-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;"><i class="fas fa-hand-holding-heart"></i></div>
-                        <div class="contact-info">
+                    </a>
+                    <a href="mailto:info@11avatardigitalhub.cloud" class="contact-card" aria-label="Email Partnerships">
+                        <div class="contact-card-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;">🤗</div>
+                        <div>
                             <h3>Partnerships</h3>
                             <p>Explore affiliate, integration, and technology partnership opportunities.</p>
-                            <a href="mailto:partners@11avatardigitalhub.cloud">partners@11avatardigitalhub.cloud</a>
+                            <span>info@11avatardigitalhub.cloud</span>
                         </div>
-                    </div>
-                    <div class="contact-card" onclick="window.location.href='tel:+919876543210'">
-                        <div class="contact-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;"><i class="fas fa-phone-alt"></i></div>
-                        <div class="contact-info">
+                    </a>
+                    <a href="tel:+919876543210" class="contact-card" aria-label="Call us">
+                        <div class="contact-card-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">📞</div>
+                        <div>
                             <h3>Call Us</h3>
                             <p>Monday - Friday, 10:00 AM - 6:00 PM IST</p>
-                            <a href="tel:+919876543210">+91 98765 43210</a>
+                            <span>+91 98765 43210</span>
                         </div>
-                    </div>
+                    </a>
                 </div>
-
+                
                 <!-- Contact Form -->
-                <div class="contact-form-card" id="contact-form-container">
-                    <h2>Send us a Message</h2>
+                <section class="contact-form-card" id="contact-form-container" aria-labelledby="form-heading">
+                    <h2 id="form-heading">Send us a Message</h2>
                     <p>Fill out the form below and we'll get back to you within 24 hours.</p>
-                    <form id="contact-form" onsubmit="handleSubmit(event)">
-                        <div class="form-row">
+                    
+                    <div id="contact-notification" style="display:none;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:14px" role="alert" aria-live="polite"></div>
+                    
+                    <form id="contact-form" novalidate method="POST" aria-label="Contact form">
+                        <input type="hidden" id="contact-csrf" name="csrf_token" value="" />
+                        
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                             <div class="form-group">
-                                <label for="name">Full Name *</label>
-                                <input type="text" id="name" name="name" required placeholder="Your full name" autocomplete="name">
+                                <label for="name" class="required">Full Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Your full name" autocomplete="name" aria-required="true" maxlength="100" />
                             </div>
                             <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+                                <label for="email" class="required">Email Address</label>
+                                <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-required="true" maxlength="254" />
                             </div>
                         </div>
-                        <div class="form-row">
+                        
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                             <div class="form-group">
                                 <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel">
+                                <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel" maxlength="15" />
                             </div>
                             <div class="form-group">
                                 <label for="company">Company Name</label>
-                                <input type="text" id="company" name="company" placeholder="Your company" autocomplete="organization">
+                                <input type="text" id="company" name="company" placeholder="Your company" autocomplete="organization" maxlength="200" />
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="inquiry">Inquiry Type *</label>
-                            <select id="inquiry" name="inquiry" required>
+                            <label for="inquiry" class="required">Inquiry Type</label>
+                            <select id="inquiry" name="inquiry" required aria-required="true">
                                 <option value="">Select inquiry type...</option>
                                 <option value="demo">Request a Demo</option>
                                 <option value="sales">Sales Inquiry</option>
@@ -216,88 +220,209 @@
                                 <option value="other">Other</option>
                             </select>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="subject">Subject *</label>
-                            <input type="text" id="subject" name="subject" required placeholder="How can we help you?">
+                            <label for="subject" class="required">Subject</label>
+                            <input type="text" id="subject" name="subject" required placeholder="How can we help you?" aria-required="true" maxlength="200" />
                         </div>
+                        
                         <div class="form-group">
-                            <label for="message">Message *</label>
-                            <textarea id="message" name="message" required placeholder="Tell us more about your inquiry..."></textarea>
+                            <label for="message" class="required">Message</label>
+                            <textarea id="message" name="message" required placeholder="Tell us more about your inquiry..." rows="4" aria-required="true"></textarea>
                         </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Message</button>
-                            <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        
+                        <div style="display:flex;gap:12px;margin-top:24px">
+                            <button type="submit" id="contact-submit" class="btn btn-primary btn-lg" style="flex:1" aria-busy="false">
+                                <span class="btn-text">📩 Send Message</span>
+                                <span class="spinner" style="display:none;width:20px;height:20px;border:2px solid rgba(0,0,0,0.2);border-top-color:#000;border-radius:50%;animation:spin 0.6s linear infinite" aria-hidden="true"></span>
+                            </button>
+                            <button type="reset" class="btn btn-outline">Clear Form</button>
                         </div>
                     </form>
+                    
                     <!-- Success Message -->
-                    <div class="success-message" id="success-message">
-                        <div class="check-icon"><i class="fas fa-check"></i></div>
-                        <h3>Message Sent Successfully!</h3>
-                        <p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
-                        <button class="btn btn-primary" style="margin-top:20px;" onclick="resetForm()">Send Another Message</button>
+                    <div id="contact-success" style="display:none;text-align:center;padding:48px 24px" role="status" aria-live="polite">
+                        <div style="width:72px;height:72px;border-radius:50%;background:rgba(16,185,129,0.15);color:#10B981;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px" aria-hidden="true">✓</div>
+                        <h3 style="font-family:'Poppins',sans-serif;font-size:22px;margin-bottom:8px;color:#10B981">Message Sent Successfully!</h3>
+                        <p style="color:#888;margin-bottom:20px">Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+                        <button type="button" id="reset-contact-btn" class="btn btn-outline">Send Another Message</button>
                     </div>
-                </div>
+                </section>
+                
             </div>
-
+            
             <!-- Map Section -->
-            <section class="map-section">
+            <section class="contact-map-section">
                 <h2>Our Office</h2>
-                <div class="map-placeholder">
-                    <div style="text-align:center;">
-                        <i class="fas fa-map-marker-alt" style="font-size:40px;color:var(--gold);margin-bottom:12px;display:block;"></i>
-                        <strong>11 Avatar Digital Hub</strong><br>
+                <div class="contact-map-placeholder">
+                    <div>
+                        <div style="font-size:40px;color:#D4AF37;margin-bottom:12px;">📍</div>
+                        <strong style="color:#fff">11 Avatar Digital Hub</strong><br>
                         12th Floor, Tech Park One<br>
                         Andheri East, Mumbai - 400093<br>
                         Maharashtra, India<br><br>
-                        <a href="https://maps.google.com/?q=11+Avatar+Digital+Hub+Mumbai" target="_blank" rel="noopener" style="color:var(--gold-light);">
-                            <i class="fas fa-external-link-alt"></i> View on Google Maps
-                        </a>
+                        <a href="https://maps.google.com/?q=Andheri+East+Mumbai+400093" target="_blank" rel="noopener">🗺️ View on Google Maps</a>
                     </div>
                 </div>
             </section>
-
+            
             <!-- Social -->
-            <section class="social-section">
+            <section class="contact-social">
                 <h2>Follow Us</h2>
-                <div class="social-links">
-                    <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <div class="contact-social-links">
+                    <a href="https://linkedin.com/company/11avatardigitalhub" class="contact-social-link" aria-label="LinkedIn" target="_blank" rel="noopener">in</a>
+                    <a href="https://twitter.com/11avatarcrm" class="contact-social-link" aria-label="Twitter" target="_blank" rel="noopener">𝕏</a>
+                    <a href="https://youtube.com/@11avatardigitalhub" class="contact-social-link" aria-label="YouTube" target="_blank" rel="noopener">▶</a>
+                    <a href="https://instagram.com/11avatardigitalhub" class="contact-social-link" aria-label="Instagram" target="_blank" rel="noopener">📷</a>
+                    <a href="https://github.com/11avatardigitalhub" class="contact-social-link" aria-label="GitHub" target="_blank" rel="noopener">⌨</a>
                 </div>
             </section>
+            
         </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved. | Mumbai, India</p>
-        <p><a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/contact.html">Contact</a></p>
+    
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:#888;font-size:14px">© <span id="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved. | 🇮🇳 Mumbai, India</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                    <a href="contact.html" style="color:#D4AF37;text-decoration:none;font-size:14px">Contact</a>
+                    <a href="about.html" class="footer-link">About</a>
+                </nav>
+            </div>
+        </div>
     </footer>
-
+    
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
     <script>
-        function handleSubmit(e) {
-            e.preventDefault();
-            const form = document.getElementById('contact-form');
-            const success = document.getElementById('success-message');
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+        /**
+         * @fileoverview Contact Page Controller
+         * @description Handles contact form validation, submission, and UX.
+         * @version 3.0.0
+         */
+        'use strict';
+        
+        (function() {
             
-            if (name && email) {
-                form.style.display = 'none';
-                success.classList.add('show');
-                console.log('Contact form submitted:', { name, email, inquiry: document.getElementById('inquiry').value });
-                window.scrollTo({ top: success.offsetTop - 100, behavior: 'smooth' });
+            var isSubmitting = false;
+            var elements = {};
+            
+            function generateCSRFToken() {
+                try {
+                    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+                        var arr = new Uint32Array(4);
+                        crypto.getRandomValues(arr);
+                        return Array.from(arr, function(d) { return ('00000000' + d.toString(16)).slice(-8); }).join('');
+                    }
+                } catch (e) {}
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 10);
             }
-        }
-        function resetForm() {
-            document.getElementById('contact-form').style.display = 'block';
-            document.getElementById('success-message').classList.remove('show');
-            document.getElementById('contact-form').reset();
-            window.scrollTo({ top: document.getElementById('contact-form-container').offsetTop - 100, behavior: 'smooth' });
-        }
+            
+            function showNotification(message, type) {
+                var el = elements.notification;
+                if (!el) return;
+                el.textContent = message;
+                el.style.display = 'block';
+                el.style.background = type === 'error' ? 'rgba(239,68,68,0.08)' : 'rgba(16,185,129,0.08)';
+                el.style.color = type === 'error' ? '#EF4444' : '#10B981';
+                el.style.borderLeft = '3px solid ' + (type === 'error' ? '#EF4444' : '#10B981');
+                setTimeout(function() { el.style.display = 'none'; }, 6000);
+            }
+            
+            function setLoading(loading) {
+                isSubmitting = loading;
+                if (elements.submitBtn) {
+                    elements.submitBtn.disabled = loading;
+                    elements.submitBtn.setAttribute('aria-busy', String(loading));
+                    var text = elements.submitBtn.querySelector('.btn-text');
+                    var spinner = elements.submitBtn.querySelector('.spinner');
+                    if (text) text.style.display = loading ? 'none' : '';
+                    if (spinner) spinner.style.display = loading ? 'inline-block' : 'none';
+                }
+            }
+            
+            function handleSubmit(event) {
+                event.preventDefault();
+                if (isSubmitting) return;
+                
+                var name = (elements.name && elements.name.value || '').trim();
+                var email = (elements.email && elements.email.value || '').trim();
+                var subject = (elements.subject && elements.subject.value || '').trim();
+                var message = (elements.messageEl && elements.messageEl.value || '').trim();
+                
+                if (!name) { showNotification('⚠️ Please enter your full name.', 'error'); if (elements.name) elements.name.focus(); return; }
+                if (!email) { showNotification('⚠️ Please enter your email address.', 'error'); if (elements.email) elements.email.focus(); return; }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showNotification('⚠️ Please enter a valid email address.', 'error'); if (elements.email) elements.email.focus(); return; }
+                if (!subject) { showNotification('⚠️ Please enter a subject.', 'error'); if (elements.subject) elements.subject.focus(); return; }
+                if (!message) { showNotification('⚠️ Please enter your message.', 'error'); if (elements.messageEl) elements.messageEl.focus(); return; }
+                
+                setLoading(true);
+                
+                setTimeout(function() {
+                    if (elements.form) elements.form.style.display = 'none';
+                    if (elements.success) {
+                        elements.success.style.display = 'block';
+                        elements.success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    setLoading(false);
+                }, 1000);
+            }
+            
+            function resetForm() {
+                if (elements.form) {
+                    elements.form.style.display = 'block';
+                    elements.form.reset();
+                }
+                if (elements.success) elements.success.style.display = 'none';
+                if (elements.notification) elements.notification.style.display = 'none';
+                if (elements.name) elements.name.focus();
+            }
+            
+            function init() {
+                elements = {
+                    form: document.getElementById('contact-form'),
+                    name: document.getElementById('name'),
+                    email: document.getElementById('email'),
+                    phone: document.getElementById('phone'),
+                    company: document.getElementById('company'),
+                    inquiry: document.getElementById('inquiry'),
+                    subject: document.getElementById('subject'),
+                    messageEl: document.getElementById('message'),
+                    submitBtn: document.getElementById('contact-submit'),
+                    success: document.getElementById('contact-success'),
+                    notification: document.getElementById('contact-notification'),
+                    resetBtn: document.getElementById('reset-contact-btn'),
+                    csrfInput: document.getElementById('contact-csrf'),
+                };
+                
+                if (!elements.form) return;
+                
+                if (elements.csrfInput) elements.csrfInput.value = generateCSRFToken();
+                if (elements.form) elements.form.addEventListener('submit', handleSubmit);
+                if (elements.resetBtn) elements.resetBtn.addEventListener('click', resetForm);
+                
+                var yearEl = document.getElementById('current-year');
+                if (yearEl) yearEl.textContent = new Date().getFullYear();
+                
+                document.body.classList.add('loaded');
+                if (elements.name) setTimeout(function() { elements.name.focus(); }, 500);
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+            
+        })();
     </script>
+    
 </body>
 </html>
-
-

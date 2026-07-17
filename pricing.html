@@ -1,312 +1,365 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="11 Avatar Digital Hub - Transparent pricing plans for CRM, WhatsApp, invoicing & more">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - Pricing Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
     
-    <title>Pricing - 11 Avatar Digital Hub</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SEO & Indexing -->
+    <meta name="description" content="11 Avatar Digital Hub pricing - Free Forever plan + affordable Business & Enterprise plans. No hidden fees. Start from ₹0." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="copyright" content="© 2024-2026 11 Avatar Digital Hub. All Rights Reserved." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Pricing - 11 Avatar Digital Hub | Free Forever CRM" />
+    <meta property="og:description" content="Transparent pricing. Start free, upgrade as you grow. No hidden fees." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/pricing.html" />
+    <meta property="og:image" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pricing - 11 Avatar Digital Hub" />
+    <meta name="twitter:description" content="Free Forever CRM. Start from ₹0." />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/pricing.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/landing.css" />
+    
+    <title>Pricing - 11 Avatar Digital Hub | Free Forever CRM</title>
     
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
-            --radius: 16px; --radius-sm: 10px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; min-height: 100vh; }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gold); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; align-items: center; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-        .header-nav .btn-login { padding: 10px 24px; background: var(--gold); color: #000; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); }
-        .header-nav .btn-login:hover { background: var(--gold-dark); color: #fff; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
-
-        .hero { text-align: center; padding: 72px 0 48px; }
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto 32px; }
-
-        .billing-toggle { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 48px; }
-        .billing-toggle span { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
-        .billing-toggle .save-badge { padding: 4px 10px; background: rgba(16,185,129,0.15); color: #10B981; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .toggle-switch { position: relative; width: 52px; height: 28px; cursor: pointer; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); border-radius: 28px; transition: var(--transition); }
-        .toggle-slider::before { content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: var(--transition); }
-        .toggle-switch input:checked + .toggle-slider { background: var(--gold); }
-        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); }
-
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 80px; }
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
         
-        .pricing-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; box-shadow: var(--shadow); transition: var(--transition); position: relative; display: flex; flex-direction: column; }
-        .pricing-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(212,175,55,0.25); }
-        .pricing-card.featured { border-color: var(--gold); background: linear-gradient(180deg, rgba(212,175,55,0.06) 0%, var(--bg-card) 30%); }
-        .pricing-card.featured::before { content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); padding: 6px 20px; background: var(--gold); color: #000; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .pricing-card.enterprise { border-color: rgba(139,92,246,0.3); }
+        .price-hero { text-align: center; padding: 72px 0 48px; }
+        .price-hero h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, #E8C95A, #B8960F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .price-hero p { color: #888; font-size: 18px; max-width: 600px; margin: 0 auto 32px; }
         
-        .plan-name { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-        .plan-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; min-height: 40px; }
+        .price-toggle { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 48px; }
+        .price-toggle span { font-size: 15px; color: #CCC; font-weight: 500; }
+        .price-toggle .price-save { padding: 4px 10px; background: rgba(16,185,129,0.15); color: #10B981; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .price-toggle-switch { position: relative; width: 52px; height: 28px; cursor: pointer; display: inline-block; }
+        .price-toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .price-toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.12); border-radius: 28px; transition: all 0.3s ease; }
+        .price-toggle-slider::before { content: ''; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: all 0.3s ease; }
+        .price-toggle-switch input:checked + .price-toggle-slider { background: #D4AF37; }
+        .price-toggle-switch input:checked + .price-toggle-slider::before { transform: translateX(24px); }
         
-        .plan-price { margin-bottom: 24px; }
-        .plan-price .currency { font-size: 20px; font-weight: 600; vertical-align: top; position: relative; top: 8px; }
-        .plan-price .amount { font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; line-height: 1; }
-        .plan-price .period { font-size: 14px; color: var(--text-muted); display: block; }
-        .plan-price .original { text-decoration: line-through; color: var(--text-muted); font-size: 14px; margin-right: 8px; }
+        .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 80px; }
+        .price-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 36px 32px; transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; }
+        .price-card:hover { transform: translateY(-6px); border-color: rgba(212,175,55,0.25); box-shadow: 0 12px 48px rgba(0,0,0,0.4); }
+        .price-card.featured { border-color: #D4AF37; background: linear-gradient(180deg, rgba(212,175,55,0.06) 0%, rgba(26,26,26,0.6) 30%); }
+        .price-card.featured::before { content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); padding: 6px 20px; background: #D4AF37; color: #000; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .price-card.enterprise { border-color: rgba(139,92,246,0.3); }
         
-        .plan-features { list-style: none; padding: 0; margin-bottom: 28px; flex: 1; }
-        .plan-features li { padding: 8px 0; font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .plan-features li i.fa-check { color: #10B981; font-size: 12px; }
-        .plan-features li i.fa-times { color: #DC2626; font-size: 12px; }
-        .plan-features li strong { color: var(--text); }
+        .price-plan-name { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; color: #fff; }
+        .price-plan-desc { color: #888; font-size: 14px; margin-bottom: 24px; min-height: 40px; }
+        .price-amount-wrap { margin-bottom: 24px; }
+        .price-currency { font-size: 20px; font-weight: 600; vertical-align: top; position: relative; top: 8px; }
+        .price-amount { font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; line-height: 1; color: #fff; }
+        .price-period { font-size: 14px; color: #888; display: block; }
         
-        .plan-btn { display: block; text-align: center; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; transition: var(--transition); margin-top: auto; }
-        .btn-primary { background: var(--gold); color: #000; }
-        .btn-primary:hover { background: var(--gold-dark); color: #fff; }
-        .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
-        .btn-outline:hover { background: var(--gold); color: #000; }
-        .btn-enterprise { background: linear-gradient(135deg, #8B5CF6, #6366F1); color: #fff; }
-        .btn-enterprise:hover { opacity: 0.9; }
-
-        .faq-section { padding: 64px 0; }
-        .faq-section h2 { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 700; text-align: center; margin-bottom: 40px; }
-        .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; }
-        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: var(--transition); }
-        .faq-item:hover { border-color: rgba(212,175,55,0.2); }
-        .faq-item h4 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 8px; color: var(--gold); }
-        .faq-item p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
-
-        .cta-section { text-align: center; padding: 64px 0; }
-        .cta-section h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; }
-        .cta-section p { color: var(--text-muted); margin-bottom: 24px; }
-        .cta-section .btn-large { padding: 16px 40px; background: var(--gold); color: #000; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 16px; transition: var(--transition); }
-        .cta-section .btn-large:hover { background: var(--gold-dark); }
-
-        .comparison-table { overflow-x: auto; margin: 48px 0; }
-        .comparison-table table { width: 100%; border-collapse: collapse; min-width: 700px; }
-        .comparison-table th, .comparison-table td { padding: 14px 18px; text-align: center; border-bottom: 1px solid var(--border); font-size: 14px; }
-        .comparison-table th { background: rgba(212,175,55,0.06); color: var(--gold); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; }
-        .comparison-table th:first-child, .comparison-table td:first-child { text-align: left; font-weight: 500; color: var(--text); }
-        .comparison-table td i.fa-check { color: #10B981; }
-        .comparison-table td i.fa-times { color: #DC2626; }
-        .comparison-table tr:hover td { background: rgba(212,175,55,0.02); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); margin-top: 40px; }
-        footer p { color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
+        .price-features { list-style: none; padding: 0; margin-bottom: 28px; flex: 1; }
+        .price-features li { padding: 8px 0; font-size: 14px; color: #CCC; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .price-features li.included::before { content: '✅'; font-size: 12px; flex-shrink: 0; }
+        .price-features li.excluded { color: #666; }
+        .price-features li.excluded::before { content: '❌'; font-size: 12px; flex-shrink: 0; }
+        .price-features li strong { color: #fff; }
+        
+        .price-btn { display: block; text-align: center; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 15px; transition: all 0.3s ease; margin-top: auto; }
+        .price-btn-primary { background: #D4AF37; color: #000; }
+        .price-btn-primary:hover { background: #B8960F; color: #fff; }
+        .price-btn-outline { background: transparent; border: 2px solid #D4AF37; color: #D4AF37; }
+        .price-btn-outline:hover { background: #D4AF37; color: #000; }
+        .price-btn-enterprise { background: linear-gradient(135deg, #8B5CF6, #6366F1); color: #fff; }
+        .price-btn-enterprise:hover { opacity: 0.9; }
+        
+        .price-faq { padding: 64px 0; }
+        .price-faq h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; text-align: center; margin-bottom: 40px; color: #fff; }
+        .price-faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; }
+        .price-faq-item { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; }
+        .price-faq-item h4 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 8px; color: #D4AF37; }
+        .price-faq-item p { color: #888; font-size: 14px; line-height: 1.6; margin: 0; }
+        
+        .price-compare { overflow-x: auto; margin: 48px 0; }
+        .price-compare h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 1.75rem); font-weight: 700; text-align: center; margin-bottom: 32px; color: #fff; }
+        .price-compare table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        .price-compare th, .price-compare td { padding: 14px 18px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; color: #CCC; }
+        .price-compare th { background: rgba(212,175,55,0.06); color: #D4AF37; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .price-compare th:first-child, .price-compare td:first-child { text-align: left; font-weight: 500; color: #fff; }
+        .price-compare tr:hover td { background: rgba(212,175,55,0.02); }
+        .price-check { color: #10B981; }
+        .price-cross { color: #DC2626; }
+        
+        .price-cta { text-align: center; padding: 64px 0; }
+        .price-cta h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; color: #fff; }
+        .price-cta p { color: #888; margin-bottom: 24px; }
+        
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            .hero h1 { font-size: 34px; }
-            .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto 60px; }
-            .faq-grid { grid-template-columns: 1fr; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-            .header-nav { gap: 4px; }
-            .header-nav a { padding: 8px 14px; font-size: 13px; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 28px; }
-            .plan-price .amount { font-size: 38px; }
-            .pricing-card { padding: 24px 20px; }
+            .price-hero { padding: 48px 0 32px; }
+            .price-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto 60px; }
+            .price-faq-grid { grid-template-columns: 1fr; }
+            .price-amount { font-size: 38px; }
+            .price-card { padding: 24px 20px; }
         }
     </style>
 </head>
 <body>
+    
     <a href="#main-content" class="skip-link">Skip to Pricing</a>
-
+    
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect width="36" height="36" rx="10" fill="#D4AF37"/>
+                <text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text>
+            </svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/pricing.html" class="active">Pricing</a>
-            <a href="/login.html" class="btn-login">Get Started Free</a>
+            <a href="index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html" class="active">Pricing</a>
+            <a href="integrations.html">Integrations</a>
+            <a href="contact.html">Contact</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main id="main-content" role="main">
-        <div class="container">
+    
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main id="main-content" class="main-content" role="main">
+        <div class="container" style="max-width:1200px">
+            
             <!-- Hero -->
-            <section class="hero">
+            <section class="price-hero">
                 <h1>Simple, Transparent Pricing</h1>
                 <p>Choose the plan that fits your business. No hidden fees. Upgrade or downgrade anytime.</p>
                 
-                <div class="billing-toggle">
-                    <span>Monthly</span>
-                    <label class="toggle-switch" aria-label="Toggle annual billing">
-                        <input type="checkbox" id="billing-toggle" onchange="toggleBilling()">
-                        <span class="toggle-slider"></span>
+                <div class="price-toggle">
+                    <span id="toggle-monthly" style="color:#D4AF37">Monthly</span>
+                    <label class="price-toggle-switch" aria-label="Toggle annual billing">
+                        <input type="checkbox" id="billing-toggle">
+                        <span class="price-toggle-slider"></span>
                     </label>
-                    <span>Annual</span>
-                    <span class="save-badge">Save 20%</span>
+                    <span id="toggle-annual">Annual</span>
+                    <span class="price-save">Save 20%</span>
                 </div>
             </section>
-
+            
             <!-- Pricing Cards -->
-            <section class="pricing-grid" id="pricing-grid">
+            <section class="price-grid" id="pricing-grid">
+                
                 <!-- Starter -->
-                <div class="pricing-card">
-                    <h3 class="plan-name">Starter</h3>
-                    <p class="plan-desc">For small teams getting started with CRM</p>
-                    <div class="plan-price">
-                        <span class="currency">₹</span><span class="amount" data-monthly="999" data-annual="799">999</span>
-                        <span class="period">/user/month</span>
+                <div class="price-card">
+                    <h3 class="price-plan-name">Starter</h3>
+                    <p class="price-plan-desc">For small teams getting started with CRM</p>
+                    <div class="price-amount-wrap">
+                        <span class="price-currency">₹</span><span class="price-amount" data-monthly="999" data-annual="799">999</span>
+                        <span class="price-period">/user/month</span>
                     </div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Up to <strong>5 Users</strong></li>
-                        <li><i class="fas fa-check"></i> Lead & Client Management</li>
-                        <li><i class="fas fa-check"></i> Basic Pipeline (Kanban)</li>
-                        <li><i class="fas fa-check"></i> GST Invoicing (50/month)</li>
-                        <li><i class="fas fa-check"></i> Payment Collection</li>
-                        <li><i class="fas fa-check"></i> Task Management</li>
-                        <li><i class="fas fa-check"></i> Email Support</li>
-                        <li><i class="fas fa-times"></i> WhatsApp Integration</li>
-                        <li><i class="fas fa-times"></i> Advanced Reports</li>
-                        <li><i class="fas fa-times"></i> API Access</li>
+                    <ul class="price-features">
+                        <li class="included">Up to <strong>5 Users</strong></li>
+                        <li class="included">Lead & Client Management</li>
+                        <li class="included">Basic Pipeline (Kanban)</li>
+                        <li class="included">GST Invoicing (50/month)</li>
+                        <li class="included">Payment Collection</li>
+                        <li class="included">Task Management</li>
+                        <li class="included">Email Support</li>
+                        <li class="excluded">WhatsApp Integration</li>
+                        <li class="excluded">Advanced Reports</li>
+                        <li class="excluded">API Access</li>
                     </ul>
-                    <a href="/register.html?plan=starter" class="plan-btn btn-outline">Start Free Trial</a>
+                    <a href="register.html" class="price-btn price-btn-outline">Start Free Trial</a>
                 </div>
-
+                
                 <!-- Business - Featured -->
-                <div class="pricing-card featured">
-                    <h3 class="plan-name">Business</h3>
-                    <p class="plan-desc">For growing businesses needing full CRM power</p>
-                    <div class="plan-price">
-                        <span class="currency">₹</span><span class="amount" data-monthly="2499" data-annual="1999">2,499</span>
-                        <span class="period">/user/month</span>
+                <div class="price-card featured">
+                    <h3 class="price-plan-name">Business</h3>
+                    <p class="price-plan-desc">For growing businesses needing full CRM power</p>
+                    <div class="price-amount-wrap">
+                        <span class="price-currency">₹</span><span class="price-amount" data-monthly="2499" data-annual="1999">2,499</span>
+                        <span class="price-period">/user/month</span>
                     </div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Up to <strong>25 Users</strong></li>
-                        <li><i class="fas fa-check"></i> <strong>Everything in Starter</strong></li>
-                        <li><i class="fas fa-check"></i> WhatsApp Cloud API</li>
-                        <li><i class="fas fa-check"></i> E-Invoicing & E-Way Bill</li>
-                        <li><i class="fas fa-check"></i> Project Management</li>
-                        <li><i class="fas fa-check"></i> Training LMS (5 Courses)</li>
-                        <li><i class="fas fa-check"></i> Referral Engine</li>
-                        <li><i class="fas fa-check"></i> Advanced Reports & Analytics</li>
-                        <li><i class="fas fa-check"></i> Priority Support</li>
-                        <li><i class="fas fa-times"></i> API Access</li>
+                    <ul class="price-features">
+                        <li class="included">Up to <strong>25 Users</strong></li>
+                        <li class="included"><strong>Everything in Starter</strong></li>
+                        <li class="included">WhatsApp Cloud API</li>
+                        <li class="included">E-Invoicing & E-Way Bill</li>
+                        <li class="included">Project Management</li>
+                        <li class="included">Training LMS (5 Courses)</li>
+                        <li class="included">Referral Engine</li>
+                        <li class="included">Advanced Reports & Analytics</li>
+                        <li class="included">Priority Support</li>
+                        <li class="excluded">API Access</li>
                     </ul>
-                    <a href="/register.html?plan=business" class="plan-btn btn-primary">Start Free Trial</a>
+                    <a href="register.html" class="price-btn price-btn-primary">Start Free Trial</a>
                 </div>
-
+                
                 <!-- Enterprise -->
-                <div class="pricing-card enterprise">
-                    <h3 class="plan-name">Enterprise</h3>
-                    <p class="plan-desc">For large organizations with custom needs</p>
-                    <div class="plan-price">
-                        <span class="currency">₹</span><span class="amount" data-monthly="4999" data-annual="3999">4,999</span>
-                        <span class="period">/user/month</span>
+                <div class="price-card enterprise">
+                    <h3 class="price-plan-name">Enterprise</h3>
+                    <p class="price-plan-desc">For large organizations with custom needs</p>
+                    <div class="price-amount-wrap">
+                        <span class="price-currency">₹</span><span class="price-amount" data-monthly="4999" data-annual="3999">4,999</span>
+                        <span class="price-period">/user/month</span>
                     </div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> <strong>Unlimited Users</strong></li>
-                        <li><i class="fas fa-check"></i> <strong>Everything in Business</strong></li>
-                        <li><i class="fas fa-check"></i> Full API Access & Webhooks</li>
-                        <li><i class="fas fa-check"></i> Custom Integrations</li>
-                        <li><i class="fas fa-check"></i> Tally & Zoho Sync</li>
-                        <li><i class="fas fa-check"></i> Dedicated Account Manager</li>
-                        <li><i class="fas fa-check"></i> SLA Guarantee (99.9%)</li>
-                        <li><i class="fas fa-check"></i> White-Label Option</li>
-                        <li><i class="fas fa-check"></i> On-Premise Deployment</li>
-                        <li><i class="fas fa-check"></i> 24/7 Phone Support</li>
+                    <ul class="price-features">
+                        <li class="included"><strong>Unlimited Users</strong></li>
+                        <li class="included"><strong>Everything in Business</strong></li>
+                        <li class="included">Full API Access & Webhooks</li>
+                        <li class="included">Custom Integrations</li>
+                        <li class="included">Tally & Zoho Sync</li>
+                        <li class="included">Dedicated Account Manager</li>
+                        <li class="included">SLA Guarantee (99.9%)</li>
+                        <li class="included">White-Label Option</li>
+                        <li class="included">On-Premise Deployment</li>
+                        <li class="included">24/7 Phone Support</li>
                     </ul>
-                    <a href="mailto:sales@11avatardigitalhub.cloud" class="plan-btn btn-enterprise">Contact Sales</a>
+                    <a href="mailto:sales@11avatardigitalhub.cloud" class="price-btn price-btn-enterprise">Contact Sales</a>
                 </div>
+                
             </section>
-
+            
             <!-- Feature Comparison -->
-            <section class="comparison-table">
-                <h2 style="text-align:center;font-family:'Poppins',sans-serif;font-size:28px;margin-bottom:32px;">Full Feature Comparison</h2>
+            <section class="price-compare">
+                <h2>Full Feature Comparison</h2>
                 <table role="table" aria-label="Plan comparison">
                     <thead>
                         <tr><th>Feature</th><th>Starter</th><th>Business</th><th>Enterprise</th></tr>
                     </thead>
                     <tbody>
                         <tr><td>Users Included</td><td>5</td><td>25</td><td>Unlimited</td></tr>
-                        <tr><td>Leads & Clients</td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
+                        <tr><td>Leads & Clients</td><td><span class="price-check">✓</span></td><td><span class="price-check">✓</span></td><td><span class="price-check">✓</span></td></tr>
                         <tr><td>Kanban Pipeline</td><td>Basic</td><td>Advanced</td><td>Advanced + Custom</td></tr>
                         <tr><td>GST Invoicing</td><td>50/mo</td><td>500/mo</td><td>Unlimited</td></tr>
-                        <tr><td>E-Invoice & E-Way Bill</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Payment Collection</td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>WhatsApp Integration</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Task & Project Mgmt</td><td>Basic Tasks</td><td>Full Projects</td><td>Full + Gantt</td></tr>
-                        <tr><td>Training LMS</td><td><i class="fas fa-times"></i></td><td>5 Courses</td><td>Unlimited</td></tr>
-                        <tr><td>Referral Engine</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Reports & Analytics</td><td>Basic</td><td>Advanced</td><td>Custom + Scheduled</td></tr>
-                        <tr><td>API & Webhooks</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Calendar Sync</td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Maps & Location</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Multi-Tenant RBAC</td><td><i class="fas fa-times"></i></td><td>5 Roles</td><td>8 Roles</td></tr>
-                        <tr><td>Slack Integration</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>Tally/Zoho Sync</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td></tr>
-                        <tr><td>White-Label</td><td><i class="fas fa-times"></i></td><td><i class="fas fa-times"></i></td><td><i class="fas fa-check"></i></td></tr>
+                        <tr><td>E-Invoice & E-Way Bill</td><td><span class="price-cross">✗</span></td><td><span class="price-check">✓</span></td><td><span class="price-check">✓</span></td></tr>
+                        <tr><td>Payment Collection</td><td><span class="price-check">✓</span></td><td><span class="price-check">✓</span></td><td><span class="price-check">✓</span></td></tr>
+                        <tr><td>WhatsApp Integration</td><td><span class="price-cross">✗</span></td><td><span class="price-check">✓</span></td><td><span class="price-check">✓</span></td></tr>
+                        <tr><td>Task & Project Mgmt</td><td>Basic</td><td>Full</td><td>Full + Gantt</td></tr>
+                        <tr><td>Reports & Analytics</td><td>Basic</td><td>Advanced</td><td>Custom</td></tr>
+                        <tr><td>API & Webhooks</td><td><span class="price-cross">✗</span></td><td><span class="price-cross">✗</span></td><td><span class="price-check">✓</span></td></tr>
+                        <tr><td>Multi-Tenant RBAC</td><td><span class="price-cross">✗</span></td><td>5 Roles</td><td>8 Roles</td></tr>
                         <tr><td>Support</td><td>Email</td><td>Priority</td><td>24/7 Phone + SLA</td></tr>
                     </tbody>
                 </table>
             </section>
-
+            
             <!-- FAQ -->
-            <section class="faq-section">
+            <section class="price-faq">
                 <h2>Frequently Asked Questions</h2>
-                <div class="faq-grid">
-                    <div class="faq-item"><h4>Is there a free trial?</h4><p>Yes! All plans come with a 14-day free trial. No credit card required. You can explore all features before committing.</p></div>
-                    <div class="faq-item"><h4>Can I change plans later?</h4><p>Absolutely. You can upgrade or downgrade your plan at any time. When upgrading, you get immediate access. When downgrading, changes apply at the next billing cycle.</p></div>
-                    <div class="faq-item"><h4>What payment methods do you accept?</h4><p>We accept UPI, credit/debit cards, net banking, and bank transfers. All payments are processed securely via Razorpay and Stripe.</p></div>
-                    <div class="faq-item"><h4>Do you offer GST invoices?</h4><p>Yes! All plans include GST-compliant invoices. For Indian businesses, we provide proper GST invoices with applicable tax breakdowns.</p></div>
-                    <div class="faq-item"><h4>Is my data secure?</h4><p>Your data is encrypted at rest (AES-256) and in transit (TLS 1.3). We use Google Cloud's Mumbai data center for data residency in India.</p></div>
-                    <div class="faq-item"><h4>Do you offer discounts for startups?</h4><p>Yes! We offer special startup pricing. Contact us at sales@11avatardigitalhub.cloud with your startup details.</p></div>
+                <div class="price-faq-grid">
+                    <div class="price-faq-item"><h4>Is there a free trial?</h4><p>Yes! All plans come with a 14-day free trial. No credit card required. Explore all features before committing.</p></div>
+                    <div class="price-faq-item"><h4>Can I change plans later?</h4><p>Absolutely. Upgrade or downgrade anytime. Upgrades are immediate, downgrades apply at next billing cycle.</p></div>
+                    <div class="price-faq-item"><h4>What payment methods accepted?</h4><p>UPI, credit/debit cards, net banking, and bank transfers via Razorpay and Stripe.</p></div>
+                    <div class="price-faq-item"><h4>Do you offer GST invoices?</h4><p>Yes! All plans include GST-compliant invoices for Indian businesses.</p></div>
+                    <div class="price-faq-item"><h4>Is my data secure?</h4><p>AES-256 encryption + TLS 1.3. Google Cloud Mumbai data center for India residency.</p></div>
+                    <div class="price-faq-item"><h4>Startup discounts?</h4><p>Yes! Contact sales@11avatardigitalhub.cloud for special startup pricing.</p></div>
                 </div>
             </section>
-
+            
             <!-- CTA -->
-            <section class="cta-section">
+            <section class="price-cta">
                 <h2>Ready to Transform Your Business?</h2>
-                <p>Join 10,000+ businesses using 11 Avatar Digital Hub. Start your free trial today.</p>
-                <a href="/register.html" class="btn-large"><i class="fas fa-rocket"></i> Get Started Free</a>
+                <p>Join 10,000+ businesses using 11 Avatar Digital Hub. Start free today.</p>
+                <a href="register.html" class="btn btn-primary btn-lg">🚀 Get Started Free</a>
             </section>
+            
         </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved.</p>
-        <p><a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/pricing.html">Pricing</a></p>
+    
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:#888;font-size:14px">© <span id="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved.</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                    <a href="refund.html" class="footer-link">Refund</a>
+                    <a href="pricing.html" style="color:#D4AF37;text-decoration:none;font-size:14px">Pricing</a>
+                </nav>
+            </div>
+        </div>
     </footer>
-
+    
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
     <script>
-        let isAnnual = false;
-        function toggleBilling() {
-            isAnnual = !isAnnual;
-            document.querySelectorAll('.plan-price .amount').forEach(el => {
-                const monthly = parseInt(el.dataset.monthly);
-                const annual = parseInt(el.dataset.annual);
-                el.textContent = isAnnual ? annual.toLocaleString('en-IN') : monthly.toLocaleString('en-IN');
-            });
-            document.querySelectorAll('.plan-price .period').forEach(el => {
-                el.textContent = isAnnual ? '/user/month (billed annually)' : '/user/month';
-            });
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            
+            // Dynamic year
+            var yearEl = document.getElementById('current-year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+            
+            // Billing toggle
+            var isAnnual = false;
+            var toggleInput = document.getElementById('billing-toggle');
+            var toggleMonthly = document.getElementById('toggle-monthly');
+            var toggleAnnual = document.getElementById('toggle-annual');
+            
+            if (toggleInput) {
+                toggleInput.addEventListener('change', function() {
+                    isAnnual = this.checked;
+                    
+                    if (toggleMonthly) toggleMonthly.style.color = isAnnual ? '#CCC' : '#D4AF37';
+                    if (toggleAnnual) toggleAnnual.style.color = isAnnual ? '#D4AF37' : '#CCC';
+                    
+                    document.querySelectorAll('.price-amount').forEach(function(el) {
+                        var monthly = parseInt(el.getAttribute('data-monthly'));
+                        var annual = parseInt(el.getAttribute('data-annual'));
+                        el.textContent = isAnnual ? annual.toLocaleString('en-IN') : monthly.toLocaleString('en-IN');
+                    });
+                    
+                    document.querySelectorAll('.price-period').forEach(function(el) {
+                        el.textContent = isAnnual ? '/user/month (billed annually)' : '/user/month';
+                    });
+                });
+            }
+        });
     </script>
+    
 </body>
 </html>
-
-

@@ -1,268 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore all features of 11 Avatar Digital Hub - CRM, WhatsApp, Invoicing, Projects, Training & more">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - Features Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
     
-    <title>Features - 11 Avatar Digital Hub</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SEO & Indexing -->
+    <meta name="description" content="Explore all features of 11 Avatar Digital Hub - CRM, WhatsApp, GST Invoicing, Projects, Payments, Reports & more. 15+ modules for Indian SMEs." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="copyright" content="© 2024-2026 11 Avatar Digital Hub. All Rights Reserved." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Features - 11 Avatar Digital Hub | 15+ CRM Modules" />
+    <meta property="og:description" content="CRM, WhatsApp, GST Invoicing, Projects, Payments, Reports - everything your SME needs in one platform." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features.html" />
+    <meta property="og:image" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Features - 11 Avatar Digital Hub" />
+    <meta name="twitter:description" content="15+ powerful CRM modules for Indian SMEs." />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/features.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/landing.css" />
+    
+    <title>Features - 11 Avatar Digital Hub | 15+ CRM Modules</title>
     
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
-            --radius: 16px; --radius-sm: 10px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; min-height: 100vh; }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gold); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
-
-        .hero { text-align: center; padding: 80px 0 48px; }
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
-
-        .feature-section { padding: 48px 0; }
-        .feature-section:nth-child(even) .feature-row { flex-direction: row-reverse; }
-        .feature-row { display: flex; align-items: center; gap: 60px; }
-        .feature-text { flex: 1; }
-        .feature-text .feature-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; }
-        .feature-text h2 { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 700; margin-bottom: 12px; }
-        .feature-text p { color: var(--text-secondary); font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
-        .feature-text .feature-list { list-style: none; padding: 0; }
-        .feature-text .feature-list li { padding: 6px 0; color: var(--text-secondary); font-size: 15px; display: flex; align-items: center; gap: 10px; }
-        .feature-text .feature-list li i { color: #10B981; font-size: 14px; }
-        .feature-visual { flex: 1; min-width: 300px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; text-align: center; box-shadow: var(--shadow); min-height: 320px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .feature-visual .visual-icon { font-size: 72px; margin-bottom: 16px; display: block; }
-        .feature-visual .visual-label { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-
-        .stats-band { display: flex; justify-content: center; gap: 64px; flex-wrap: wrap; padding: 48px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 48px 0; }
-        .stats-band .stat { text-align: center; }
-        .stats-band .stat-number { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 700; color: var(--gold); display: block; }
-        .stats-band .stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .cta-section { text-align: center; padding: 64px 0; }
-        .cta-section h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; }
-        .cta-section p { color: var(--text-muted); margin-bottom: 24px; }
-        .cta-section .btn-large { display: inline-block; padding: 16px 40px; background: var(--gold); color: #000; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 16px; transition: var(--transition); }
-        .cta-section .btn-large:hover { background: var(--gold-dark); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); }
-        footer p { color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
+        
+        .feat-hero { text-align: center; padding: 80px 0 48px; }
+        .feat-hero h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, #E8C95A, #B8960F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .feat-hero p { color: #888; font-size: 18px; max-width: 600px; margin: 0 auto; }
+        
+        .feat-stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; padding: 48px 0; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); margin: 0 0 48px; }
+        .feat-stat { text-align: center; }
+        .feat-stat-num { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 700; color: #D4AF37; display: block; }
+        .feat-stat-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .feat-section { padding: 48px 0; }
+        .feat-row { display: flex; align-items: center; gap: 48px; }
+        .feat-section:nth-child(even) .feat-row { flex-direction: row-reverse; }
+        .feat-text { flex: 1; }
+        .feat-text-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; }
+        .feat-text h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; margin-bottom: 12px; color: #fff; }
+        .feat-text p { color: #CCC; font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
+        .feat-list { list-style: none; padding: 0; }
+        .feat-list li { padding: 8px 0; color: #CCC; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+        .feat-list li::before { content: '✅'; font-size: 14px; flex-shrink: 0; }
+        .feat-visual { flex: 1; min-width: 280px; background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 48px; text-align: center; min-height: 300px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .feat-visual-icon { font-size: 72px; margin-bottom: 16px; display: block; }
+        .feat-visual-label { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .feat-cta { text-align: center; padding: 64px 0; }
+        .feat-cta h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; color: #fff; }
+        .feat-cta p { color: #888; margin-bottom: 24px; }
+        
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            .feature-row { flex-direction: column !important; gap: 32px; }
-            .feature-text h2 { font-size: 26px; }
-            .hero h1 { font-size: 34px; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-            .stats-band { gap: 32px; }
-            .stats-band .stat-number { font-size: 28px; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 26px; }
-            .feature-text h2 { font-size: 22px; }
+            .feat-row { flex-direction: column !important; gap: 32px; }
+            .feat-section:nth-child(even) .feat-row { flex-direction: column !important; }
+            .feat-hero { padding: 48px 0 32px; }
+            .feat-stats { gap: 32px; }
+            .feat-stat-num { font-size: 28px; }
+            .feat-visual { min-height: 200px; padding: 32px; }
         }
     </style>
 </head>
 <body>
+    
     <a href="#main-content" class="skip-link">Skip to Features</a>
-
+    
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect width="36" height="36" rx="10" fill="#D4AF37"/>
+                <text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text>
+            </svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/features.html" class="active">Features</a>
-            <a href="/pricing.html">Pricing</a>
-            <a href="/login.html">Login</a>
+            <a href="index.html">Home</a>
+            <a href="features.html" class="active">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main id="main-content" role="main">
-        <div class="container">
-            <section class="hero">
+    
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main id="main-content" class="main-content" role="main">
+        <div class="container" style="max-width:1200px">
+            
+            <!-- Hero -->
+            <section class="feat-hero">
                 <h1>Everything Your Business Needs</h1>
                 <p>A unified platform combining CRM, invoicing, communication, project management, and analytics.</p>
             </section>
-
-            <div class="stats-band">
-                <div class="stat"><span class="stat-number">15+</span><span class="stat-label">Modules</span></div>
-                <div class="stat"><span class="stat-number">100+</span><span class="stat-label">Features</span></div>
-                <div class="stat"><span class="stat-number">10</span><span class="stat-label">Integrations</span></div>
-                <div class="stat"><span class="stat-number">8</span><span class="stat-label">Roles</span></div>
+            
+            <!-- Stats -->
+            <div class="feat-stats">
+                <div class="feat-stat"><span class="feat-stat-num">15+</span><span class="feat-stat-label">Modules</span></div>
+                <div class="feat-stat"><span class="feat-stat-num">100+</span><span class="feat-stat-label">Features</span></div>
+                <div class="feat-stat"><span class="feat-stat-num">10</span><span class="feat-stat-label">Integrations</span></div>
+                <div class="feat-stat"><span class="feat-stat-num">8</span><span class="feat-stat-label">Roles</span></div>
             </div>
-
-            <!-- CRM Feature -->
-            <section class="feature-section">
-                <div class="feature-row">
-                    <div class="feature-text">
-                        <div class="feature-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;"><i class="fas fa-users"></i></div>
+            
+            <!-- CRM & Pipeline -->
+            <section class="feat-section">
+                <div class="feat-row">
+                    <div class="feat-text">
+                        <div class="feat-text-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;">👥</div>
                         <h2>CRM & Pipeline Management</h2>
                         <p>Manage leads, clients, and deals with visual Kanban boards. Track every interaction, automate follow-ups, and never miss an opportunity.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Visual Kanban pipeline with drag-drop</li>
-                            <li><i class="fas fa-check"></i> Lead scoring & automated qualification</li>
-                            <li><i class="fas fa-check"></i> Client 360° view with activity timeline</li>
-                            <li><i class="fas fa-check"></i> Deal tracking with probability forecasting</li>
-                            <li><i class="fas fa-check"></i> Bulk import/export for leads & clients</li>
+                        <ul class="feat-list">
+                            <li>Visual Kanban pipeline with drag-drop</li>
+                            <li>Lead scoring & automated qualification</li>
+                            <li>Client 360° view with activity timeline</li>
+                            <li>Deal tracking with probability forecasting</li>
+                            <li>Bulk import/export for leads & clients</li>
                         </ul>
                     </div>
-                    <div class="feature-visual">
-                        <span class="visual-icon" style="color:#3B82F6;">📊</span>
-                        <span class="visual-label">Visual Pipeline Board</span>
+                    <div class="feat-visual">
+                        <span class="feat-visual-icon" style="color:#3B82F6;">📊</span>
+                        <span class="feat-visual-label">Visual Pipeline Board</span>
                     </div>
                 </div>
             </section>
-
+            
             <!-- GST Invoicing -->
-            <section class="feature-section">
-                <div class="feature-row">
-                    <div class="feature-text">
-                        <div class="feature-icon" style="background:rgba(16,185,129,0.12);color:#10B981;"><i class="fas fa-file-invoice"></i></div>
+            <section class="feat-section">
+                <div class="feat-row">
+                    <div class="feat-text">
+                        <div class="feat-text-icon" style="background:rgba(16,185,129,0.12);color:#10B981;">🧾</div>
                         <h2>GST-Compliant Invoicing</h2>
                         <p>Create professional GST invoices with automated tax calculations. E-Invoice and E-Way Bill ready with direct IRP integration.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Auto CGST/SGST/IGST calculation</li>
-                            <li><i class="fas fa-check"></i> E-Invoice IRN generation & QR code</li>
-                            <li><i class="fas fa-check"></i> E-Way Bill generation for transport</li>
-                            <li><i class="fas fa-check"></i> HSN/SAC code library with lookup</li>
-                            <li><i class="fas fa-check"></i> Payment link embedded in invoices</li>
+                        <ul class="feat-list">
+                            <li>Auto CGST/SGST/IGST calculation</li>
+                            <li>E-Invoice IRN generation & QR code</li>
+                            <li>E-Way Bill generation for transport</li>
+                            <li>HSN/SAC code library with lookup</li>
+                            <li>Payment link embedded in invoices</li>
                         </ul>
                     </div>
-                    <div class="feature-visual">
-                        <span class="visual-icon" style="color:#10B981;">🧾</span>
-                        <span class="visual-label">GST Invoice Generator</span>
+                    <div class="feat-visual">
+                        <span class="feat-visual-icon" style="color:#10B981;">📄</span>
+                        <span class="feat-visual-label">GST Invoice Generator</span>
                     </div>
                 </div>
             </section>
-
+            
             <!-- WhatsApp -->
-            <section class="feature-section">
-                <div class="feature-row">
-                    <div class="feature-text">
-                        <div class="feature-icon" style="background:rgba(37,211,102,0.12);color:#25D366;"><i class="fab fa-whatsapp"></i></div>
+            <section class="feat-section">
+                <div class="feat-row">
+                    <div class="feat-text">
+                        <div class="feat-text-icon" style="background:rgba(37,211,102,0.12);color:#25D366;">💬</div>
                         <h2>WhatsApp Business Integration</h2>
                         <p>Send and receive WhatsApp messages directly from the CRM. Use templates, set up auto-replies, and manage conversations at scale.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> CloudWA integration (same Firebase project)</li>
-                            <li><i class="fas fa-check"></i> Template messaging with variables</li>
-                            <li><i class="fas fa-check"></i> Auto-reply rules & chatbots</li>
-                            <li><i class="fas fa-check"></i> Bulk WhatsApp broadcasting</li>
-                            <li><i class="fas fa-check"></i> Conversation history & analytics</li>
+                        <ul class="feat-list">
+                            <li>CloudWA integration (same Firebase project)</li>
+                            <li>Template messaging with variables</li>
+                            <li>Auto-reply rules & chatbots</li>
+                            <li>Bulk WhatsApp broadcasting</li>
+                            <li>Conversation history & analytics</li>
                         </ul>
                     </div>
-                    <div class="feature-visual">
-                        <span class="visual-icon" style="color:#25D366;">💬</span>
-                        <span class="visual-label">WhatsApp Chat Interface</span>
+                    <div class="feat-visual">
+                        <span class="feat-visual-icon" style="color:#25D366;">💭</span>
+                        <span class="feat-visual-label">WhatsApp Chat Interface</span>
                     </div>
                 </div>
             </section>
-
+            
             <!-- Projects & Tasks -->
-            <section class="feature-section">
-                <div class="feature-row">
-                    <div class="feature-text">
-                        <div class="feature-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;"><i class="fas fa-tasks"></i></div>
+            <section class="feat-section">
+                <div class="feat-row">
+                    <div class="feat-text">
+                        <div class="feat-text-icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;">📋</div>
                         <h2>Project & Task Management</h2>
                         <p>Manage projects with Gantt charts, track tasks with Kanban boards, log time, and collaborate with your team in real-time.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Gantt charts & milestone tracking</li>
-                            <li><i class="fas fa-check"></i> Task dependencies & subtasks</li>
-                            <li><i class="fas fa-check"></i> Time tracking with start/stop timer</li>
-                            <li><i class="fas fa-check"></i> Project budgets & health scores</li>
-                            <li><i class="fas fa-check"></i> Resource allocation & workload view</li>
+                        <ul class="feat-list">
+                            <li>Gantt charts & milestone tracking</li>
+                            <li>Task dependencies & subtasks</li>
+                            <li>Time tracking with start/stop timer</li>
+                            <li>Project budgets & health scores</li>
+                            <li>Resource allocation & workload view</li>
                         </ul>
                     </div>
-                    <div class="feature-visual">
-                        <span class="visual-icon" style="color:#F59E0B;">📅</span>
-                        <span class="visual-label">Gantt Chart View</span>
+                    <div class="feat-visual">
+                        <span class="feat-visual-icon" style="color:#F59E0B;">📅</span>
+                        <span class="feat-visual-label">Gantt Chart View</span>
                     </div>
                 </div>
             </section>
-
+            
             <!-- Payments -->
-            <section class="feature-section">
-                <div class="feature-row">
-                    <div class="feature-text">
-                        <div class="feature-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;"><i class="fas fa-rupee-sign"></i></div>
+            <section class="feat-section">
+                <div class="feat-row">
+                    <div class="feat-text">
+                        <div class="feat-text-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">💳</div>
                         <h2>Multi-Gateway Payments</h2>
                         <p>Accept payments via Razorpay, Stripe, UPI, and bank transfers. Auto-reconcile transactions and send payment receipts.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Razorpay + Stripe + PayPal + UPI</li>
-                            <li><i class="fas fa-check"></i> Auto payment reconciliation</li>
-                            <li><i class="fas fa-check"></i> Payment links & QR codes</li>
-                            <li><i class="fas fa-check"></i> Refund processing & tracking</li>
-                            <li><i class="fas fa-check"></i> Real-time webhook processing</li>
+                        <ul class="feat-list">
+                            <li>Razorpay + Stripe + PayPal + UPI</li>
+                            <li>Auto payment reconciliation</li>
+                            <li>Payment links & QR codes</li>
+                            <li>Refund processing & tracking</li>
+                            <li>Real-time webhook processing</li>
                         </ul>
                     </div>
-                    <div class="feature-visual">
-                        <span class="visual-icon" style="color:#8B5CF6;">💳</span>
-                        <span class="visual-label">Payment Dashboard</span>
+                    <div class="feat-visual">
+                        <span class="feat-visual-icon" style="color:#8B5CF6;">💰</span>
+                        <span class="feat-visual-label">Payment Dashboard</span>
                     </div>
                 </div>
             </section>
-
+            
             <!-- Reports -->
-            <section class="feature-section">
-                <div class="feature-row">
-                    <div class="feature-text">
-                        <div class="feature-icon" style="background:rgba(236,72,153,0.12);color:#EC4899;"><i class="fas fa-chart-pie"></i></div>
+            <section class="feat-section">
+                <div class="feat-row">
+                    <div class="feat-text">
+                        <div class="feat-text-icon" style="background:rgba(236,72,153,0.12);color:#EC4899;">📈</div>
                         <h2>Advanced Reports & Analytics</h2>
                         <p>Generate customizable reports with 12+ chart types. Schedule automatic report delivery and export to PDF, Excel, or CSV.</p>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> 12 chart types (Bar, Line, Pie, Funnel...)</li>
-                            <li><i class="fas fa-check"></i> KPI dashboards with real-time data</li>
-                            <li><i class="fas fa-check"></i> Scheduled report delivery via email</li>
-                            <li><i class="fas fa-check"></i> Export to PDF, Excel, CSV, JSON</li>
-                            <li><i class="fas fa-check"></i> Custom report builder</li>
+                        <ul class="feat-list">
+                            <li>12 chart types (Bar, Line, Pie, Funnel...)</li>
+                            <li>KPI dashboards with real-time data</li>
+                            <li>Scheduled report delivery via email</li>
+                            <li>Export to PDF, Excel, CSV, JSON</li>
+                            <li>Custom report builder</li>
                         </ul>
                     </div>
-                    <div class="feature-visual">
-                        <span class="visual-icon" style="color:#EC4899;">📈</span>
-                        <span class="visual-label">Analytics Dashboard</span>
+                    <div class="feat-visual">
+                        <span class="feat-visual-icon" style="color:#EC4899;">📊</span>
+                        <span class="feat-visual-label">Analytics Dashboard</span>
                     </div>
                 </div>
             </section>
-
+            
             <!-- CTA -->
-            <section class="cta-section">
+            <section class="feat-cta">
                 <h2>Ready to Explore All Features?</h2>
-                <p>Start your 14-day free trial. No credit card required.</p>
-                <a href="/register.html" class="btn-large"><i class="fas fa-rocket"></i> Start Free Trial</a>
+                <p>Start your free account. No credit card required.</p>
+                <a href="register.html" class="btn btn-primary btn-lg">🚀 Start Free Forever</a>
             </section>
+            
         </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved.</p>
-        <p><a href="/features.html">Features</a> | <a href="/pricing.html">Pricing</a> | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a></p>
+    
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:#888;font-size:14px">© <span id="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved.</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="features.html" style="color:#D4AF37;text-decoration:none;font-size:14px">Features</a>
+                    <a href="pricing.html" class="footer-link">Pricing</a>
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </nav>
+            </div>
+        </div>
     </footer>
+    
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            var yearEl = document.getElementById('current-year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+        });
+    </script>
+    
 </body>
 </html>
-
-

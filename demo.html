@@ -1,310 +1,532 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Request a personalized demo of 11 Avatar Digital Hub CRM - See how our platform can transform your business">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - Demo Request Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
     
-    <title>Request a Demo - 11 Avatar Digital Hub</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SEO & Indexing -->
+    <meta name="description" content="Request a personalized demo of 11 Avatar Digital Hub CRM. See how our Revenue OS can transform your SME with leads, pipeline, GST invoices, and WhatsApp integration." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="copyright" content="© 2024-2026 11 Avatar Digital Hub. All Rights Reserved." />
     
+    <!-- Open Graph -->
+    <meta property="og:title" content="Request a Demo - 11 Avatar Digital Hub | See CRM in Action" />
+    <meta property="og:description" content="Get a personalized walkthrough of 11 Avatar CRM tailored to your business needs. 30 minutes, no pressure." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/demo.html" />
+    <meta property="og:image" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Request a Demo - 11 Avatar Digital Hub" />
+    <meta name="twitter:description" content="Get a personalized CRM demo. See 11 Avatar in action." />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/demo.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="AvatarCRM Demo" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/landing.css" />
+    
+    <title>Request a Demo - 11 Avatar Digital Hub | See CRM in Action</title>
+    
+    <!-- Anti-flicker -->
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
-            --radius: 16px; --radius-sm: 10px; --radius-xs: 6px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; min-height: 100vh; }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gold); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
-
-        .hero { text-align: center; padding: 64px 0 40px; }
-        .hero .demo-badge { display: inline-block; padding: 8px 20px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); border-radius: 24px; font-size: 14px; color: var(--gold-light); margin-bottom: 20px; font-weight: 500; }
-        .hero .demo-badge i { margin-right: 6px; }
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 44px; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
-
-        .demo-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0 80px; }
-
-        /* Benefits Side */
-        .benefits-side { display: flex; flex-direction: column; gap: 20px; }
-        .benefit-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); transition: var(--transition); }
-        .benefit-item:hover { border-color: rgba(212,175,55,0.25); transform: translateX(4px); }
-        .benefit-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-        .benefit-info h3 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 4px; }
-        .benefit-info p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
-        .testimonial-card { background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02)); border: 1px solid rgba(212,175,55,0.15); border-radius: var(--radius); padding: 28px; margin-top: 8px; }
-        .testimonial-card .quote { font-size: 15px; color: var(--text-secondary); font-style: italic; margin-bottom: 16px; line-height: 1.6; }
-        .testimonial-card .author { display: flex; align-items: center; gap: 12px; }
-        .testimonial-card .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
-        .testimonial-card .author-name { font-weight: 600; font-size: 14px; }
-        .testimonial-card .author-role { color: var(--text-muted); font-size: 12px; }
-
-        /* Form Side */
-        .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); }
-        .form-card h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 8px; }
-        .form-card > p { color: var(--text-muted); margin-bottom: 28px; font-size: 14px; }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
-        .form-group label .required { color: #DC2626; margin-left: 2px; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border); border-radius: var(--radius-sm);
-            color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif;
-            transition: var(--transition); outline: none;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-        .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; cursor: pointer; }
-        .form-group select option { background: var(--bg-card); color: var(--text); }
-        .form-group .helper-text { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .form-row .full-width { grid-column: 1 / -1; }
-
-        .form-check { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0; }
-        .form-check input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--gold); cursor: pointer; }
-        .form-check label { font-size: 13px; color: var(--text-secondary); cursor: pointer; line-height: 1.5; }
-        .form-check label a { color: var(--gold-light); text-decoration: underline; }
-
-        .form-actions { display: flex; gap: 12px; margin-top: 24px; }
-        .btn { padding: 14px 32px; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 15px; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--gold); color: #000; }
-        .btn-primary:hover { background: var(--gold-dark); color: #fff; }
-        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
-        .btn-secondary:hover { border-color: var(--gold); color: var(--text); }
-
-        .success-message { display: none; text-align: center; padding: 40px 20px; }
-        .success-message.show { display: block; }
-        .success-message .check-circle { width: 72px; height: 72px; border-radius: 50%; background: rgba(16,185,129,0.15); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px; }
-        .success-message h3 { font-family: 'Poppins', sans-serif; font-size: 22px; margin-bottom: 8px; }
-        .success-message p { color: var(--text-muted); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); }
-        footer p { color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
-        @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            .demo-layout { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 32px; }
-            .form-row { grid-template-columns: 1fr; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-            .form-card { padding: 24px 20px; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 26px; }
-            .benefit-item { padding: 16px; }
-        }
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
     </style>
 </head>
 <body>
+    
+    <!-- Skip Navigation -->
     <a href="#main-content" class="skip-link">Skip to Demo Request Form</a>
-
+    
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect width="36" height="36" rx="10" fill="#D4AF37"/>
+                <text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text>
+            </svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/features.html">Features</a>
-            <a href="/pricing.html">Pricing</a>
-            <a href="/demo.html" class="active">Demo</a>
+            <a href="index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="demo.html" class="active">Demo</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main id="main-content" role="main">
-        <div class="container">
-            <!-- Hero -->
-            <section class="hero">
-                <span class="demo-badge"><i class="fas fa-play-circle"></i> Personalized Walkthrough</span>
-                <h1>See 11 Avatar in Action</h1>
-                <p>Get a personalized demo tailored to your business needs. Our experts will walk you through the features that matter most to you.</p>
-            </section>
-
-            <!-- Demo Layout -->
-            <div class="demo-layout">
-                <!-- Benefits Side -->
-                <div class="benefits-side">
-                    <div class="benefit-item">
-                        <div class="benefit-icon" style="background:rgba(212,175,55,0.12);color:var(--gold);"><i class="fas fa-user-check"></i></div>
-                        <div class="benefit-info"><h3>Personalized Experience</h3><p>We customize the demo based on your industry, team size, and specific requirements. No generic slideshows.</p></div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;"><i class="fas fa-clock"></i></div>
-                        <div class="benefit-info"><h3>30 Minutes, No Pressure</h3><p>A concise, focused session. We respect your time and won't hard-sell. See what matters, ask questions, decide at your pace.</p></div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon" style="background:rgba(16,185,129,0.12);color:#10B981;"><i class="fas fa-headset"></i></div>
-                        <div class="benefit-info"><h3>Expert Guidance</h3><p>Our product specialists have deep knowledge of CRM, GST, and business workflows. Get answers from people who understand your challenges.</p></div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;"><i class="fas fa-gift"></i></div>
-                        <div class="benefit-info"><h3>Exclusive Trial Extension</h3><p>Demo attendees get an extended 30-day trial with premium features unlocked, so you can fully evaluate the platform.</p></div>
-                    </div>
-                    <div class="testimonial-card">
-                        <p class="quote">"The demo was eye-opening. Within 20 minutes, I could see exactly how 11 Avatar would solve our invoicing and follow-up challenges. We signed up the same week."</p>
-                        <div class="author">
-                            <div class="author-avatar">AK</div>
-                            <div><div class="author-name">Amit Khanna</div><div class="author-role">Director, TechServe Solutions</div></div>
-                        </div>
-                    </div>
+    
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main id="main-content" class="main-content" role="main">
+        <div class="container" style="max-width:1100px">
+            
+            <!-- ==========================================
+                 HERO
+                 ========================================== -->
+            <section class="hero-section" style="padding:60px 0 40px">
+                <div class="hero-content">
+                    <span class="hero-badge">🎥 Personalized Walkthrough</span>
+                    <h1 class="hero-title">See <span class="gold-text">11 Avatar</span> in Action</h1>
+                    <p class="hero-subtitle" style="max-width:600px">
+                        Get a personalized demo tailored to your business needs. Our experts will walk you through the features that matter most to you.
+                    </p>
                 </div>
-
-                <!-- Form Side -->
-                <div class="form-card" id="form-container">
-                    <h2>Request Your Demo</h2>
-                    <p>Fill out the form and we'll reach out within 2 business hours to schedule your personalized demo.</p>
-                    <form id="demo-form" onsubmit="handleDemoSubmit(event)">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="first-name">First Name <span class="required">*</span></label>
-                                <input type="text" id="first-name" name="firstName" required placeholder="Your first name" autocomplete="given-name">
-                            </div>
-                            <div class="form-group">
-                                <label for="last-name">Last Name <span class="required">*</span></label>
-                                <input type="text" id="last-name" name="lastName" required placeholder="Your last name" autocomplete="family-name">
+            </section>
+            
+            <!-- ==========================================
+                 DEMO LAYOUT
+                 ========================================== -->
+            <div class="demo-layout" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:0 0 80px">
+                
+                <!-- ==========================================
+                     BENEFITS SIDE
+                     ========================================== -->
+                <aside class="benefits-side" style="display:flex;flex-direction:column;gap:20px" aria-label="Demo benefits">
+                    
+                    <div class="benefit-item" style="display:flex;gap:16px;align-items:flex-start;padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;transition:all 0.3s ease">
+                        <div class="benefit-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:rgba(212,175,55,0.12);color:#D4AF37" aria-hidden="true">🎯</div>
+                        <div>
+                            <h3 style="font-family:'Poppins',sans-serif;font-size:16px;margin-bottom:4px;color:#fff">Personalized Experience</h3>
+                            <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin:0">We customize the demo based on your industry, team size, and specific requirements. No generic slideshows.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item" style="display:flex;gap:16px;align-items:flex-start;padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;transition:all 0.3s ease">
+                        <div class="benefit-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:rgba(59,130,246,0.12);color:#3B82F6" aria-hidden="true">⏱️</div>
+                        <div>
+                            <h3 style="font-family:'Poppins',sans-serif;font-size:16px;margin-bottom:4px;color:#fff">30 Minutes, No Pressure</h3>
+                            <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin:0">A concise, focused session. We respect your time and won't hard-sell. See what matters, ask questions, decide at your pace.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item" style="display:flex;gap:16px;align-items:flex-start;padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;transition:all 0.3s ease">
+                        <div class="benefit-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:rgba(16,185,129,0.12);color:#10B981" aria-hidden="true">🎧</div>
+                        <div>
+                            <h3 style="font-family:'Poppins',sans-serif;font-size:16px;margin-bottom:4px;color:#fff">Expert Guidance</h3>
+                            <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin:0">Our product specialists have deep knowledge of CRM, GST, and business workflows. Get answers from people who understand your challenges.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item" style="display:flex;gap:16px;align-items:flex-start;padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;transition:all 0.3s ease">
+                        <div class="benefit-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:rgba(139,92,246,0.12);color:#8B5CF6" aria-hidden="true">🎁</div>
+                        <div>
+                            <h3 style="font-family:'Poppins',sans-serif;font-size:16px;margin-bottom:4px;color:#fff">Exclusive Trial Extension</h3>
+                            <p style="color:var(--text-muted);font-size:13px;line-height:1.5;margin:0">Demo attendees get an extended 30-day trial with premium features unlocked, so you can fully evaluate the platform.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial -->
+                    <div style="background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.15);border-radius:16px;padding:28px;margin-top:8px">
+                        <p style="font-size:15px;color:var(--text-secondary);font-style:italic;margin-bottom:16px;line-height:1.6">
+                            "The demo was eye-opening. Within 20 minutes, I could see exactly how 11 Avatar would solve our invoicing and follow-up challenges. We signed up the same week."
+                        </p>
+                        <div style="display:flex;align-items:center;gap:12px">
+                            <div style="width:40px;height:40px;border-radius:50%;background:#D4AF37;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px" aria-hidden="true">AK</div>
+                            <div>
+                                <div style="font-weight:600;font-size:14px;color:#fff">Amit Khanna</div>
+                                <div style="color:var(--text-muted);font-size:12px">Director, TechServe Solutions</div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Work Email <span class="required">*</span></label>
-                                <input type="email" id="email" name="email" required placeholder="you@company.com" autocomplete="email">
+                    </div>
+                </aside>
+                
+                <!-- ==========================================
+                     FORM SIDE
+                     ========================================== -->
+                <section id="form-container" aria-labelledby="form-heading">
+                    <div class="card card-glass" style="padding:40px">
+                        <h2 id="form-heading" style="font-family:'Poppins',sans-serif;font-size:24px;margin-bottom:8px;color:#fff">Request Your Demo</h2>
+                        <p style="color:var(--text-muted);margin-bottom:28px;font-size:14px">Fill out the form and we'll reach out within <strong style="color:#D4AF37">2 business hours</strong> to schedule your personalized demo.</p>
+                        
+                        <!-- Notification -->
+                        <div id="demo-notification" style="display:none;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:14px" role="alert" aria-live="polite"></div>
+                        
+                        <!-- Demo Form -->
+                        <form id="demo-form" novalidate method="POST" aria-label="Demo request form">
+                            <input type="hidden" id="demo-csrf" name="csrf_token" value="" />
+                            
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                                <div class="form-group">
+                                    <label for="first-name" class="required">First Name</label>
+                                    <input type="text" id="first-name" name="firstName" required placeholder="Your first name" autocomplete="given-name" aria-required="true" maxlength="50" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="last-name" class="required">Last Name</label>
+                                    <input type="text" id="last-name" name="lastName" required placeholder="Your last name" autocomplete="family-name" aria-required="true" maxlength="50" />
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number <span class="required">*</span></label>
-                                <input type="tel" id="phone" name="phone" required placeholder="+91 98765 43210" autocomplete="tel">
+                            
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                                <div class="form-group">
+                                    <label for="email" class="required">Work Email</label>
+                                    <input type="email" id="email" name="email" required placeholder="you@company.com" autocomplete="email" aria-required="true" maxlength="254" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="required">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" required placeholder="+91 98765 43210" autocomplete="tel" aria-required="true" maxlength="15" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="company">Company Name <span class="required">*</span></label>
-                                <input type="text" id="company" name="company" required placeholder="Your company name" autocomplete="organization">
+                            
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                                <div class="form-group">
+                                    <label for="company" class="required">Company Name</label>
+                                    <input type="text" id="company" name="company" required placeholder="Your company name" autocomplete="organization" aria-required="true" maxlength="200" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="team-size" class="required">Team Size</label>
+                                    <select id="team-size" name="teamSize" required aria-required="true">
+                                        <option value="">Select team size...</option>
+                                        <option value="1-5">1-5 employees</option>
+                                        <option value="6-20">6-20 employees</option>
+                                        <option value="21-50">21-50 employees</option>
+                                        <option value="51-200">51-200 employees</option>
+                                        <option value="201-500">201-500 employees</option>
+                                        <option value="500+">500+ employees</option>
+                                    </select>
+                                </div>
                             </div>
+                            
                             <div class="form-group">
-                                <label for="team-size">Team Size <span class="required">*</span></label>
-                                <select id="team-size" name="teamSize" required>
-                                    <option value="">Select team size...</option>
-                                    <option value="1-5">1-5 employees</option>
-                                    <option value="6-20">6-20 employees</option>
-                                    <option value="21-50">21-50 employees</option>
-                                    <option value="51-200">51-200 employees</option>
-                                    <option value="201-500">201-500 employees</option>
-                                    <option value="500+">500+ employees</option>
+                                <label for="interest" class="required">Primary Interest</label>
+                                <select id="interest" name="interest" required aria-required="true">
+                                    <option value="">What features interest you most?</option>
+                                    <option value="crm">CRM & Pipeline Management</option>
+                                    <option value="invoicing">GST Invoicing & E-Way Bill</option>
+                                    <option value="whatsapp">WhatsApp Business Integration</option>
+                                    <option value="payments">Payment Collection</option>
+                                    <option value="projects">Project & Task Management</option>
+                                    <option value="full">Full Platform Overview</option>
+                                    <option value="other">Other</option>
                                 </select>
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="preferred-date">Preferred Demo Date</label>
+                                <input type="date" id="preferred-date" name="preferredDate" />
+                                <span class="form-hint">We'll confirm availability or suggest alternatives</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Additional Notes</label>
+                                <textarea id="message" name="message" placeholder="Tell us about your specific needs, challenges, or questions..." rows="3"></textarea>
+                            </div>
+                            
+                            <!-- Consent -->
+                            <label style="display:flex;align-items:flex-start;gap:10px;margin:16px 0;cursor:pointer">
+                                <input type="checkbox" id="consent" name="consent" required aria-required="true" style="margin-top:3px;width:18px;height:18px;accent-color:#D4AF37;flex-shrink:0" />
+                                <span style="font-size:13px;color:var(--text-secondary);line-height:1.5">
+                                    I agree to the <a href="terms.html" target="_blank" rel="noopener" style="color:#D4AF37">Terms of Service</a> and <a href="privacy.html" target="_blank" rel="noopener" style="color:#D4AF37">Privacy Policy</a>. I consent to being contacted for demo scheduling purposes. <span style="color:#DC2626">*</span>
+                                </span>
+                            </label>
+                            
+                            <!-- Newsletter -->
+                            <label style="display:flex;align-items:flex-start;gap:10px;margin:16px 0;cursor:pointer">
+                                <input type="checkbox" id="newsletter" name="newsletter" style="margin-top:3px;width:18px;height:18px;accent-color:#D4AF37;flex-shrink:0" />
+                                <span style="font-size:13px;color:var(--text-muted);line-height:1.5">
+                                    I'd like to receive product updates, tips, and industry insights via email. (Optional)
+                                </span>
+                            </label>
+                            
+                            <!-- Actions -->
+                            <div style="display:flex;gap:12px;margin-top:24px">
+                                <button type="submit" id="demo-submit" class="btn btn-primary btn-lg" style="flex:1" aria-busy="false">
+                                    <span class="btn-text">📩 Request Demo</span>
+                                    <span class="spinner" style="display:none;width:20px;height:20px;border:2px solid rgba(0,0,0,0.2);border-top-color:#000;border-radius:50%;animation:spin 0.6s linear infinite" aria-hidden="true"></span>
+                                </button>
+                                <button type="reset" class="btn btn-outline">Clear Form</button>
+                            </div>
+                        </form>
+                        
+                        <!-- Success Message -->
+                        <div id="demo-success" style="display:none;text-align:center;padding:40px 20px" role="status" aria-live="polite">
+                            <div style="width:72px;height:72px;border-radius:50%;background:rgba(16,185,129,0.15);color:#10B981;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px" aria-hidden="true">✓</div>
+                            <h3 style="font-family:'Poppins',sans-serif;font-size:22px;margin-bottom:8px;color:#10B981">Demo Request Received!</h3>
+                            <p style="color:var(--text-muted);line-height:1.7;margin-bottom:20px">
+                                Thank you! Our team will contact you within <strong style="color:#D4AF37">2 business hours</strong> to schedule your personalized demo. We're excited to show you what 11 Avatar can do for your business.
+                            </p>
+                            <button type="button" id="reset-demo-btn" class="btn btn-outline">Request Another Demo</button>
                         </div>
-                        <div class="form-group">
-                            <label for="interest">Primary Interest <span class="required">*</span></label>
-                            <select id="interest" name="interest" required>
-                                <option value="">What features interest you most?</option>
-                                <option value="crm">CRM & Pipeline Management</option>
-                                <option value="invoicing">GST Invoicing & E-Way Bill</option>
-                                <option value="whatsapp">WhatsApp Business Integration</option>
-                                <option value="payments">Payment Collection</option>
-                                <option value="projects">Project & Task Management</option>
-                                <option value="training">Training & LMS</option>
-                                <option value="full">Full Platform Overview</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="preferred-date">Preferred Demo Date</label>
-                            <input type="date" id="preferred-date" name="preferredDate" min="">
-                            <span class="helper-text">We'll confirm availability or suggest alternatives</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Additional Notes</label>
-                            <textarea id="message" name="message" placeholder="Tell us about your specific needs, challenges, or questions..."></textarea>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" id="consent" name="consent" required>
-                            <label for="consent">I agree to the <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>. I consent to being contacted for demo scheduling purposes. <span class="required">*</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" id="newsletter" name="newsletter">
-                            <label for="newsletter">I'd like to receive product updates, tips, and industry insights via email. (Optional)</label>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Request Demo</button>
-                            <button type="reset" class="btn btn-secondary">Clear Form</button>
-                        </div>
-                    </form>
-                    <div class="success-message" id="success-message">
-                        <div class="check-circle"><i class="fas fa-check"></i></div>
-                        <h3>Demo Request Received!</h3>
-                        <p>Thank you! Our team will contact you within <strong>2 business hours</strong> to schedule your personalized demo. We're excited to show you what 11 Avatar can do for your business.</p>
-                        <button class="btn btn-primary" style="margin-top:20px;" onclick="resetDemoForm()">Request Another Demo</button>
                     </div>
-                </div>
+                </section>
+                
             </div>
         </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved.</p>
-        <p><a href="/demo.html">Demo</a> | <a href="/pricing.html">Pricing</a> | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a></p>
+    
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:var(--footer-text);font-size:14px">© <span id="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved.</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="demo.html" style="color:#D4AF37;text-decoration:none;font-size:14px">Demo</a>
+                    <a href="pricing.html" class="footer-link">Pricing</a>
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </nav>
+            </div>
+        </div>
     </footer>
-
+    
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
+    <script src="src/js/config/constants.js"></script>
+    
     <script>
-        // Set minimum date to tomorrow
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('preferred-date').min = tomorrow.toISOString().split('T')[0];
-
-        function handleDemoSubmit(e) {
-            e.preventDefault();
-            const form = document.getElementById('demo-form');
-            const success = document.getElementById('success-message');
-            const firstName = document.getElementById('first-name').value;
-            const email = document.getElementById('email').value;
+        /**
+         * @fileoverview Demo Request Page Controller
+         * @description Handles demo form validation, submission, success state,
+         *              CSRF protection, and UX enhancements.
+         * @version 3.0.0
+         */
+        'use strict';
+        
+        (function() {
             
-            if (firstName && email) {
-                form.style.display = 'none';
-                success.classList.add('show');
-                console.log('Demo request submitted:', { 
-                    name: firstName + ' ' + document.getElementById('last-name').value, 
-                    email, 
-                    company: document.getElementById('company').value,
-                    teamSize: document.getElementById('team-size').value,
-                    interest: document.getElementById('interest').value
-                });
-                window.scrollTo({ top: success.offsetTop - 100, behavior: 'smooth' });
+            // -----------------------------------------------------------------
+            // STATE
+            // -----------------------------------------------------------------
+            var isSubmitting = false;
+            var elements = {};
+            
+            // -----------------------------------------------------------------
+            // UTILITIES
+            // -----------------------------------------------------------------
+            
+            function generateCSRFToken() {
+                try {
+                    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+                        var arr = new Uint32Array(4);
+                        crypto.getRandomValues(arr);
+                        return Array.from(arr, function(d) { return ('00000000' + d.toString(16)).slice(-8); }).join('');
+                    }
+                } catch (e) {}
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 10);
             }
-        }
-
-        function resetDemoForm() {
-            document.getElementById('demo-form').style.display = 'block';
-            document.getElementById('success-message').classList.remove('show');
-            document.getElementById('demo-form').reset();
-            window.scrollTo({ top: document.getElementById('form-container').offsetTop - 100, behavior: 'smooth' });
-        }
+            
+            function validateEmail(email) {
+                if (!email || !email.trim()) return false;
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+            }
+            
+            function showNotification(message, type) {
+                var el = elements.notification;
+                if (!el) return;
+                el.textContent = message;
+                el.style.display = 'block';
+                el.style.background = type === 'error' ? 'rgba(239,68,68,0.08)' : 'rgba(212,175,55,0.08)';
+                el.style.color = type === 'error' ? '#EF4444' : '#D4AF37';
+                el.style.borderLeft = '3px solid ' + (type === 'error' ? '#EF4444' : '#D4AF37');
+                setTimeout(function() { el.style.display = 'none'; }, 6000);
+            }
+            
+            function setLoading(loading) {
+                isSubmitting = loading;
+                if (elements.submitBtn) {
+                    elements.submitBtn.disabled = loading;
+                    elements.submitBtn.setAttribute('aria-busy', String(loading));
+                    var text = elements.submitBtn.querySelector('.btn-text');
+                    var spinner = elements.submitBtn.querySelector('.spinner');
+                    if (text) text.style.display = loading ? 'none' : '';
+                    if (spinner) spinner.style.display = loading ? 'inline-block' : 'none';
+                }
+            }
+            
+            // -----------------------------------------------------------------
+            // FORM HANDLER
+            // -----------------------------------------------------------------
+            
+            function handleSubmit(event) {
+                event.preventDefault();
+                if (isSubmitting) return;
+                
+                var notif = elements.notification;
+                if (notif) notif.style.display = 'none';
+                
+                // Validate required fields
+                var firstName = (elements.firstName && elements.firstName.value || '').trim();
+                var lastName = (elements.lastName && elements.lastName.value || '').trim();
+                var email = (elements.email && elements.email.value || '').trim();
+                var phone = (elements.phone && elements.phone.value || '').trim();
+                var company = (elements.company && elements.company.value || '').trim();
+                var teamSize = elements.teamSize ? elements.teamSize.value : '';
+                var interest = elements.interest ? elements.interest.value : '';
+                var consent = elements.consent ? elements.consent.checked : false;
+                
+                if (!firstName) { showNotification('⚠️ Please enter your first name.', 'error'); if (elements.firstName) elements.firstName.focus(); return; }
+                if (!lastName) { showNotification('⚠️ Please enter your last name.', 'error'); if (elements.lastName) elements.lastName.focus(); return; }
+                if (!email) { showNotification('⚠️ Please enter your email address.', 'error'); if (elements.email) elements.email.focus(); return; }
+                if (!validateEmail(email)) { showNotification('⚠️ Please enter a valid email address.', 'error'); if (elements.email) elements.email.focus(); return; }
+                if (!phone) { showNotification('⚠️ Please enter your phone number.', 'error'); if (elements.phone) elements.phone.focus(); return; }
+                if (!company) { showNotification('⚠️ Please enter your company name.', 'error'); if (elements.company) elements.company.focus(); return; }
+                if (!teamSize) { showNotification('⚠️ Please select your team size.', 'error'); if (elements.teamSize) elements.teamSize.focus(); return; }
+                if (!interest) { showNotification('⚠️ Please select your primary interest.', 'error'); if (elements.interest) elements.interest.focus(); return; }
+                if (!consent) { showNotification('⚠️ Please accept the Terms of Service and Privacy Policy.', 'error'); return; }
+                
+                setLoading(true);
+                
+                // Simulate submission (replace with actual API call)
+                setTimeout(function() {
+                    try {
+                        // Log submission data
+                        if (window.Constants && window.Constants.APP && window.Constants.APP.DEBUG) {
+                            console.log('[Demo Request] Submitted:', {
+                                name: firstName + ' ' + lastName,
+                                email: email,
+                                phone: phone,
+                                company: company,
+                                teamSize: teamSize,
+                                interest: interest,
+                                date: elements.preferredDate ? elements.preferredDate.value : 'Not specified',
+                                message: elements.message ? elements.message.value : '',
+                                newsletter: elements.newsletter ? elements.newsletter.checked : false,
+                            });
+                        }
+                        
+                        // Show success
+                        if (elements.form) elements.form.style.display = 'none';
+                        if (elements.success) {
+                            elements.success.style.display = 'block';
+                            elements.success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        
+                    } catch (e) {
+                        showNotification('Something went wrong. Please try again.', 'error');
+                    } finally {
+                        setLoading(false);
+                    }
+                }, 1200);
+            }
+            
+            function resetForm() {
+                if (elements.form) {
+                    elements.form.style.display = 'block';
+                    elements.form.reset();
+                }
+                if (elements.success) elements.success.style.display = 'none';
+                if (elements.notification) elements.notification.style.display = 'none';
+                if (elements.firstName) elements.firstName.focus();
+                window.scrollTo({ top: (elements.formContainer && elements.formContainer.offsetTop || 0) - 100, behavior: 'smooth' });
+            }
+            
+            // -----------------------------------------------------------------
+            // INIT
+            // -----------------------------------------------------------------
+            
+            function init() {
+                // Cache elements
+                elements = {
+                    form: document.getElementById('demo-form'),
+                    formContainer: document.getElementById('form-container'),
+                    firstName: document.getElementById('first-name'),
+                    lastName: document.getElementById('last-name'),
+                    email: document.getElementById('email'),
+                    phone: document.getElementById('phone'),
+                    company: document.getElementById('company'),
+                    teamSize: document.getElementById('team-size'),
+                    interest: document.getElementById('interest'),
+                    preferredDate: document.getElementById('preferred-date'),
+                    message: document.getElementById('message'),
+                    consent: document.getElementById('consent'),
+                    newsletter: document.getElementById('newsletter'),
+                    submitBtn: document.getElementById('demo-submit'),
+                    success: document.getElementById('demo-success'),
+                    notification: document.getElementById('demo-notification'),
+                    resetBtn: document.getElementById('reset-demo-btn'),
+                    csrfInput: document.getElementById('demo-csrf'),
+                };
+                
+                if (!elements.form) return;
+                
+                // Set CSRF token
+                if (elements.csrfInput) elements.csrfInput.value = generateCSRFToken();
+                
+                // Set min date to tomorrow
+                if (elements.preferredDate) {
+                    var tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    elements.preferredDate.setAttribute('min', tomorrow.toISOString().split('T')[0]);
+                }
+                
+                // Attach listeners
+                if (elements.form) elements.form.addEventListener('submit', handleSubmit);
+                if (elements.resetBtn) elements.resetBtn.addEventListener('click', resetForm);
+                
+                // Clear notification on input
+                var inputs = [elements.firstName, elements.lastName, elements.email, elements.phone, elements.company];
+                inputs.forEach(function(input) {
+                    if (input) {
+                        input.addEventListener('input', function() {
+                            if (elements.notification) elements.notification.style.display = 'none';
+                        });
+                    }
+                });
+                
+                // Copyright year
+                var yearEl = document.getElementById('current-year');
+                if (yearEl) yearEl.textContent = new Date().getFullYear();
+                
+                // Mark loaded
+                document.body.classList.add('loaded');
+                
+                // Focus first field
+                if (elements.firstName) {
+                    setTimeout(function() { elements.firstName.focus(); }, 500);
+                }
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+            
+        })();
     </script>
+    
 </body>
 </html>
-
-

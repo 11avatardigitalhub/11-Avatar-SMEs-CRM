@@ -1,20 +1,44 @@
 {
   "hosting": {
-    "public": "public",
+    "public": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/functions/**",
+      "**/tests/**",
+      "**/docs/**",
+      "**/scripts/**",
+      "**/database/**",
+      "**/.github/**",
+      "**/package.json",
+      "**/package-lock.json",
+      "**/README.md",
+      "**/LICENSE",
+      "**/.gitignore",
+      "**/.nojekyll"
     ],
-    "rewrites": [
+    "rewrites": [],
+    "redirects": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/",
+        "destination": "/index.html",
+        "type": 301
+      },
+      {
+        "source": "/404",
+        "destination": "/404.html",
+        "type": 301
+      },
+      {
+        "source": "/offline",
+        "destination": "/offline.html",
+        "type": 301
       }
     ],
     "headers": [
       {
-        "source": "**/*.@(html)",
+        "source": "**/*.html",
         "headers": [
           {
             "key": "Cache-Control",
@@ -31,6 +55,10 @@
           {
             "key": "Referrer-Policy",
             "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Permissions-Policy",
+            "value": "camera=(), microphone=(), geolocation=(self)"
           }
         ]
       },
@@ -44,7 +72,7 @@
         ]
       },
       {
-        "source": "**/*.@(png|jpg|svg|ico|webp|gif)",
+        "source": "**/*.@(png|jpg|jpeg|svg|ico|webp|gif)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -62,7 +90,7 @@
         ]
       },
       {
-        "source": "**/manifest.json",
+        "source": "manifest.json",
         "headers": [
           {
             "key": "Cache-Control",
@@ -71,7 +99,7 @@
         ]
       },
       {
-        "source": "**/sw.js",
+        "source": "sw.js",
         "headers": [
           {
             "key": "Cache-Control",
@@ -79,12 +107,12 @@
           },
           {
             "key": "Service-Worker-Allowed",
-            "value": "/"
+            "value": "./"
           }
         ]
       },
       {
-        "source": "**/*.@(json)",
+        "source": "**/*.json",
         "headers": [
           {
             "key": "Cache-Control",
@@ -97,7 +125,7 @@
         ]
       }
     ],
-    "cleanUrls": true,
+    "cleanUrls": false,
     "trailingSlash": false,
     "appAssociation": "AUTO",
     "i18n": {
@@ -154,5 +182,3 @@
     "template": "remoteconfig.template.json"
   }
 }
-
-

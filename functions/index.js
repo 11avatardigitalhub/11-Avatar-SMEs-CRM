@@ -1,18 +1,13 @@
-/* ==========================================
-   11 AVATAR DIGITAL HUB
-   Firebase Cloud Functions - Backend API
-   Version: 2.0 Enterprise
-   ==========================================
-   Purpose:
-   - Serverless backend operations
-   - Authentication triggers
-   - Database triggers & maintenance
-   - Scheduled backups
-   - WhatsApp webhook processing
-   - Email notifications
-   - Data cleanup & optimization
-   - Security & validation
-   ========================================== */
+/**
+ * @fileoverview 11 Avatar SMEs CRM - Firebase Cloud Functions
+ * @description Serverless backend functions for authentication triggers,
+ *              Firestore document triggers, scheduled backups, data cleanup,
+ *              WhatsApp webhook processing, and weekly reporting.
+ * @version 3.0.0
+ * @author 11 Avatar Digital Hub
+ * @license Proprietary - All Rights Reserved
+ * @copyright 2024-2026 11 Avatar Digital Hub
+ */
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -27,40 +22,45 @@ const storage = admin.storage();
 const FieldValue = admin.firestore.FieldValue;
 const Timestamp = admin.firestore.Timestamp;
 
-// ==========================================
+// =============================================================================
 // CONFIGURATION
-// ==========================================
+// =============================================================================
 const CONFIG = {
     backup: {
         enabled: true,
         schedule: 'every 24 hours',
         retentionDays: 30,
-        collections: ['users','leads','clients','revenue','projects','retainers','invoices','history']
+        collections: [
+            'users', 'leads', 'clients', 'deals', 'revenue', 
+            'projects', 'retainers', 'invoices', 'payments', 'history'
+        ],
     },
     cleanup: {
         enabled: true,
         schedule: 'every 24 hours',
-        maxHistoryAge: 90, // days
-        maxAuditLogAge: 180, // days
-        maxInactiveUserDays: 365
+        maxHistoryAge: 90,        // days
+        maxAuditLogAge: 180,      // days
+        maxInactiveUserDays: 365, // days
+        maxNotificationsAge: 30,  // days
     },
     notifications: {
         enabled: true,
-        senderEmail: '11avatardigitalhub@gmail.com'
+        senderEmail: 'info@11avatardigitalhub.cloud',
+        supportEmail: 'support@11avatardigitalhub.cloud',
     },
     whatsapp: {
         enabled: true,
-        verifyToken: process.env.WHATSAPP_VERIFY_TOKEN || '11avatar_wa_verify_token_2024'
-    }
+        verifyToken: process.env.WHATSAPP_VERIFY_TOKEN || '',
+    },
 };
 
-// ==========================================
+// =============================================================================
 // AUTHENTICATION TRIGGERS
-// ==========================================
+// =============================================================================
 
 /**
- * Trigger: New user registered
- * Creates user profile document in Firestore
+ * Trigger: New user registered via Firebase Auth
+ * Creates user profile document in Firestore with default role
  */
 exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
     console.log('👤 New user created:', user.uid, user.email);
@@ -72,9 +72,16 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
             displayName: user.displayName || '',
             photoURL: user.photoURL || '',
             phone: user.phoneNumber || '',
-            role: 'client_owner',
+            role: 'viewer',                        // Default role
             clientId: null,
-            permissions: [],
+            permissions: [
+                'view_assigned_leads',
+                'view_assigned_clients',
+                'view_assigned_deals',
+                'view_invoices',
+                'view_reports',
+                'view_tasks',
+            ],
             emailVerified: user.emailVerified || false,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now(),
@@ -93,9 +100,9 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
                     email: true,
                     push: true,
                     sms: false,
-                    sound: true
-                }
-            }
+                    sound: true,
+                },
+            },
         };
         
         // Create user document
@@ -108,16 +115,16 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
             title: 'Welcome to 11 Avatar Digital Hub! 🎉',
             message: 'Your account has been created successfully. Start managing your leads and revenue today.',
             read: false,
-            createdAt: Timestamp.now()
+            createdAt: Timestamp.now(),
         });
         
         // Log activity
         await db.collection('history').add({
             userId: user.uid,
             type: 'user_created',
-            desc: `User account created: ${user.email}`,
+            desc: 'User account created: ' + (user.email || user.uid),
             timestamp: Timestamp.now(),
-            date: new Date().toISOString().slice(0, 10)
+            date: new Date().toISOString().slice(0, 10),
         });
         
         console.log('✅ User profile created:', user.uid);
@@ -129,8 +136,8 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
 });
 
 /**
- * Trigger: User deleted
- * Cleans up user data
+ * Trigger: User deleted from Firebase Auth
+ * Cleans up all user data across collections
  */
 exports.onUserDelete = functions.auth.user().onDelete(async (user) => {
     console.log('🗑️ User deleted:', user.uid);
@@ -139,22 +146,26 @@ exports.onUserDelete = functions.auth.user().onDelete(async (user) => {
         // Delete user profile
         await db.collection('users').doc(user.uid).delete();
         
-        // Delete user notifications
+        // Delete user notifications (batch)
         const notifications = await db.collection('notifications')
             .where('userId', '==', user.uid)
             .get();
         
-        const batch = db.batch();
-        notifications.docs.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
+        if (!notifications.empty) {
+            const batch = db.batch();
+            notifications.docs.forEach(function(doc) {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+        }
         
         // Log deletion
         await db.collection('history').add({
             userId: 'system',
             type: 'user_deleted',
-            desc: `User account deleted: ${user.email || user.uid}`,
+            desc: 'User account deleted: ' + (user.email || user.uid),
             timestamp: Timestamp.now(),
-            date: new Date().toISOString().slice(0, 10)
+            date: new Date().toISOString().slice(0, 10),
         });
         
         console.log('✅ User data cleaned up:', user.uid);
@@ -164,13 +175,13 @@ exports.onUserDelete = functions.auth.user().onDelete(async (user) => {
     }
 });
 
-// ==========================================
+// =============================================================================
 // FIRESTORE TRIGGERS
-// ==========================================
+// =============================================================================
 
 /**
  * Trigger: Lead status changed to Won
- * Auto-creates client and project
+ * Auto-creates client and optionally project/retainer
  */
 exports.onLeadWon = functions.firestore
     .document('leads/{leadId}')
@@ -180,11 +191,11 @@ exports.onLeadWon = functions.firestore
         const leadId = context.params.leadId;
         
         // Check if status changed to Won
-        if (beforeData.status !== 'Won' && afterData.status === 'Won') {
+        if (beforeData.status !== 'won' && afterData.status === 'won') {
             console.log('🏆 Lead won:', leadId, afterData.name);
             
             try {
-                // Create client
+                // Create client from won lead
                 const clientRef = await db.collection('clients').add({
                     name: afterData.name || 'Unknown',
                     business: afterData.business || '',
@@ -200,38 +211,38 @@ exports.onLeadWon = functions.firestore
                     updatedAt: Timestamp.now(),
                     notes: afterData.notes || '',
                     mrr: 0,
-                    renewalDate: ''
+                    renewalDate: '',
                 });
                 
-                // Create project if service exists
+                // Create project if service specified
                 if (afterData.service) {
                     await db.collection('projects').add({
-                        name: `${afterData.service} - ${afterData.name}`,
-                        clientName: afterData.name,
+                        name: afterData.service + ' - ' + (afterData.name || 'Client'),
+                        clientName: afterData.name || 'Client',
                         clientId: clientRef.id,
                         service: afterData.service,
                         startDate: new Date().toISOString().slice(0, 10),
                         dueDate: '',
-                        status: 'Planning',
+                        status: 'planning',
                         progress: 0,
                         leadId: leadId,
                         clientDataId: afterData.clientId || null,
                         createdAt: Timestamp.now(),
-                        updatedAt: Timestamp.now()
+                        updatedAt: Timestamp.now(),
                     });
                 }
                 
                 // Create retainer if deal value > 0
                 if (parseFloat(afterData.dealValue) > 0) {
                     await db.collection('retainers').add({
-                        clientName: afterData.name,
+                        clientName: afterData.name || 'Client',
                         clientId: clientRef.id,
                         service: afterData.service || 'General',
                         monthlyFee: parseFloat(afterData.dealValue) || 0,
                         status: 'Active',
                         clientDataId: afterData.clientId || null,
                         createdAt: Timestamp.now(),
-                        updatedAt: Timestamp.now()
+                        updatedAt: Timestamp.now(),
                     });
                 }
                 
@@ -240,10 +251,10 @@ exports.onLeadWon = functions.firestore
                     leadId: leadId,
                     leadName: afterData.name,
                     type: 'won',
-                    desc: `Lead won → Client created: ${afterData.name}`,
+                    desc: 'Lead won → Client created: ' + (afterData.name || 'Unknown'),
                     userId: afterData.updatedBy || 'system',
                     timestamp: Timestamp.now(),
-                    date: new Date().toISOString().slice(0, 10)
+                    date: new Date().toISOString().slice(0, 10),
                 });
                 
                 console.log('✅ Client, project & retainer created for:', afterData.name);
@@ -258,7 +269,7 @@ exports.onLeadWon = functions.firestore
 
 /**
  * Trigger: New revenue entry added
- * Updates client MRR and revenue stats
+ * Updates client MRR and logs history
  */
 exports.onRevenueAdded = functions.firestore
     .document('revenue/{entryId}')
@@ -267,7 +278,7 @@ exports.onRevenueAdded = functions.firestore
         console.log('💰 Revenue added:', data.client, data.amount);
         
         try {
-            // Find matching client
+            // Find and update matching client MRR
             if (data.client) {
                 const clientsSnapshot = await db.collection('clients')
                     .where('name', '==', data.client)
@@ -276,13 +287,12 @@ exports.onRevenueAdded = functions.firestore
                 
                 if (!clientsSnapshot.empty) {
                     const clientDoc = clientsSnapshot.docs[0];
-                    const clientData = clientDoc.data();
-                    const currentMRR = parseFloat(clientData.mrr) || 0;
+                    const currentMRR = parseFloat(clientDoc.data().mrr) || 0;
                     const newMRR = currentMRR + parseFloat(data.amount || 0);
                     
                     await clientDoc.ref.update({
                         mrr: newMRR,
-                        updatedAt: Timestamp.now()
+                        updatedAt: Timestamp.now(),
                     });
                 }
             }
@@ -290,10 +300,10 @@ exports.onRevenueAdded = functions.firestore
             // Log history
             await db.collection('history').add({
                 type: 'revenue',
-                desc: `Revenue added: ₹${parseFloat(data.amount || 0).toLocaleString('en-IN')} from ${data.client}`,
+                desc: 'Revenue added: ₹' + (parseFloat(data.amount || 0)).toLocaleString('en-IN') + ' from ' + (data.client || 'Unknown'),
                 userId: data.createdBy || 'system',
                 timestamp: Timestamp.now(),
-                date: new Date().toISOString().slice(0, 10)
+                date: new Date().toISOString().slice(0, 10),
             });
             
         } catch (error) {
@@ -303,16 +313,16 @@ exports.onRevenueAdded = functions.firestore
         return null;
     });
 
-// ==========================================
+// =============================================================================
 // SCHEDULED FUNCTIONS
-// ==========================================
+// =============================================================================
 
 /**
- * Scheduled: Daily Backup
- * Exports all collections to backup storage
+ * Scheduled: Daily Backup (2:00 AM IST)
+ * Exports all collections to Cloud Storage
  */
 exports.dailyBackup = functions.pubsub
-    .schedule('0 2 * * *') // Every day at 2:00 AM IST
+    .schedule('0 2 * * *')
     .timeZone('Asia/Kolkata')
     .onRun(async (context) => {
         console.log('💾 Starting daily backup...');
@@ -322,53 +332,54 @@ exports.dailyBackup = functions.pubsub
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             
             // Backup each collection
-            for (const collectionName of CONFIG.backup.collections) {
-                const snapshot = await db.collection(collectionName).get();
+            for (var i = 0; i < CONFIG.backup.collections.length; i++) {
+                var collectionName = CONFIG.backup.collections[i];
+                var snapshot = await db.collection(collectionName).get();
                 backupData[collectionName] = [];
                 
-                snapshot.forEach(doc => {
+                snapshot.forEach(function(doc) {
                     backupData[collectionName].push({
                         id: doc.id,
-                        ...doc.data()
+                        ...doc.data(),
                     });
                 });
                 
-                console.log(`  📦 ${collectionName}: ${backupData[collectionName].length} documents`);
+                console.log('  📦 ' + collectionName + ': ' + backupData[collectionName].length + ' documents');
             }
             
             // Add metadata
             backupData._metadata = {
                 timestamp: new Date().toISOString(),
                 totalCollections: CONFIG.backup.collections.length,
-                totalDocuments: Object.values(backupData).reduce(
-                    (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
-                ),
-                version: '2.0.0'
+                totalDocuments: Object.values(backupData).reduce(function(sum, arr) {
+                    return sum + (Array.isArray(arr) ? arr.length : 0);
+                }, 0),
+                version: '3.0.0',
             };
             
             // Save to Storage
-            const bucket = storage.bucket();
-            const fileName = `backups/daily/backup-${timestamp}.json`;
-            const file = bucket.file(fileName);
+            var bucket = storage.bucket();
+            var fileName = 'backups/daily/backup-' + timestamp + '.json';
+            var file = bucket.file(fileName);
             
             await file.save(JSON.stringify(backupData, null, 2), {
                 contentType: 'application/json',
                 metadata: {
                     metadata: {
                         type: 'daily_backup',
-                        timestamp: new Date().toISOString()
-                    }
-                }
+                        timestamp: new Date().toISOString(),
+                    },
+                },
             });
             
-            // Update backup log
+            // Update backup log in Firestore
             await db.collection('backups').add({
                 fileName: fileName,
                 timestamp: Timestamp.now(),
                 collections: CONFIG.backup.collections,
                 totalDocuments: backupData._metadata.totalDocuments,
                 status: 'success',
-                size: JSON.stringify(backupData).length
+                size: JSON.stringify(backupData).length,
             });
             
             // Clean old backups
@@ -383,7 +394,7 @@ exports.dailyBackup = functions.pubsub
             await db.collection('backups').add({
                 timestamp: Timestamp.now(),
                 status: 'failed',
-                error: error.message
+                error: error.message,
             });
         }
         
@@ -391,65 +402,67 @@ exports.dailyBackup = functions.pubsub
     });
 
 /**
- * Scheduled: Data Cleanup
- * Removes old data to optimize storage
+ * Scheduled: Data Cleanup (3:00 AM IST)
+ * Removes old data to optimize storage costs
  */
 exports.dataCleanup = functions.pubsub
-    .schedule('0 3 * * *') // Every day at 3:00 AM IST
+    .schedule('0 3 * * *')
     .timeZone('Asia/Kolkata')
     .onRun(async (context) => {
         console.log('🧹 Starting data cleanup...');
-        let cleanedCount = 0;
+        var cleanedCount = 0;
         
         try {
-            const now = Timestamp.now();
-            
             // Clean old history entries
-            const historyCutoff = new Date();
+            var historyCutoff = new Date();
             historyCutoff.setDate(historyCutoff.getDate() - CONFIG.cleanup.maxHistoryAge);
             
-            const oldHistory = await db.collection('history')
+            var oldHistory = await db.collection('history')
                 .where('timestamp', '<', Timestamp.fromDate(historyCutoff))
                 .limit(500)
                 .get();
             
             if (!oldHistory.empty) {
-                const batch = db.batch();
-                oldHistory.docs.forEach(doc => batch.delete(doc.ref));
+                var batch = db.batch();
+                oldHistory.docs.forEach(function(doc) {
+                    batch.delete(doc.ref);
+                });
                 await batch.commit();
                 cleanedCount += oldHistory.size;
-                console.log(`  🗑️ Deleted ${oldHistory.size} old history entries`);
+                console.log('  🗑️ Deleted ' + oldHistory.size + ' old history entries');
             }
             
-            // Clean old notifications
-            const notificationCutoff = new Date();
-            notificationCutoff.setDate(notificationCutoff.getDate() - 30);
+            // Clean old read notifications
+            var notificationCutoff = new Date();
+            notificationCutoff.setDate(notificationCutoff.getDate() - CONFIG.cleanup.maxNotificationsAge);
             
-            const oldNotifications = await db.collection('notifications')
+            var oldNotifications = await db.collection('notifications')
                 .where('createdAt', '<', Timestamp.fromDate(notificationCutoff))
                 .where('read', '==', true)
                 .limit(500)
                 .get();
             
             if (!oldNotifications.empty) {
-                const batch2 = db.batch();
-                oldNotifications.docs.forEach(doc => batch2.delete(doc.ref));
+                var batch2 = db.batch();
+                oldNotifications.docs.forEach(function(doc) {
+                    batch2.delete(doc.ref);
+                });
                 await batch2.commit();
                 cleanedCount += oldNotifications.size;
-                console.log(`  🔔 Deleted ${oldNotifications.size} old notifications`);
+                console.log('  🔔 Deleted ' + oldNotifications.size + ' old notifications');
             }
             
-            // Clean old backup files
-            const bucket = storage.bucket();
+            // Clean old backup files from Storage
+            var bucket = storage.bucket();
             await cleanOldBackups(bucket);
             
-            // Log cleanup
+            // Log cleanup activity
             await db.collection('history').add({
                 type: 'system',
-                desc: `Data cleanup completed: ${cleanedCount} items removed`,
+                desc: 'Data cleanup completed: ' + cleanedCount + ' items removed',
                 userId: 'system',
                 timestamp: Timestamp.now(),
-                date: new Date().toISOString().slice(0, 10)
+                date: new Date().toISOString().slice(0, 10),
             });
             
             console.log('✅ Cleanup completed:', cleanedCount, 'items removed');
@@ -462,50 +475,52 @@ exports.dataCleanup = functions.pubsub
     });
 
 /**
- * Scheduled: Weekly Report Generation
+ * Scheduled: Weekly Report (Monday 8:00 AM IST)
+ * Generates weekly performance report
  */
 exports.weeklyReport = functions.pubsub
-    .schedule('0 8 * * 1') // Every Monday at 8:00 AM IST
+    .schedule('0 8 * * 1')
     .timeZone('Asia/Kolkata')
     .onRun(async (context) => {
         console.log('📊 Generating weekly report...');
         
         try {
-            const weekAgo = new Date();
+            var weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
-            const weekAgoStr = weekAgo.toISOString().slice(0, 10);
+            var weekAgoStr = weekAgo.toISOString().slice(0, 10);
+            var todayStr = new Date().toISOString().slice(0, 10);
             
             // Get weekly stats
-            const newLeads = await db.collection('leads')
+            var newLeads = await db.collection('leads')
                 .where('createdDate', '>=', weekAgoStr)
                 .get();
             
-            const newRevenue = await db.collection('revenue')
+            var newRevenue = await db.collection('revenue')
                 .where('date', '>=', weekAgoStr)
                 .get();
             
-            const wonDeals = await db.collection('leads')
-                .where('status', '==', 'Won')
+            var wonDeals = await db.collection('leads')
+                .where('status', '==', 'won')
                 .where('createdDate', '>=', weekAgoStr)
                 .get();
             
-            const totalRevenue = newRevenue.docs.reduce(
-                (sum, doc) => sum + (parseFloat(doc.data().amount) || 0), 0
-            );
+            var totalRevenue = newRevenue.docs.reduce(function(sum, doc) {
+                return sum + (parseFloat(doc.data().amount) || 0);
+            }, 0);
             
             // Save report
             await db.collection('reports').add({
                 type: 'weekly',
-                period: `${weekAgoStr} to ${new Date().toISOString().slice(0, 10)}`,
+                period: weekAgoStr + ' to ' + todayStr,
                 stats: {
                     newLeads: newLeads.size,
                     newRevenue: totalRevenue,
                     wonDeals: wonDeals.size,
                     conversionRate: newLeads.size > 0 
-                        ? ((wonDeals.size / newLeads.size) * 100).toFixed(1) 
-                        : 0
+                        ? parseFloat(((wonDeals.size / newLeads.size) * 100).toFixed(1))
+                        : 0,
                 },
-                createdAt: Timestamp.now()
+                createdAt: Timestamp.now(),
             });
             
             console.log('✅ Weekly report generated');
@@ -517,24 +532,25 @@ exports.weeklyReport = functions.pubsub
         return null;
     });
 
-// ==========================================
+// =============================================================================
 // WHATSAPP WEBHOOK
-// ==========================================
+// =============================================================================
 
 /**
  * WhatsApp Webhook Handler
- * Processes incoming WhatsApp messages
+ * GET: Verification challenge
+ * POST: Process incoming messages
  */
 exports.whatsappWebhook = functions.https.onRequest(async (req, res) => {
     // CORS headers
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'GET, POST');
     
-    // Verification challenge (GET request)
+    // Verification challenge (GET request from WhatsApp)
     if (req.method === 'GET') {
-        const mode = req.query['hub.mode'];
-        const token = req.query['hub.verify_token'];
-        const challenge = req.query['hub.challenge'];
+        var mode = req.query['hub.mode'];
+        var token = req.query['hub.verify_token'];
+        var challenge = req.query['hub.challenge'];
         
         if (mode === 'subscribe' && token === CONFIG.whatsapp.verifyToken) {
             console.log('✅ WhatsApp webhook verified');
@@ -548,46 +564,46 @@ exports.whatsappWebhook = functions.https.onRequest(async (req, res) => {
     // Handle incoming messages (POST request)
     if (req.method === 'POST') {
         try {
-            const body = req.body;
-            console.log('📩 WhatsApp message received:', JSON.stringify(body));
+            var body = req.body;
+            console.log('📩 WhatsApp message received');
             
-            // Process message
+            // Process message entries
             if (body.entry && body.entry[0] && body.entry[0].changes) {
-                const changes = body.entry[0].changes[0];
-                const value = changes.value;
+                var changes = body.entry[0].changes[0];
+                var value = changes.value;
                 
                 if (value.messages && value.messages[0]) {
-                    const message = value.messages[0];
-                    const from = message.from;
-                    const text = message.text?.body || '';
-                    const timestamp = message.timestamp;
+                    var message = value.messages[0];
+                    var from = message.from;
+                    var text = message.text?.body || '';
+                    var msgTimestamp = message.timestamp;
                     
                     // Save message to Firestore
                     await db.collection('whatsappMessages').add({
                         from: from,
                         message: text,
-                        timestamp: Timestamp.fromMillis(parseInt(timestamp) * 1000),
+                        timestamp: Timestamp.fromMillis(parseInt(msgTimestamp) * 1000),
                         direction: 'incoming',
                         processed: false,
-                        createdAt: Timestamp.now()
+                        createdAt: Timestamp.now(),
                     });
                     
-                    // Try to find matching lead/contact
-                    const contacts = await db.collection('contacts')
+                    // Try to find matching contact
+                    var contacts = await db.collection('contacts')
                         .where('mobile', '==', from)
                         .limit(1)
                         .get();
                     
                     if (!contacts.empty) {
-                        const contact = contacts.docs[0];
+                        var contact = contacts.docs[0];
                         await contact.ref.update({
                             lastWhatsAppMessage: text,
-                            lastWhatsAppTime: Timestamp.now()
+                            lastWhatsAppTime: Timestamp.now(),
                         });
                     }
                     
-                    // Create lead if new number
-                    const existingLeads = await db.collection('leads')
+                    // Auto-create lead if new number
+                    var existingLeads = await db.collection('leads')
                         .where('mobile', '==', from)
                         .limit(1)
                         .get();
@@ -597,12 +613,12 @@ exports.whatsappWebhook = functions.https.onRequest(async (req, res) => {
                             name: 'WhatsApp Contact',
                             mobile: from,
                             source: 'WhatsApp',
-                            status: 'New',
-                            notes: `Auto-created from WhatsApp message: "${text}"`,
+                            status: 'new',
+                            notes: 'Auto-created from WhatsApp message: "' + text + '"',
                             createdDate: new Date().toISOString().slice(0, 10),
                             followupDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
                             createdAt: Timestamp.now(),
-                            updatedAt: Timestamp.now()
+                            updatedAt: Timestamp.now(),
                         });
                         
                         console.log('📋 Auto-lead created from WhatsApp:', from);
@@ -621,24 +637,26 @@ exports.whatsappWebhook = functions.https.onRequest(async (req, res) => {
     return res.status(405).send('Method Not Allowed');
 });
 
-// ==========================================
+// =============================================================================
 // UTILITY FUNCTIONS
-// ==========================================
+// =============================================================================
 
 /**
- * Clean old backup files from Storage
+ * Clean old backup files from Cloud Storage
+ * @param {Bucket} bucket - Storage bucket instance
  */
 async function cleanOldBackups(bucket) {
     try {
-        const [files] = await bucket.getFiles({ prefix: 'backups/daily/' });
-        const cutoffDate = new Date();
+        var [files] = await bucket.getFiles({ prefix: 'backups/daily/' });
+        var cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - CONFIG.backup.retentionDays);
         
-        let deletedCount = 0;
+        var deletedCount = 0;
         
-        for (const file of files) {
-            const [metadata] = await file.getMetadata();
-            const created = new Date(metadata.timeCreated);
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var [metadata] = await file.getMetadata();
+            var created = new Date(metadata.timeCreated);
             
             if (created < cutoffDate) {
                 await file.delete();
@@ -647,7 +665,7 @@ async function cleanOldBackups(bucket) {
         }
         
         if (deletedCount > 0) {
-            console.log(`  🗑️ Deleted ${deletedCount} old backup files`);
+            console.log('  🗑️ Deleted ' + deletedCount + ' old backup files');
         }
         
     } catch (error) {
@@ -655,38 +673,25 @@ async function cleanOldBackups(bucket) {
     }
 }
 
-/**
- * Send email notification (placeholder)
- */
-async function sendEmailNotification(to, subject, html) {
-    // Integration with SendGrid, Resend, or other email service
-    console.log('📧 Email would be sent:', { to, subject });
-    return true;
-}
+// =============================================================================
+// EXPORTS
+// =============================================================================
 
-// ==========================================
-// EXPORT ALL FUNCTIONS
-// ==========================================
+// Auth triggers
+exports.onUserCreate = exports.onUserCreate;
+exports.onUserDelete = exports.onUserDelete;
 
-module.exports = {
-    // Auth triggers
-    onUserCreate: exports.onUserCreate,
-    onUserDelete: exports.onUserDelete,
-    
-    // Firestore triggers
-    onLeadWon: exports.onLeadWon,
-    onRevenueAdded: exports.onRevenueAdded,
-    
-    // Scheduled functions
-    dailyBackup: exports.dailyBackup,
-    dataCleanup: exports.dataCleanup,
-    weeklyReport: exports.weeklyReport,
-    
-    // HTTP functions
-    whatsappWebhook: exports.whatsappWebhook
-};
+// Firestore triggers
+exports.onLeadWon = exports.onLeadWon;
+exports.onRevenueAdded = exports.onRevenueAdded;
 
-console.log('🚀 Firebase Cloud Functions loaded and ready');
+// Scheduled functions
+exports.dailyBackup = exports.dailyBackup;
+exports.dataCleanup = exports.dataCleanup;
+exports.weeklyReport = exports.weeklyReport;
+
+// HTTP functions
+exports.whatsappWebhook = exports.whatsappWebhook;
+
+console.log('🚀 Firebase Cloud Functions v3.0.0 loaded');
 console.log('📋 Available functions:', Object.keys(exports).length);
-
-

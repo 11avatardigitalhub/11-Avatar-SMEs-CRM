@@ -1,154 +1,92 @@
 # ==========================================
 # 11 AVATAR DIGITAL HUB
-# Robots.txt - Search Engine Crawler Rules
-# Version: 2.0 Enterprise
-# ==========================================
-# Purpose:
-# - Control search engine crawling
-# - Allow indexing of public pages
-# - Block internal/admin pages
-# - Sitemap location declaration
-# - Crawl delay specification
-# - Specific bot rules
+# Robots.txt - Search Engine Crawler Rules v3.0
 # ==========================================
 
-# ==========================================
-# USER-AGENT: All Bots (Default Rules)
-# ==========================================
 User-agent: *
 
-# Allow crawling of public pages
-Allow: /
+# Allow public pages
 Allow: /index.html
-Allow: /public/index.html
-Allow: /public/login.html
-Allow: /public/register.html
-Allow: /public/forgot-password.html
-Allow: /public/offline.html
-Allow: /public/manifest.json
+Allow: /login.html
+Allow: /register.html
+Allow: /forgot-password.html
+Allow: /offline.html
+Allow: /404.html
+Allow: /demo.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /features.html
+Allow: /integrations.html
+Allow: /pricing.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /refund.html
+Allow: /security.html
+Allow: /careers.html
+Allow: /partners.html
 
-# Allow static assets (CSS, JS, Images)
+# Allow static assets
 Allow: /src/css/
-Allow: /src/js/config/
+Allow: /src/js/
 Allow: /assets/
-Allow: /public/assets/
+Allow: /icons/
+Allow: /fonts/
+Allow: /manifest.json
+Allow: /sw.js
 
-# Disallow internal authenticated pages
-Disallow: /src/pages/
-Disallow: /#/dashboard
-Disallow: /#/leads
-Disallow: /#/pipeline
-Disallow: /#/clients
-Disallow: /#/revenue
-Disallow: /#/invoices
-Disallow: /#/projects
-Disallow: /#/whatsapp
-Disallow: /#/tasks
-Disallow: /#/settings
-Disallow: /#/reports
-Disallow: /#/admin
-Disallow: /#/contacts
-Disallow: /#/customers
-Disallow: /#/payments
-Disallow: /#/inbox
-Disallow: /#/chat
-Disallow: /#/appointments
-Disallow: /#/campaigns
-Disallow: /#/proposals
-Disallow: /#/audit
-Disallow: /#/training
-Disallow: /#/referrals
-Disallow: /#/history
-Disallow: /#/profile
-Disallow: /#/error
+# Disallow internal pages
+Disallow: /dashboard.html
+Disallow: /leads.html
+Disallow: /pipeline.html
+Disallow: /clients.html
+Disallow: /revenue.html
+Disallow: /invoices.html
+Disallow: /projects.html
+Disallow: /whatsapp.html
+Disallow: /tasks.html
+Disallow: /settings.html
+Disallow: /reports.html
+Disallow: /contacts.html
+Disallow: /payments.html
+Disallow: /inbox.html
+Disallow: /profile.html
 
-# Disallow API and backend paths
+# Disallow backend
 Disallow: /api/
 Disallow: /functions/
-Disallow: /workers/
 Disallow: /database/
 Disallow: /tests/
 Disallow: /docs/
 Disallow: /scripts/
 Disallow: /config/
 Disallow: /.github/
+Disallow: /node_modules/
 
-# Disallow temporary and system files
+# Disallow system files
 Disallow: /*.log$
 Disallow: /*.tmp$
 Disallow: /*.bak$
-Disallow: /node_modules/
 Disallow: /.git/
-Disallow: /.wrangler/
-Disallow: /11avatar-api/
 
-# Crawl delay (polite crawling - 10 seconds between requests)
 Crawl-delay: 10
 
-# ==========================================
-# GOOGLEBOT (Google Specific Rules)
-# ==========================================
+# Google specific
 User-agent: Googlebot
-
-# Google can crawl faster
 Crawl-delay: 2
-
-# Allow Google to access CSS/JS for rendering
 Allow: /src/css/
 Allow: /src/js/
 Allow: /assets/
 
-# Specific Google crawlers
 User-agent: Googlebot-Image
-Allow: /assets/images/
-Allow: /public/assets/images/
+Allow: /assets/
+Allow: /icons/
 Crawl-delay: 5
 
-User-agent: Googlebot-News
-Disallow: /
-
-User-agent: Googlebot-Video
-Disallow: /
-
-# ==========================================
-# BINGBOT (Microsoft Bing)
-# ==========================================
+# Bing
 User-agent: Bingbot
 Crawl-delay: 5
-Allow: /public/
-Allow: /assets/
-Disallow: /src/pages/
-Disallow: /api/
 
-# ==========================================
-# OTHER SEARCH ENGINES
-# ==========================================
-User-agent: DuckDuckBot
-Crawl-delay: 5
-Allow: /public/
-
-User-agent: Baiduspider
-Crawl-delay: 10
-Allow: /public/
-
-User-agent: YandexBot
-Crawl-delay: 10
-Allow: /public/
-
-User-agent: Slurp
-Disallow: /
-
-User-agent: MSNBot
-Crawl-delay: 5
-
-User-agent: Applebot
-Crawl-delay: 5
-Allow: /public/
-
-# ==========================================
-# AI & LLM BOTS (Block Data Scraping)
-# ==========================================
-# Block AI training crawlers from accessing data
+# Block AI crawlers
 User-agent: GPTBot
 Disallow: /
 
@@ -158,51 +96,15 @@ Disallow: /
 User-agent: anthropic-ai
 Disallow: /
 
-User-agent: Claude-Web
-Disallow: /
-
-User-agent: cohere-ai
-Disallow: /
-
-User-agent: PerplexityBot
-Disallow: /
-
 User-agent: Bytespider
 Disallow: /
 
-User-agent: Omgilibot
-Disallow: /
-
-User-agent: FacebookBot
-Disallow: /src/pages/
-Disallow: /api/
-Allow: /public/
-Allow: /assets/
-
-# ==========================================
-# SEO & MARKETING BOTS (Allow)
-# ==========================================
+# SEO bots
 User-agent: AhrefsBot
 Crawl-delay: 15
 
 User-agent: SemrushBot
 Crawl-delay: 15
 
-User-agent: Moz
-Crawl-delay: 15
-
-User-agent: Majestic-12
-Crawl-delay: 15
-
-User-agent: DotBot
-Crawl-delay: 10
-
-# ==========================================
-# SITEMAP LOCATION
-# ==========================================
+# Sitemap
 Sitemap: https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/sitemap.xml
-Sitemap: https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/sitemap.xml
-
-# ==========================================
-# END OF ROBOTS.TXT
-# ==========================================

@@ -1,741 +1,584 @@
-/* ==========================================
-   11 AVATAR DIGITAL HUB
-   Offline Support Manager
-   Version: 2.0 Enterprise
-   ==========================================
-   Purpose:
-   - Complete offline-first architecture
-   - Service Worker registration & management
-   - Offline data synchronization
-   - Background sync
-   - Periodic sync
-   - Offline queue management
-   - Network status detection
-   - Connection quality monitoring
-   - Offline UI indicators
-   - Data conflict resolution
-   - Storage estimation
-   - Offline analytics
-   ==========================================
-   Architecture:
-   
-   OfflineManager
-   ├── Service Worker Manager
-   ├── Network Monitor
-   ├── Sync Queue Manager
-   ├── Conflict Resolver
-   └── Storage Manager
-   
-   Features:
-   - Works offline with full functionality
-   - Auto-syncs when back online
-   - Background sync for pending operations
-   - Smart conflict resolution
-   - Offline indicators in UI
-   ========================================== */
+/**
+ * @fileoverview 11 Avatar SMEs CRM - Offline Support Manager
+ * @description Lightweight offline manager for GitHub Pages static deployment.
+ *              Handles network detection, sync queue management, service worker
+ *              communication, and connection quality monitoring.
+ *              Designed for multi-page architecture (NOT SPA).
+ * @module core/offline
+ * @version 3.0.0
+ * @author 11 Avatar Digital Hub
+ * @license Proprietary - All Rights Reserved
+ * @copyright 2024-2026 11 Avatar Digital Hub
+ *
+ * @requires AppCore (window.AppCore) - optional, for event system
+ *
+ * @exports window.OfflineManager - Global namespace
+ */
 
-// ==========================================
-// OFFLINE MANAGER CLASS
-// ==========================================
-class OfflineManager {
+'use strict';
+
+// =============================================================================
+// OFFLINE MANAGER - Self-executing IIFE
+// =============================================================================
+const OfflineManager = (function() {
+
+    // -------------------------------------------------------------------------
+    // SECTION 1: CONFIGURATION
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Default configuration */
+    const config = {
+        /** @type {boolean} Whether service worker is enabled */
+        serviceWorkerEnabled: true,
+        
+        /** @type {string} Path to service worker file */
+        serviceWorkerPath: 'sw.js',
+        
+        /** @type {number} How often to ping for connectivity (ms) */
+        pingInterval: 30000,
+        
+        /** @type {number} Maximum sync queue size */
+        maxQueueSize: 500,
+        
+        /** @type {number} Max retries for failed sync items */
+        maxRetries: 5,
+        
+        /** @type {number} Delay between retries (ms) */
+        retryDelay: 30000,
+        
+        /** @type {string[]} Priority levels for sync items */
+        priorityLevels: ['critical', 'high', 'normal', 'low'],
+    };
+
+    // -------------------------------------------------------------------------
+    // SECTION 2: STATE
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Internal state */
+    const state = {
+        /** @type {boolean} Whether browser is online */
+        online: typeof navigator !== 'undefined' ? navigator.onLine : true,
+        
+        /** @type {string|null} Connection type (4g, 3g, wifi, etc.) */
+        connectionType: null,
+        
+        /** @type {string} Connection quality: excellent, good, slow, offline */
+        connectionQuality: typeof navigator !== 'undefined' && navigator.onLine ? 'good' : 'offline',
+        
+        /** @type {boolean} Whether service worker is registered */
+        serviceWorkerRegistered: false,
+        
+        /** @type {string|null} Service worker version */
+        serviceWorkerVersion: null,
+        
+        /** @type {boolean} Whether sync is in progress */
+        syncInProgress: false,
+        
+        /** @type {string|null} Last successful sync timestamp */
+        lastSyncTime: null,
+        
+        /** @type {string|null} Last online timestamp */
+        lastOnlineTime: null,
+        
+        /** @type {Array} Pending sync operations queue */
+        syncQueue: [],
+        
+        /** @type {number|null} Ping timer interval ID */
+        pingTimer: null,
+        
+        /** @type {Object|null} Service worker registration */
+        swRegistration: null,
+        
+        /** @type {boolean} Whether manager is initialized */
+        isInitialized: false,
+    };
+
+    // -------------------------------------------------------------------------
+    // SECTION 3: UTILITY FUNCTIONS
+    // -------------------------------------------------------------------------
     
     /**
-     * Initialize the Offline Manager
+     * Log message with module prefix
+     * @param {string} level - 'log', 'warn', 'error'
+     * @param {string} message
+     * @param {*} [data]
      */
-    constructor() {
-        // Configuration
-        this.config = {
-            // Service Worker
-            serviceWorker: {
-                enabled: true,
-                path: '/sw.js',
-                scope: '/',
-                updateInterval: 60 * 60 * 1000 // 1 hour
-            },
+    function log(level, message, data) {
+        try {
+            var isDebug = window.Constants && 
+                         window.Constants.APP && 
+                         window.Constants.APP.DEBUG;
+            if (!isDebug && level === 'log') return;
             
-            // Sync
-            sync: {
-                enabled: true,
-                maxRetries: 5,
-                retryDelay: 30000, // 30 seconds
-                maxQueueSize: 500,
-                batchSize: 10,
-                priorityLevels: ['critical', 'high', 'normal', 'low']
-            },
-            
-            // Network
-            network: {
-                pingURL: '/api/health',
-                pingInterval: 30000, // 30 seconds
-                slowThreshold: 2000, // 2 seconds response = slow
-                offlineThreshold: 5000 // 5 seconds = offline
-            },
-            
-            // Storage
-            storage: {
-                warningThreshold: 0.8, // 80% full = warning
-                criticalThreshold: 0.95, // 95% full = critical
-                cleanupThreshold: 0.9
-            },
-            
-            // UI
-            ui: {
-                showIndicator: true,
-                showBanner: true,
-                bannerDuration: 5000
+            var prefix = '[OfflineManager]';
+            switch (level) {
+                case 'error': console.error(prefix, message, data || ''); break;
+                case 'warn': console.warn(prefix, message, data || ''); break;
+                default: console.log(prefix, message, data || ''); break;
             }
-        };
-        
-        // State
-        this.state = {
-            online: navigator.onLine,
-            connectionType: null,
-            connectionQuality: 'unknown', // 'excellent' | 'good' | 'slow' | 'offline'
-            serviceWorkerRegistered: false,
-            serviceWorkerVersion: null,
-            syncInProgress: false,
-            lastSyncTime: null,
-            lastOnlineTime: null,
-            lastOfflineTime: null,
-            storageUsage: 0,
-            storageQuota: 0,
-            storageWarning: false,
-            storageCritical: false
-        };
-        
-        // Sync queue
-        this._syncQueue = [];
-        
-        // Listeners
-        this._networkListeners = [];
-        this._storageListeners = [];
-        
-        // Timers
-        this._pingTimer = null;
-        this._swUpdateTimer = null;
-        
-        // Service Worker registration
-        this._swRegistration = null;
-        
-        // Bind methods
-        this._handleOnline = this._handleOnline.bind(this);
-        this._handleOffline = this._handleOffline.bind(this);
-        this._handleConnectionChange = this._handleConnectionChange.bind(this);
-        this._ping = this._ping.bind(this);
-        
-        // Initialize
-        this._init();
+        } catch (e) { /* Silent */ }
     }
     
     /**
-     * Initialize the offline manager
-     * @private
+     * Emit event via AppCore if available, otherwise DOM custom event
+     * @param {string} eventName
+     * @param {*} [data]
      */
-    async _init() {
-        console.log('📡 Initializing Offline Manager...');
-        
-        // Setup network monitoring
-        this._setupNetworkMonitoring();
-        
-        // Register Service Worker
-        if (this.config.serviceWorker.enabled) {
-            await this._registerServiceWorker();
-        }
-        
-        // Setup background sync
-        if (this.config.sync.enabled) {
-            this._setupBackgroundSync();
-        }
-        
-        // Load sync queue from storage
-        await this._loadSyncQueue();
-        
-        // Check storage
-        await this._checkStorage();
-        
-        // Start periodic checks
-        this._startPeriodicChecks();
-        
-        // Restore state
-        this._restoreState();
-        
-        console.log('✅ Offline Manager initialized');
-        console.log('📡 Status:', this.getStatus());
+    function emitEvent(eventName, data) {
+        try {
+            // Try AppCore event system
+            if (window.AppCore && typeof window.AppCore.emit === 'function') {
+                window.AppCore.emit(eventName, data || {});
+            }
+            // Also dispatch as DOM custom event
+            window.dispatchEvent(new CustomEvent(eventName, {
+                detail: data || {},
+                bubbles: false,
+            }));
+        } catch (e) { /* Silent */ }
     }
     
-    // ==========================================
-    // SERVICE WORKER MANAGEMENT
-    // ==========================================
+    /**
+     * Generate unique sync item ID
+     * @returns {string}
+     */
+    function generateSyncId() {
+        return 'sync_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 8);
+    }
     
     /**
-     * Register the Service Worker
-     * @private
+     * Get connection info from browser API
+     * @returns {Object}
      */
-    async _registerServiceWorker() {
+    function getConnectionInfo() {
+        try {
+            var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (conn) {
+                return {
+                    type: conn.effectiveType || 'unknown',
+                    downlink: conn.downlink || 0,
+                    rtt: conn.rtt || 0,
+                };
+            }
+        } catch (e) { /* Silent */ }
+        return { type: 'unknown', downlink: 0, rtt: 0 };
+    }
+    
+    /**
+     * Assess connection quality from connection info
+     * @param {Object} connInfo
+     * @returns {string} 'excellent' | 'good' | 'slow' | 'offline'
+     */
+    function assessQuality(connInfo) {
+        if (!state.online) return 'offline';
+        if (connInfo.rtt < 100 && connInfo.downlink > 5) return 'excellent';
+        if (connInfo.rtt < 300 && connInfo.downlink > 2) return 'good';
+        return 'slow';
+    }
+    
+    /**
+     * Sort sync queue by priority
+     */
+    function sortSyncQueue() {
+        var priorityOrder = { critical: 0, high: 1, normal: 2, low: 3 };
+        state.syncQueue.sort(function(a, b) {
+            var pa = priorityOrder[a.priority] || 2;
+            var pb = priorityOrder[b.priority] || 2;
+            if (pa !== pb) return pa - pb;
+            return (a.createdAt || 0) - (b.createdAt || 0);
+        });
+    }
+    
+    /**
+     * Save sync queue to localStorage
+     */
+    function saveSyncQueue() {
+        try {
+            var serializable = state.syncQueue.map(function(item) {
+                return {
+                    id: item.id,
+                    type: item.type,
+                    collection: item.collection,
+                    docId: item.docId || null,
+                    data: item.data || null,
+                    priority: item.priority || 'normal',
+                    retryCount: item.retryCount || 0,
+                    maxRetries: item.maxRetries || config.maxRetries,
+                    createdAt: item.createdAt || Date.now(),
+                    updatedAt: item.updatedAt || Date.now(),
+                    status: item.status || 'pending',
+                    error: item.error || null,
+                };
+            });
+            localStorage.setItem('11avatar_sync_queue', JSON.stringify(serializable));
+        } catch (e) {
+            log('warn', 'Failed to save sync queue:', e.message);
+        }
+    }
+    
+    /**
+     * Load sync queue from localStorage
+     */
+    function loadSyncQueue() {
+        try {
+            var saved = localStorage.getItem('11avatar_sync_queue');
+            if (saved) {
+                state.syncQueue = JSON.parse(saved);
+                log('log', 'Loaded ' + state.syncQueue.length + ' sync items from storage');
+            }
+        } catch (e) {
+            log('warn', 'Failed to load sync queue:', e.message);
+            state.syncQueue = [];
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 4: SERVICE WORKER MANAGEMENT
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Register the service worker
+     * @returns {Promise<void>}
+     */
+    async function registerServiceWorker() {
         if (!('serviceWorker' in navigator)) {
-            console.warn('⚠️ Service Worker not supported in this browser');
-            this.config.serviceWorker.enabled = false;
+            log('warn', 'Service Worker not supported');
+            config.serviceWorkerEnabled = false;
             return;
         }
         
         try {
-            const registration = await navigator.serviceWorker.register(
-                this.config.serviceWorker.path,
-                { scope: this.config.serviceWorker.scope }
+            var registration = await navigator.serviceWorker.register(
+                config.serviceWorkerPath,
+                { scope: './' }
             );
             
-            this._swRegistration = registration;
-            this.state.serviceWorkerRegistered = true;
+            state.swRegistration = registration;
+            state.serviceWorkerRegistered = true;
             
-            console.log('👷 Service Worker registered:', registration.scope);
+            log('log', 'Service Worker registered: ' + registration.scope);
             
             // Listen for updates
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                
+            registration.addEventListener('updatefound', function() {
+                var newWorker = registration.installing;
                 if (newWorker) {
-                    newWorker.addEventListener('statechange', () => {
+                    newWorker.addEventListener('statechange', function() {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            console.log('🔄 New Service Worker available');
-                            this._notifyUpdateAvailable();
+                            log('log', 'New Service Worker available');
+                            emitEvent('offline:updateAvailable', {});
                         }
                     });
                 }
             });
             
-            // Check for updates periodically
-            this._swUpdateTimer = setInterval(() => {
-                registration.update().catch(() => {});
-            }, this.config.serviceWorker.updateInterval);
-            
-            // Listen for messages from Service Worker
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                this._handleSWMessage(event.data);
+            // Listen for messages from SW
+            navigator.serviceWorker.addEventListener('message', function(event) {
+                handleSWMessage(event.data);
             });
             
-            // Get version
-            if (registration.active) {
-                this.state.serviceWorkerVersion = await this._getSWVersion(registration.active);
-            }
+            // Check for updates periodically (every hour)
+            setInterval(function() {
+                registration.update().catch(function() {});
+            }, 60 * 60 * 1000);
             
         } catch (error) {
-            console.error('❌ Service Worker registration failed:', error);
-            this.config.serviceWorker.enabled = false;
+            log('error', 'Service Worker registration failed:', error);
+            config.serviceWorkerEnabled = false;
+            
+            // Try alternate path for GitHub Pages
+            try {
+                var altRegistration = await navigator.serviceWorker.register(
+                    '/11-Avatar-SMEs-CRM/sw.js',
+                    { scope: '/11-Avatar-SMEs-CRM/' }
+                );
+                state.swRegistration = altRegistration;
+                state.serviceWorkerRegistered = true;
+                log('log', 'Service Worker registered (alt path): ' + altRegistration.scope);
+            } catch (e2) {
+                log('error', 'Alt path registration also failed');
+            }
         }
     }
     
     /**
-     * Get Service Worker version
-     * @private
+     * Handle messages from service worker
+     * @param {Object} data - Message data
      */
-    async _getSWVersion(worker) {
-        return new Promise((resolve) => {
-            const channel = new MessageChannel();
-            
-            channel.port1.onmessage = (event) => {
-                resolve(event.data.version || 'unknown');
-            };
-            
-            worker.postMessage({ type: 'GET_VERSION' }, [channel.port2]);
-            
-            // Timeout
-            setTimeout(() => resolve('unknown'), 1000);
-        });
-    }
-    
-    /**
-     * Handle messages from Service Worker
-     * @private
-     */
-    _handleSWMessage(data) {
+    function handleSWMessage(data) {
         if (!data) return;
         
         switch (data.type) {
             case 'SYNC_COMPLETE':
-                console.log('🔄 Background sync completed');
-                this.state.syncInProgress = false;
-                this.state.lastSyncTime = new Date().toISOString();
-                window.EventBus?.emit('offline:syncComplete', data);
-                break;
-                
-            case 'SYNC_FAILED':
-                console.warn('⚠️ Background sync failed:', data.error);
-                this.state.syncInProgress = false;
-                window.EventBus?.emit('offline:syncFailed', data);
+                log('log', 'Background sync completed: ' + data.processed + '/' + data.total);
+                state.syncInProgress = false;
+                state.lastSyncTime = new Date().toISOString();
+                emitEvent('offline:syncComplete', data);
                 break;
                 
             case 'CACHE_UPDATED':
-                console.log('💾 Cache updated by Service Worker');
-                window.EventBus?.emit('offline:cacheUpdated', data);
-                break;
-                
-            case 'OFFLINE_READY':
-                console.log('📡 App is ready for offline use');
-                window.EventBus?.emit('offline:ready', data);
+                log('log', 'Cache updated by SW');
+                emitEvent('offline:cacheUpdated', data);
                 break;
                 
             default:
-                if (this.config.debug) {
-                    console.log('📡 SW Message:', data);
-                }
+                break;
         }
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 5: NETWORK MONITORING
+    // -------------------------------------------------------------------------
     
     /**
-     * Notify user about available update
-     * @private
+     * Handle browser online event
      */
-    _notifyUpdateAvailable() {
-        window.EventBus?.emit('offline:updateAvailable', {
-            message: 'A new version is available. Refresh to update.'
-        });
+    function handleOnline() {
+        log('log', 'Network: Online');
+        state.online = true;
+        state.lastOnlineTime = new Date().toISOString();
         
-        if (window.App?.toast) {
-            window.App.toast('🔄 New version available! Refresh to update.', 'info', 10000);
-        }
-    }
-    
-    /**
-     * Skip waiting and activate new Service Worker
-     */
-    async updateSW() {
-        if (!this._swRegistration || !this._swRegistration.waiting) {
-            return false;
-        }
+        var connInfo = getConnectionInfo();
+        state.connectionType = connInfo.type;
+        state.connectionQuality = assessQuality(connInfo);
         
+        // Save last online time
         try {
-            this._swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
-            
-            // Reload page to activate new SW
-            window.location.reload();
-            return true;
-        } catch (error) {
-            console.error('❌ Failed to update Service Worker:', error);
-            return false;
-        }
+            localStorage.setItem('11avatar_last_online', Date.now().toString());
+        } catch (e) { /* Silent */ }
+        
+        // Process pending sync
+        processSyncQueue();
+        
+        emitEvent('network:online', { connectionType: state.connectionType });
     }
     
     /**
-     * Unregister Service Worker
+     * Handle browser offline event
      */
-    async unregisterSW() {
-        if (!this._swRegistration) return false;
+    function handleOffline() {
+        log('log', 'Network: Offline');
+        state.online = false;
+        state.connectionQuality = 'offline';
         
-        try {
-            const success = await this._swRegistration.unregister();
-            
-            if (success) {
-                console.log('👷 Service Worker unregistered');
-                this._swRegistration = null;
-                this.state.serviceWorkerRegistered = false;
-            }
-            
-            return success;
-        } catch (error) {
-            console.error('❌ Failed to unregister Service Worker:', error);
-            return false;
-        }
-    }
-    
-    // ==========================================
-    // NETWORK MONITORING
-    // ==========================================
-    
-    /**
-     * Setup network monitoring
-     * @private
-     */
-    _setupNetworkMonitoring() {
-        // Online/Offline events
-        window.addEventListener('online', this._handleOnline);
-        window.addEventListener('offline', this._handleOffline);
-        
-        // Connection API
-        if ('connection' in navigator) {
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            
-            if (connection) {
-                connection.addEventListener('change', this._handleConnectionChange);
-                
-                // Initial connection type
-                this.state.connectionType = connection.effectiveType || 'unknown';
-                this._assessConnectionQuality(connection);
-            }
-        }
-        
-        // Initial state
-        this.state.online = navigator.onLine;
-        if (!navigator.onLine) {
-            this.state.connectionQuality = 'offline';
-        }
-        
-        console.log('📶 Network monitoring setup complete');
-    }
-    
-    /**
-     * Handle coming online
-     * @private
-     */
-    async _handleOnline() {
-        console.log('📶 Online');
-        
-        this.state.online = true;
-        this.state.lastOnlineTime = new Date().toISOString();
-        this.state.connectionQuality = 'good';
-        
-        // Process sync queue
-        await this.processSyncQueue();
-        
-        // Notify app
-        window.EventBus?.emit('network:online');
-        
-        if (window.App?.toast) {
-            window.App.toast('📶 Back online! Syncing data...', 'success');
-        }
-    }
-    
-    /**
-     * Handle going offline
-     * @private
-     */
-    _handleOffline() {
-        console.log('📶 Offline');
-        
-        this.state.online = false;
-        this.state.lastOfflineTime = new Date().toISOString();
-        this.state.connectionQuality = 'offline';
-        
-        // Notify app
-        window.EventBus?.emit('network:offline');
-        
-        if (window.App?.toast) {
-            window.App.toast('📶 You are offline. Changes will be saved locally.', 'warning');
-        }
+        emitEvent('network:offline', {});
     }
     
     /**
      * Handle connection type change
-     * @private
      */
-    _handleConnectionChange(event) {
-        const connection = event.target;
+    function handleConnectionChange() {
+        var connInfo = getConnectionInfo();
+        state.connectionType = connInfo.type;
+        state.connectionQuality = assessQuality(connInfo);
         
-        this.state.connectionType = connection.effectiveType || 'unknown';
-        this._assessConnectionQuality(connection);
-        
-        window.EventBus?.emit('network:connectionChange', {
-            type: this.state.connectionType,
-            quality: this.state.connectionQuality,
-            downlink: connection.downlink,
-            rtt: connection.rtt
+        log('log', 'Connection changed: ' + state.connectionType + ' (' + state.connectionQuality + ')');
+        emitEvent('network:connectionChange', {
+            type: state.connectionType,
+            quality: state.connectionQuality,
+            downlink: connInfo.downlink,
+            rtt: connInfo.rtt,
         });
-        
-        console.log('📶 Connection changed:', this.state.connectionType, this.state.connectionQuality);
     }
     
     /**
-     * Assess connection quality
-     * @private
+     * Setup network event listeners
      */
-    _assessConnectionQuality(connection) {
-        if (!connection || !navigator.onLine) {
-            this.state.connectionQuality = 'offline';
-            return;
+    function setupNetworkListeners() {
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+        
+        // Connection API
+        if (navigator.connection) {
+            navigator.connection.addEventListener('change', handleConnectionChange);
+            // Initial values
+            var connInfo = getConnectionInfo();
+            state.connectionType = connInfo.type;
+            state.connectionQuality = assessQuality(connInfo);
         }
         
-        const rtt = connection.rtt || 0;
-        const downlink = connection.downlink || 0;
-        
-        if (rtt < 100 && downlink > 5) {
-            this.state.connectionQuality = 'excellent';
-        } else if (rtt < 300 && downlink > 2) {
-            this.state.connectionQuality = 'good';
-        } else {
-            this.state.connectionQuality = 'slow';
-        }
+        log('log', 'Network listeners setup complete');
     }
-    
-    /**
-     * Ping server to check real connectivity
-     * @private
-     */
-    async _ping() {
-        if (!navigator.onLine) {
-            this.state.connectionQuality = 'offline';
-            return;
-        }
-        
-        const startTime = performance.now();
-        
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), this.config.network.offlineThreshold);
-            
-            const response = await fetch(this.config.network.pingURL, {
-                method: 'HEAD',
-                cache: 'no-store',
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            
-            const latency = performance.now() - startTime;
-            
-            if (latency > this.config.network.slowThreshold) {
-                this.state.connectionQuality = 'slow';
-            } else {
-                this.state.connectionQuality = 'good';
-            }
-            
-            return {
-                online: true,
-                latency: Math.round(latency),
-                quality: this.state.connectionQuality
-            };
-            
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                this.state.connectionQuality = 'offline';
-                this._handleOffline();
-            }
-            
-            return {
-                online: false,
-                latency: null,
-                quality: 'offline'
-            };
-        }
-    }
-    
-    /**
-     * Start periodic checks
-     * @private
-     */
-    _startPeriodicChecks() {
-        // Ping every 30 seconds
-        this._pingTimer = setInterval(this._ping, this.config.network.pingInterval);
-        
-        // Check storage every 5 minutes
-        setInterval(() => this._checkStorage(), 5 * 60 * 1000);
-    }
-    
-    // ==========================================
-    // SYNC QUEUE MANAGEMENT
-    // ==========================================
-    
-    /**
-     * Setup background sync
-     * @private
-     */
-    _setupBackgroundSync() {
-        if (!('serviceWorker' in navigator) || !('SyncManager' in window)) {
-            console.warn('⚠️ Background Sync not supported');
-            this.config.sync.enabled = false;
-            return;
-        }
-        
-        // Register for periodic sync if available
-        if ('periodicSync' in ServiceWorkerRegistration.prototype) {
-            this._registerPeriodicSync();
-        }
-        
-        console.log('🔄 Background sync setup complete');
-    }
-    
-    /**
-     * Register for periodic background sync
-     * @private
-     */
-    async _registerPeriodicSync() {
-        try {
-            const status = await navigator.permissions.query({
-                name: 'periodic-background-sync'
-            });
-            
-            if (status.state === 'granted' && this._swRegistration) {
-                await this._swRegistration.periodicSync.register('data-sync', {
-                    minInterval: 60 * 60 * 1000 // 1 hour
-                });
-                console.log('🔄 Periodic sync registered');
-            }
-        } catch (error) {
-            console.warn('⚠️ Periodic sync not available:', error.message);
-        }
-    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 6: SYNC QUEUE MANAGEMENT
+    // -------------------------------------------------------------------------
     
     /**
      * Add an operation to the sync queue
-     * @param {Object} operation - Operation to sync
-     * @returns {Promise<string>} Operation ID
+     * @param {Object} operation
+     * @param {string} operation.type - 'create' | 'update' | 'delete'
+     * @param {string} operation.collection - Firestore collection name
+     * @param {string} [operation.docId] - Document ID
+     * @param {Object} [operation.data] - Document data
+     * @param {string} [operation.priority='normal'] - Priority level
+     * @returns {string} Sync item ID
      */
-    async addToSyncQueue(operation) {
-        const {
-            type,          // 'create' | 'update' | 'delete'
-            collection,    // Firestore collection name
-            docId = null,  // Document ID (for update/delete)
-            data = null,   // Document data (for create/update)
-            priority = 'normal', // 'critical' | 'high' | 'normal' | 'low'
-            metadata = {}
-        } = operation;
-        
-        // Validate
-        if (!type || !collection) {
-            throw new Error('Sync operation requires type and collection');
+    function addToSyncQueue(operation) {
+        try {
+            if (!operation || !operation.type || !operation.collection) {
+                throw new Error('Sync operation requires type and collection');
+            }
+            
+            if (state.syncQueue.length >= config.maxQueueSize) {
+                throw new Error('Sync queue is full (' + config.maxQueueSize + ' items max)');
+            }
+            
+            var syncItem = {
+                id: generateSyncId(),
+                type: operation.type,
+                collection: operation.collection,
+                docId: operation.docId || null,
+                data: operation.data || null,
+                priority: config.priorityLevels.indexOf(operation.priority) !== -1 
+                    ? operation.priority : 'normal',
+                retryCount: 0,
+                maxRetries: operation.maxRetries || config.maxRetries,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                status: 'pending',
+                error: null,
+            };
+            
+            state.syncQueue.push(syncItem);
+            sortSyncQueue();
+            saveSyncQueue();
+            
+            log('log', 'Added to sync queue: ' + syncItem.id + ' (' + operation.type + ' ' + operation.collection + ')');
+            
+            // Try to process immediately if online
+            if (state.online && state.connectionQuality !== 'slow') {
+                processSyncQueue();
+            }
+            
+            // Register background sync if available
+            if (state.swRegistration && 'sync' in state.swRegistration) {
+                state.swRegistration.sync.register('sync-queue').catch(function() {});
+            }
+            
+            return syncItem.id;
+            
+        } catch (e) {
+            log('error', 'Failed to add to sync queue:', e);
+            throw e;
         }
-        
-        // Check queue size
-        if (this._syncQueue.length >= this.config.sync.maxQueueSize) {
-            throw new Error('Sync queue is full');
-        }
-        
-        // Create sync item
-        const syncItem = {
-            id: this._generateSyncId(),
-            type,
-            collection,
-            docId,
-            data,
-            priority: this.config.sync.priorityLevels.includes(priority) ? priority : 'normal',
-            retryCount: 0,
-            maxRetries: this.config.sync.maxRetries,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            status: 'pending', // 'pending' | 'processing' | 'completed' | 'failed'
-            error: null,
-            metadata
-        };
-        
-        // Add to queue
-        this._syncQueue.push(syncItem);
-        
-        // Sort by priority
-        this._sortSyncQueue();
-        
-        // Save queue
-        await this._saveSyncQueue();
-        
-        // Try to process immediately if online
-        if (this.state.online && this.state.connectionQuality !== 'slow') {
-            this.processSyncQueue();
-        }
-        
-        // Register background sync
-        if (this._swRegistration && 'sync' in this._swRegistration) {
-            try {
-                await this._swRegistration.sync.register('sync-queue');
-            } catch {}
-        }
-        
-        console.log('🔄 Added to sync queue:', syncItem.id, type, collection);
-        
-        return syncItem.id;
     }
     
     /**
      * Process the sync queue
+     * @returns {Promise<Object>} { successCount, failCount }
      */
-    async processSyncQueue() {
-        if (this.state.syncInProgress) {
-            console.log('🔄 Sync already in progress');
-            return;
+    async function processSyncQueue() {
+        if (state.syncInProgress) {
+            log('log', 'Sync already in progress');
+            return { successCount: 0, failCount: 0 };
         }
         
-        if (!this.state.online) {
-            console.log('🔄 Cannot sync - offline');
-            return;
+        if (!state.online) {
+            log('log', 'Cannot sync - offline');
+            return { successCount: 0, failCount: 0 };
         }
         
-        if (this._syncQueue.length === 0) {
-            return;
-        }
-        
-        this.state.syncInProgress = true;
-        
-        console.log(`🔄 Processing sync queue: ${this._syncQueue.length} items`);
-        
-        window.EventBus?.emit('offline:syncStarted', {
-            queueSize: this._syncQueue.length
+        var pendingItems = state.syncQueue.filter(function(item) {
+            return item.status === 'pending' || item.status === 'failed';
         });
         
-        let successCount = 0;
-        let failCount = 0;
+        if (pendingItems.length === 0) return { successCount: 0, failCount: 0 };
         
-        // Process in batches
-        const pendingItems = this._syncQueue.filter(item => 
-            item.status === 'pending' || item.status === 'failed'
-        );
+        state.syncInProgress = true;
+        log('log', 'Processing sync queue: ' + pendingItems.length + ' items');
+        emitEvent('offline:syncStarted', { queueSize: pendingItems.length });
         
-        for (let i = 0; i < pendingItems.length; i += this.config.sync.batchSize) {
-            const batch = pendingItems.slice(i, i + this.config.sync.batchSize);
+        var successCount = 0;
+        var failCount = 0;
+        
+        // Process items sequentially to avoid overwhelming Firebase
+        for (var i = 0; i < pendingItems.length; i++) {
+            var item = pendingItems[i];
             
-            const results = await Promise.allSettled(
-                batch.map(item => this._processSyncItem(item))
-            );
-            
-            results.forEach((result, index) => {
-                if (result.status === 'fulfilled' && result.value) {
-                    successCount++;
-                } else {
-                    failCount++;
-                }
-            });
+            try {
+                var result = await processSyncItem(item);
+                if (result) successCount++;
+                else failCount++;
+            } catch (e) {
+                failCount++;
+            }
         }
         
-        // Clean up completed items
-        this._syncQueue = this._syncQueue.filter(item => 
-            item.status !== 'completed'
-        );
-        
-        // Save updated queue
-        await this._saveSyncQueue();
-        
-        this.state.syncInProgress = false;
-        this.state.lastSyncTime = new Date().toISOString();
-        
-        console.log(`🔄 Sync complete: ${successCount} success, ${failCount} failed`);
-        
-        window.EventBus?.emit('offline:syncCompleted', {
-            successCount,
-            failCount,
-            remainingQueue: this._syncQueue.length
+        // Clean completed items
+        state.syncQueue = state.syncQueue.filter(function(item) {
+            return item.status !== 'completed';
         });
         
-        if (successCount > 0 && window.App?.toast) {
-            window.App.toast(`🔄 Synced ${successCount} items successfully!`, 'success');
-        }
+        saveSyncQueue();
+        
+        state.syncInProgress = false;
+        state.lastSyncTime = new Date().toISOString();
+        
+        log('log', 'Sync complete: ' + successCount + ' success, ' + failCount + ' failed');
+        emitEvent('offline:syncCompleted', {
+            successCount: successCount,
+            failCount: failCount,
+            remainingQueue: state.syncQueue.length,
+        });
+        
+        return { successCount: successCount, failCount: failCount };
     }
     
     /**
      * Process a single sync item
-     * @private
+     * @param {Object} item - Sync item
+     * @returns {Promise<boolean>} True if successful
      */
-    async _processSyncItem(item) {
+    async function processSyncItem(item) {
         try {
             item.status = 'processing';
             item.updatedAt = Date.now();
             
-            let result;
+            var result;
             
-            switch (item.type) {
-                case 'create':
-                    result = await window.API.createDocument(item.collection, item.data);
-                    break;
-                    
-                case 'update':
-                    result = await window.API.updateDocument(item.collection, item.docId, item.data);
-                    break;
-                    
-                case 'delete':
-                    result = await window.API.deleteDocument(item.collection, item.docId);
-                    break;
-                    
-                default:
-                    throw new Error(`Unknown sync type: ${item.type}`);
+            if (window.FirebaseService) {
+                switch (item.type) {
+                    case 'create':
+                        result = await window.FirebaseService.createDocument(
+                            item.collection, item.data, item.docId
+                        );
+                        break;
+                    case 'update':
+                        result = await window.FirebaseService.updateDocument(
+                            item.collection, item.docId, item.data
+                        );
+                        break;
+                    case 'delete':
+                        result = await window.FirebaseService.deleteDocument(
+                            item.collection, item.docId
+                        );
+                        break;
+                    default:
+                        throw new Error('Unknown sync type: ' + item.type);
+                }
+            } else if (typeof firebase !== 'undefined' && firebase.firestore) {
+                var db = firebase.firestore();
+                switch (item.type) {
+                    case 'create':
+                        if (item.docId) {
+                            await db.collection(item.collection).doc(item.docId).set(item.data);
+                        } else {
+                            await db.collection(item.collection).add(item.data);
+                        }
+                        break;
+                    case 'update':
+                        await db.collection(item.collection).doc(item.docId).update(item.data);
+                        break;
+                    case 'delete':
+                        await db.collection(item.collection).doc(item.docId).delete();
+                        break;
+                }
+            } else {
+                throw new Error('No Firebase service available');
             }
             
             item.status = 'completed';
             item.completedAt = Date.now();
-            
             return true;
             
         } catch (error) {
@@ -745,10 +588,10 @@ class OfflineManager {
             
             if (item.retryCount >= item.maxRetries) {
                 item.status = 'failed';
-                console.error('❌ Sync item failed permanently:', item.id, error.message);
+                log('error', 'Sync item failed permanently: ' + item.id, error);
             } else {
                 item.status = 'pending';
-                console.warn('⚠️ Sync item failed, will retry:', item.id, `(${item.retryCount}/${item.maxRetries})`);
+                log('warn', 'Sync item will retry: ' + item.id + ' (' + item.retryCount + '/' + item.maxRetries + ')');
             }
             
             return false;
@@ -758,349 +601,57 @@ class OfflineManager {
     /**
      * Retry all failed sync items
      */
-    async retryFailedSync() {
-        const failedItems = this._syncQueue.filter(item => item.status === 'failed');
-        
-        failedItems.forEach(item => {
-            item.status = 'pending';
-            item.retryCount = 0;
-            item.error = null;
-        });
-        
-        await this._saveSyncQueue();
-        await this.processSyncQueue();
-    }
-    
-    /**
-     * Clear the sync queue
-     */
-    async clearSyncQueue() {
-        this._syncQueue = [];
-        await this._saveSyncQueue();
-        console.log('🔄 Sync queue cleared');
-    }
-    
-    /**
-     * Sort sync queue by priority
-     * @private
-     */
-    _sortSyncQueue() {
-        const priorityOrder = {
-            critical: 0,
-            high: 1,
-            normal: 2,
-            low: 3
-        };
-        
-        this._syncQueue.sort((a, b) => {
-            const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
-            if (priorityDiff !== 0) return priorityDiff;
-            return a.createdAt - b.createdAt; // Older first
-        });
-    }
-    
-    /**
-     * Save sync queue to storage
-     * @private
-     */
-    async _saveSyncQueue() {
-        try {
-            const serializable = this._syncQueue.map(item => ({
-                ...item,
-                // Remove functions if any
-                resolve: undefined,
-                reject: undefined
-            }));
-            
-            localStorage.setItem('11avatar_sync_queue', JSON.stringify(serializable));
-        } catch (error) {
-            console.warn('⚠️ Failed to save sync queue:', error.message);
-        }
-    }
-    
-    /**
-     * Load sync queue from storage
-     * @private
-     */
-    async _loadSyncQueue() {
-        try {
-            const saved = localStorage.getItem('11avatar_sync_queue');
-            
-            if (saved) {
-                this._syncQueue = JSON.parse(saved);
-                console.log(`🔄 Loaded ${this._syncQueue.length} sync items from storage`);
+    function retryFailedSync() {
+        state.syncQueue.forEach(function(item) {
+            if (item.status === 'failed') {
+                item.status = 'pending';
+                item.retryCount = 0;
+                item.error = null;
             }
-        } catch (error) {
-            console.warn('⚠️ Failed to load sync queue:', error.message);
-            this._syncQueue = [];
-        }
-    }
-    
-    /**
-     * Generate unique sync ID
-     * @private
-     */
-    _generateSyncId() {
-        return 'sync_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
-    }
-    
-    // ==========================================
-    // CONFLICT RESOLUTION
-    // ==========================================
-    
-    /**
-     * Resolve conflict between local and server data
-     * @param {Object} localData - Local version of the data
-     * @param {Object} serverData - Server version of the data
-     * @param {string} strategy - Resolution strategy
-     * @returns {Object} Resolved data
-     */
-    resolveConflict(localData, serverData, strategy = 'last-write-wins') {
-        switch (strategy) {
-            case 'last-write-wins':
-                return this._resolveLastWriteWins(localData, serverData);
-                
-            case 'server-wins':
-                return serverData;
-                
-            case 'client-wins':
-                return localData;
-                
-            case 'merge':
-                return this._resolveMerge(localData, serverData);
-                
-            case 'manual':
-                // Emit event for manual resolution
-                window.EventBus?.emit('offline:conflictDetected', {
-                    localData,
-                    serverData
-                });
-                return null; // Caller must handle
-                
-            default:
-                return this._resolveLastWriteWins(localData, serverData);
-        }
-    }
-    
-    /**
-     * Last-write-wins strategy
-     * @private
-     */
-    _resolveLastWriteWins(localData, serverData) {
-        const localTime = localData.updatedAt || localData.createdAt || 0;
-        const serverTime = serverData.updatedAt || serverData.createdAt || 0;
-        
-        return localTime > serverTime ? localData : serverData;
-    }
-    
-    /**
-     * Merge strategy (shallow merge)
-     * @private
-     */
-    _resolveMerge(localData, serverData) {
-        return {
-            ...serverData,
-            ...localData,
-            // Preserve server critical fields
-            id: serverData.id,
-            createdAt: serverData.createdAt,
-            createdBy: serverData.createdBy,
-            updatedAt: new Date().toISOString(),
-            _merged: true,
-            _mergeTime: new Date().toISOString()
-        };
-    }
-    
-    // ==========================================
-    // STORAGE MANAGEMENT
-    // ==========================================
-    
-    /**
-     * Check storage usage
-     * @private
-     */
-    async _checkStorage() {
-        try {
-            if ('storage' in navigator && 'estimate' in navigator.storage) {
-                const estimate = await navigator.storage.estimate();
-                
-                this.state.storageUsage = estimate.usage || 0;
-                this.state.storageQuota = estimate.quota || 0;
-                
-                const usageRatio = this.state.storageQuota > 0 
-                    ? this.state.storageUsage / this.state.storageQuota 
-                    : 0;
-                
-                // Check thresholds
-                if (usageRatio >= this.config.storage.criticalThreshold) {
-                    this.state.storageCritical = true;
-                    this.state.storageWarning = true;
-                    this._handleStorageCritical();
-                } else if (usageRatio >= this.config.storage.warningThreshold) {
-                    this.state.storageWarning = true;
-                    this.state.storageCritical = false;
-                    this._handleStorageWarning();
-                } else {
-                    this.state.storageWarning = false;
-                    this.state.storageCritical = false;
-                }
-                
-                // Cleanup if needed
-                if (usageRatio >= this.config.storage.cleanupThreshold) {
-                    await this._cleanupStorage();
-                }
-            }
-        } catch (error) {
-            console.warn('⚠️ Storage check failed:', error.message);
-        }
-    }
-    
-    /**
-     * Handle storage warning
-     * @private
-     */
-    _handleStorageWarning() {
-        window.EventBus?.emit('offline:storageWarning', {
-            usage: this._formatBytes(this.state.storageUsage),
-            quota: this._formatBytes(this.state.storageQuota),
-            percentage: this._getStoragePercentage()
         });
-        
-        console.warn('⚠️ Storage warning:', this._getStoragePercentage());
+        saveSyncQueue();
+        processSyncQueue();
     }
     
     /**
-     * Handle storage critical
-     * @private
+     * Clear the entire sync queue
      */
-    _handleStorageCritical() {
-        window.EventBus?.emit('offline:storageCritical', {
-            usage: this._formatBytes(this.state.storageUsage),
-            quota: this._formatBytes(this.state.storageQuota),
-            percentage: this._getStoragePercentage()
-        });
-        
-        if (window.App?.toast) {
-            window.App.toast('⚠️ Storage is almost full! Please clear some data.', 'warning', 10000);
-        }
-        
-        console.error('⚠️ Storage critical:', this._getStoragePercentage());
+    function clearSyncQueue() {
+        state.syncQueue = [];
+        saveSyncQueue();
+        log('log', 'Sync queue cleared');
     }
-    
-    /**
-     * Cleanup storage
-     * @private
-     */
-    async _cleanupStorage() {
-        console.log('🧹 Cleaning up storage...');
-        
-        // Clear old cache entries
-        if (window.cache) {
-            await window.cache.clear();
-        }
-        
-        // Clear old sync queue items (completed ones)
-        this._syncQueue = this._syncQueue.filter(item => item.status !== 'completed');
-        await this._saveSyncQueue();
-        
-        // Clear old history
-        if (window.StateManager) {
-            const history = window.StateManager.get('data.history') || [];
-            if (history.length > 100) {
-                window.StateManager.set('data.history', history.slice(-50));
-            }
-        }
-        
-        console.log('🧹 Storage cleanup complete');
-    }
-    
-    /**
-     * Get storage usage percentage
-     * @private
-     */
-    _getStoragePercentage() {
-        if (this.state.storageQuota === 0) return '0%';
-        return ((this.state.storageUsage / this.state.storageQuota) * 100).toFixed(1) + '%';
-    }
-    
-    /**
-     * Format bytes to human readable
-     * @private
-     */
-    _formatBytes(bytes) {
-        if (bytes === 0) return '0 B';
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-        if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-        return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
-    }
-    
-    // ==========================================
-    // STATE MANAGEMENT
-    // ==========================================
-    
-    /**
-     * Save offline manager state
-     * @private
-     */
-    _saveState() {
-        try {
-            const state = {
-                lastSyncTime: this.state.lastSyncTime,
-                lastOnlineTime: this.state.lastOnlineTime,
-                lastOfflineTime: this.state.lastOfflineTime
-            };
-            
-            localStorage.setItem('11avatar_offline_state', JSON.stringify(state));
-        } catch {}
-    }
-    
-    /**
-     * Restore offline manager state
-     * @private
-     */
-    _restoreState() {
-        try {
-            const saved = localStorage.getItem('11avatar_offline_state');
-            
-            if (saved) {
-                const state = JSON.parse(saved);
-                Object.assign(this.state, state);
-            }
-        } catch {}
-    }
-    
-    // ==========================================
-    // PUBLIC API
-    // ==========================================
+
+    // -------------------------------------------------------------------------
+    // SECTION 7: PUBLIC API
+    // -------------------------------------------------------------------------
     
     /**
      * Check if currently online
      * @returns {boolean}
      */
-    isOnline() {
-        return this.state.online;
+    function isOnline() {
+        return state.online;
     }
     
     /**
      * Check if offline
      * @returns {boolean}
      */
-    isOffline() {
-        return !this.state.online;
+    function isOffline() {
+        return !state.online;
     }
     
     /**
-     * Get current network status
+     * Get network status
      * @returns {Object}
      */
-    getNetworkStatus() {
+    function getNetworkStatus() {
         return {
-            online: this.state.online,
-            connectionType: this.state.connectionType,
-            connectionQuality: this.state.connectionQuality,
-            lastOnlineTime: this.state.lastOnlineTime,
-            lastOfflineTime: this.state.lastOfflineTime
+            online: state.online,
+            connectionType: state.connectionType,
+            connectionQuality: state.connectionQuality,
+            lastOnlineTime: state.lastOnlineTime,
         };
     }
     
@@ -1108,34 +659,26 @@ class OfflineManager {
      * Get sync queue status
      * @returns {Object}
      */
-    getSyncStatus() {
-        const pending = this._syncQueue.filter(i => i.status === 'pending').length;
-        const processing = this._syncQueue.filter(i => i.status === 'processing').length;
-        const failed = this._syncQueue.filter(i => i.status === 'failed').length;
-        const completed = this._syncQueue.filter(i => i.status === 'completed').length;
+    function getSyncStatus() {
+        var pending = 0, processing = 0, failed = 0, completed = 0;
+        
+        state.syncQueue.forEach(function(item) {
+            switch (item.status) {
+                case 'pending': pending++; break;
+                case 'processing': processing++; break;
+                case 'failed': failed++; break;
+                case 'completed': completed++; break;
+            }
+        });
         
         return {
-            total: this._syncQueue.length,
-            pending,
-            processing,
-            failed,
-            completed,
-            syncInProgress: this.state.syncInProgress,
-            lastSyncTime: this.state.lastSyncTime
-        };
-    }
-    
-    /**
-     * Get storage status
-     * @returns {Object}
-     */
-    getStorageStatus() {
-        return {
-            usage: this._formatBytes(this.state.storageUsage),
-            quota: this._formatBytes(this.state.storageQuota),
-            percentage: this._getStoragePercentage(),
-            warning: this.state.storageWarning,
-            critical: this.state.storageCritical
+            total: state.syncQueue.length,
+            pending: pending,
+            processing: processing,
+            failed: failed,
+            completed: completed,
+            syncInProgress: state.syncInProgress,
+            lastSyncTime: state.lastSyncTime,
         };
     }
     
@@ -1143,78 +686,158 @@ class OfflineManager {
      * Get complete status
      * @returns {Object}
      */
-    getStatus() {
+    function getStatus() {
         return {
-            network: this.getNetworkStatus(),
-            sync: this.getSyncStatus(),
-            storage: this.getStorageStatus(),
+            network: getNetworkStatus(),
+            sync: getSyncStatus(),
             serviceWorker: {
-                registered: this.state.serviceWorkerRegistered,
-                version: this.state.serviceWorkerVersion
-            }
+                registered: state.serviceWorkerRegistered,
+                version: state.serviceWorkerVersion,
+            },
         };
     }
     
     /**
-     * Force sync now
+     * Force immediate sync
      */
-    async forceSync() {
-        console.log('🔄 Force sync requested');
-        await this.processSyncQueue();
+    function forceSync() {
+        return processSyncQueue();
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 8: INITIALIZATION & DESTROY
+    // -------------------------------------------------------------------------
     
     /**
-     * Debug: Print offline manager state
+     * Initialize the offline manager
+     * @returns {Promise<boolean>}
      */
-    debug() {
-        console.group('📡 Offline Manager Debug');
-        console.log('Status:', this.getStatus());
-        console.log('Sync Queue:', this._syncQueue);
-        console.log('Config:', this.config);
-        console.groupEnd();
-    }
-    
-    /**
-     * Destroy the offline manager
-     */
-    destroy() {
-        window.removeEventListener('online', this._handleOnline);
-        window.removeEventListener('offline', this._handleOffline);
-        
-        if ('connection' in navigator) {
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            if (connection) {
-                connection.removeEventListener('change', this._handleConnectionChange);
+    async function init() {
+        try {
+            if (state.isInitialized) return true;
+            
+            log('log', 'Initializing OfflineManager v3.0.0...');
+            
+            // Load saved sync queue
+            loadSyncQueue();
+            
+            // Setup network monitoring
+            setupNetworkListeners();
+            
+            // Register service worker
+            if (config.serviceWorkerEnabled) {
+                await registerServiceWorker();
             }
+            
+            // Initial state
+            state.online = navigator.onLine;
+            if (!navigator.onLine) {
+                state.connectionQuality = 'offline';
+            }
+            
+            state.isInitialized = true;
+            
+            log('log', 'OfflineManager initialized. Online: ' + state.online);
+            emitEvent('offline:ready', getStatus());
+            
+            return true;
+        } catch (e) {
+            log('error', 'OfflineManager init failed:', e);
+            state.isInitialized = true; // Mark ready anyway
+            return false;
         }
+    }
+    
+    /**
+     * Destroy and cleanup
+     */
+    function destroy() {
+        try {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+            
+            if (navigator.connection) {
+                navigator.connection.removeEventListener('change', handleConnectionChange);
+            }
+            
+            if (state.pingTimer) {
+                clearInterval(state.pingTimer);
+                state.pingTimer = null;
+            }
+            
+            saveSyncQueue();
+            state.isInitialized = false;
+            
+            log('log', 'OfflineManager destroyed');
+        } catch (e) { /* Silent */ }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 9: PUBLIC API
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Public API */
+    const publicAPI = Object.freeze({
+        // Initialization
+        init: init,
+        destroy: destroy,
+        get isInitialized() { return state.isInitialized; },
         
-        if (this._pingTimer) clearInterval(this._pingTimer);
-        if (this._swUpdateTimer) clearInterval(this._swUpdateTimer);
+        // Network
+        isOnline: isOnline,
+        isOffline: isOffline,
+        getNetworkStatus: getNetworkStatus,
         
-        this._saveState();
-        this._saveSyncQueue();
+        // Sync queue
+        addToSyncQueue: addToSyncQueue,
+        processSyncQueue: processSyncQueue,
+        retryFailedSync: retryFailedSync,
+        clearSyncQueue: clearSyncQueue,
+        getSyncStatus: getSyncStatus,
+        forceSync: forceSync,
         
-        console.log('📡 Offline Manager destroyed');
+        // Status
+        getStatus: getStatus,
+        
+        // Service worker
+        get swRegistration() { return state.swRegistration; },
+        get serviceWorkerRegistered() { return state.serviceWorkerRegistered; },
+    });
+    
+    return publicAPI;
+    
+})(); // End of OfflineManager IIFE
+
+// =============================================================================
+// AUTO-INITIALIZATION
+// =============================================================================
+
+if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            OfflineManager.init();
+        });
+    } else {
+        OfflineManager.init();
     }
 }
 
-// ==========================================
-// CREATE & EXPORT OFFLINE MANAGER INSTANCE
-// ==========================================
-const offlineManager = new OfflineManager();
+// =============================================================================
+// EXPORTS
+// =============================================================================
 
-// Make available globally
-window.OfflineManager = offlineManager;
-window.offline = offlineManager; // Convenience alias
+if (typeof window !== 'undefined') {
+    window.OfflineManager = OfflineManager;
+    window.offline = OfflineManager;
+    window.Global = window.Global || {};
+    window.Global.OfflineManager = OfflineManager;
+}
 
-// Export for module usage
-export default offlineManager;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = OfflineManager;
+}
 
-console.log('📡 Offline Manager ready');
-console.log('📡 Status:', offlineManager.getNetworkStatus());
-
-// ==========================================
-// END OF OFFLINE MANAGER
-// ==========================================
-
-
+export {
+    OfflineManager as default,
+    OfflineManager,
+};

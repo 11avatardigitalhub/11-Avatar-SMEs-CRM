@@ -1,342 +1,462 @@
-/* ==========================================
-   11 AVATAR DIGITAL HUB
-   Cache Manager - Multi-Layer Caching System
-   Version: 2.0 Enterprise
-   ==========================================
-   Purpose:
-   - Multi-layer caching (Memory, IndexedDB, localStorage)
-   - Intelligent cache invalidation
-   - Time-To-Live (TTL) management
-   - Least Recently Used (LRU) eviction
-   - Cache warming & preloading
-   - Cache statistics & monitoring
-   - Offline data availability
-   - Automatic cache cleanup
-   - Quota management
-   - Compression for large objects
-   ==========================================
-   Architecture:
-   
-   CacheManager
-   ├── L1: Memory Cache (Fastest, Limited Size)
-   ├── L2: IndexedDB Cache (Large, Persistent)
-   └── L3: localStorage Cache (Small, Simple)
-   
-   Cache Strategy:
-   - Write-through: Write to all layers
-   - Read-through: Check L1 → L2 → L3 → Fetch
-   - LRU Eviction: Remove least recently used
-   - TTL: Auto-expire after configured time
-   ========================================== */
+/**
+ * @fileoverview 11 Avatar SMEs CRM - Client-Side Cache Manager
+ * @description Lightweight multi-layer caching system (Memory + localStorage)
+ *              with TTL expiration, LRU eviction, and tag-based invalidation.
+ *              Designed for GitHub Pages static deployment with Firebase backend.
+ * @module core/cache
+ * @version 3.0.0
+ * @author 11 Avatar Digital Hub
+ * @license Proprietary - All Rights Reserved
+ * @copyright 2024-2026 11 Avatar Digital Hub
+ *
+ * @requires AppCore (window.AppCore) - optional, for event system
+ *
+ * @exports window.CacheManager - Global namespace
+ * @exports window.cache - Convenience alias
+ */
 
-// ==========================================
-// CACHE MANAGER CLASS
-// ==========================================
-class CacheManager {
+'use strict';
+
+// =============================================================================
+// CACHE MANAGER - Self-executing IIFE
+// =============================================================================
+const CacheManager = (function() {
+
+    // -------------------------------------------------------------------------
+    // SECTION 1: CONFIGURATION
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Default configuration */
+    const config = {
+        /** @type {number} Max entries in memory cache */
+        maxMemoryEntries: 100,
+        
+        /** @type {number} Default TTL in ms (5 minutes) */
+        defaultTTL: 5 * 60 * 1000,
+        
+        /** @type {number} Max localStorage entries */
+        maxStorageEntries: 200,
+        
+        /** @type {number} localStorage key prefix */
+        storagePrefix: '11avatar_cache_',
+        
+        /** @type {number} Cleanup interval in ms (10 minutes) */
+        cleanupInterval: 10 * 60 * 1000,
+        
+        /** @type {boolean} Whether to enable localStorage cache */
+        storageEnabled: true,
+    };
+
+    // -------------------------------------------------------------------------
+    // SECTION 2: STATE
+    // -------------------------------------------------------------------------
+    
+    /** @type {Map} Memory cache (L1) - key → { data, metadata } */
+    const memoryCache = new Map();
+    
+    /** @type {Array<string>} Access order for LRU eviction */
+    const accessOrder = [];
+    
+    /** @type {Object} Cache statistics */
+    const stats = {
+        hits: 0,
+        misses: 0,
+        sets: 0,
+        evictions: 0,
+        expirations: 0,
+        lastCleanup: null,
+    };
+    
+    /** @type {number|null} Cleanup timer interval ID */
+    let cleanupTimer = null;
+    
+    /** @type {boolean} Whether manager is initialized */
+    let isInitialized = false;
+
+    // -------------------------------------------------------------------------
+    // SECTION 3: UTILITY FUNCTIONS
+    // -------------------------------------------------------------------------
     
     /**
-     * Initialize the Cache Manager
+     * Log message with module prefix
+     * @param {string} level
+     * @param {string} message
+     * @param {*} [data]
      */
-    constructor() {
-        // Configuration
-        this.config = {
-            // Memory Cache (L1)
-            memory: {
-                enabled: true,
-                maxSize: 100,           // Maximum entries
-                maxItemSize: 500 * 1024, // 500KB per item max
-                defaultTTL: 5 * 60 * 1000 // 5 minutes
-            },
+    function log(level, message, data) {
+        try {
+            var isDebug = window.Constants && 
+                         window.Constants.APP && 
+                         window.Constants.APP.DEBUG;
+            if (!isDebug && level === 'log') return;
             
-            // IndexedDB Cache (L2)
-            indexedDB: {
-                enabled: true,
-                dbName: '11AvatarCache',
-                dbVersion: 1,
-                storeName: 'cacheStore',
-                maxSize: 50 * 1024 * 1024, // 50MB
-                defaultTTL: 30 * 60 * 1000  // 30 minutes
-            },
-            
-            // localStorage Cache (L3)
-            localStorage: {
-                enabled: true,
-                maxSize: 5 * 1024 * 1024,  // 5MB
-                defaultTTL: 60 * 60 * 1000  // 1 hour
-            },
-            
-            // Global settings
-            compression: true,
-            compressionThreshold: 10 * 1024, // 10KB
-            cleanupInterval: 5 * 60 * 1000,  // 5 minutes
-            statsEnabled: true
-        };
-        
-        // Memory cache storage
-        this._memoryCache = new Map();
-        this._memoryAccessOrder = [];
-        
-        // IndexedDB reference
-        this._db = null;
-        this._dbReady = false;
-        this._dbPromise = null;
-        
-        // Statistics
-        this._stats = {
-            hits: { memory: 0, indexedDB: 0, localStorage: 0 },
-            misses: { memory: 0, indexedDB: 0, localStorage: 0 },
-            sets: { memory: 0, indexedDB: 0, localStorage: 0 },
-            evictions: 0,
-            expirations: 0,
-            totalSize: 0,
-            lastCleanup: null
-        };
-        
-        // Cleanup timer
-        this._cleanupTimer = null;
-        
-        // Bind methods
-        this._cleanup = this._cleanup.bind(this);
-        
-        // Initialize
-        this._init();
+            var prefix = '[CacheManager]';
+            switch (level) {
+                case 'error': console.error(prefix, message, data || ''); break;
+                case 'warn': console.warn(prefix, message, data || ''); break;
+                default: console.log(prefix, message, data || ''); break;
+            }
+        } catch (e) { /* Silent */ }
     }
     
     /**
-     * Initialize the cache manager
-     * @private
+     * Check if cache entry is expired
+     * @param {Object} metadata
+     * @returns {boolean}
      */
-    async _init() {
-        console.log('💾 Initializing Cache Manager...');
+    function isExpired(metadata) {
+        if (!metadata || !metadata.expiresAt) return false;
+        return Date.now() > metadata.expiresAt;
+    }
+    
+    /**
+     * Get storage key with prefix
+     * @param {string} key
+     * @returns {string}
+     */
+    function storageKey(key) {
+        return config.storagePrefix + key;
+    }
+    
+    /**
+     * Update LRU access order
+     * @param {string} key
+     */
+    function updateAccessOrder(key) {
+        // Remove if exists
+        var index = accessOrder.indexOf(key);
+        if (index > -1) {
+            accessOrder.splice(index, 1);
+        }
+        // Add to end (most recently used)
+        accessOrder.push(key);
+    }
+    
+    /**
+     * Remove key from access order
+     * @param {string} key
+     */
+    function removeFromAccessOrder(key) {
+        var index = accessOrder.indexOf(key);
+        if (index > -1) {
+            accessOrder.splice(index, 1);
+        }
+    }
+    
+    /**
+     * Evict least recently used entry from memory
+     */
+    function evictLRU() {
+        if (accessOrder.length === 0) return;
         
-        // Initialize IndexedDB
-        if (this.config.indexedDB.enabled) {
-            try {
-                await this._initIndexedDB();
-                console.log('💾 IndexedDB cache initialized');
-            } catch (error) {
-                console.warn('⚠️ IndexedDB cache unavailable:', error.message);
-                this.config.indexedDB.enabled = false;
-            }
+        var lruKey = accessOrder.shift();
+        memoryCache.delete(lruKey);
+        stats.evictions++;
+        
+        log('log', 'LRU evicted: ' + lruKey);
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 4: MEMORY CACHE (L1)
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Get from memory cache
+     * @param {string} key
+     * @returns {*|undefined} Cached data or undefined
+     */
+    function getFromMemory(key) {
+        var entry = memoryCache.get(key);
+        if (!entry) {
+            stats.misses++;
+            return undefined;
         }
         
-        // Start cleanup timer
-        this._cleanupTimer = setInterval(this._cleanup, this.config.cleanupInterval);
+        // Check expiration
+        if (isExpired(entry.metadata)) {
+            memoryCache.delete(key);
+            removeFromAccessOrder(key);
+            stats.expirations++;
+            stats.misses++;
+            return undefined;
+        }
         
-        // Load persisted stats
-        this._loadStats();
+        // Update access
+        updateAccessOrder(key);
+        entry.metadata.accessCount = (entry.metadata.accessCount || 0) + 1;
+        entry.metadata.lastAccessed = Date.now();
         
-        console.log('✅ Cache Manager initialized');
-        console.log('💾 Cache layers:', this._getActiveLayers().join(', '));
+        stats.hits++;
+        return entry.data;
     }
     
     /**
-     * Initialize IndexedDB database
-     * @private
+     * Set to memory cache
+     * @param {string} key
+     * @param {*} data
+     * @param {Object} metadata
+     * @returns {boolean} True if stored
      */
-    async _initIndexedDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(
-                this.config.indexedDB.dbName,
-                this.config.indexedDB.dbVersion
-            );
-            
-            request.onerror = () => {
-                reject(new Error('Failed to open IndexedDB'));
-            };
-            
-            request.onsuccess = (event) => {
-                this._db = event.target.result;
-                this._dbReady = true;
-                resolve();
-            };
-            
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                
-                // Create cache store if not exists
-                if (!db.objectStoreNames.contains(this.config.indexedDB.storeName)) {
-                    const store = db.createObjectStore(
-                        this.config.indexedDB.storeName,
-                        { keyPath: 'key' }
-                    );
-                    
-                    // Create indexes
-                    store.createIndex('timestamp', 'timestamp', { unique: false });
-                    store.createIndex('ttl', 'ttl', { unique: false });
-                    store.createIndex('size', 'size', { unique: false });
-                    store.createIndex('accessCount', 'accessCount', { unique: false });
-                    
-                    console.log('💾 IndexedDB store created');
-                }
-            };
+    function setToMemory(key, data, metadata) {
+        // Enforce max entries
+        while (memoryCache.size >= config.maxMemoryEntries) {
+            evictLRU();
+        }
+        
+        memoryCache.set(key, {
+            data: data,
+            metadata: Object.assign({}, metadata, {
+                stored: Date.now(),
+                size: estimateSize(data),
+            }),
         });
+        
+        updateAccessOrder(key);
+        stats.sets++;
+        
+        return true;
     }
     
     /**
-     * Get list of active cache layers
-     * @private
+     * Delete from memory cache
+     * @param {string} key
      */
-    _getActiveLayers() {
-        const layers = [];
-        
-        if (this.config.memory.enabled) layers.push('L1:Memory');
-        if (this.config.indexedDB.enabled && this._dbReady) layers.push('L2:IndexedDB');
-        if (this.config.localStorage.enabled) layers.push('L3:localStorage');
-        
-        return layers;
+    function deleteFromMemory(key) {
+        memoryCache.delete(key);
+        removeFromAccessOrder(key);
     }
-    
-    // ==========================================
-    // CORE CACHE OPERATIONS
-    // ==========================================
+
+    // -------------------------------------------------------------------------
+    // SECTION 5: LOCALSTORAGE CACHE (L2)
+    // -------------------------------------------------------------------------
     
     /**
-     * Get a value from cache
-     * @param {string} key - Cache key
-     * @param {Object} options - Get options
-     * @returns {Promise<*>} Cached value or null
-     * 
-     * @example
-     * const data = await cache.get('leads:list', { ttl: 60000 })
-     * if (data) {
-     *     // Use cached data
-     * } else {
-     *     // Fetch from API
-     *     const freshData = await api.getDocuments('leads')
-     *     await cache.set('leads:list', freshData, { ttl: 60000 })
-     * }
+     * Get from localStorage
+     * @param {string} key
+     * @returns {*|null} Cached data or null
      */
-    async get(key, options = {}) {
-        const {
-            layer = null,      // Force specific layer: 'memory' | 'indexedDB' | 'localStorage'
-            defaultValue = null,
-            updateAccessTime = true
-        } = options;
+    function getFromStorage(key) {
+        if (!config.storageEnabled) return null;
         
-        if (!key) {
-            console.warn('⚠️ Cache.get: key is required');
-            return defaultValue;
-        }
-        
-        // Try memory cache first
-        if (!layer || layer === 'memory') {
-            const result = this._getFromMemory(key, updateAccessTime);
-            if (result !== undefined) {
-                this._stats.hits.memory++;
-                return result;
+        try {
+            var raw = localStorage.getItem(storageKey(key));
+            if (!raw) return null;
+            
+            var entry = JSON.parse(raw);
+            
+            // Check expiration
+            if (isExpired(entry.metadata)) {
+                localStorage.removeItem(storageKey(key));
+                stats.expirations++;
+                return null;
             }
-            this._stats.misses.memory++;
-        }
-        
-        // Try IndexedDB
-        if ((!layer || layer === 'indexedDB') && this.config.indexedDB.enabled && this._dbReady) {
+            
+            // Update access
+            entry.metadata.accessCount = (entry.metadata.accessCount || 0) + 1;
+            entry.metadata.lastAccessed = Date.now();
+            
+            // Write back updated metadata (non-blocking)
             try {
-                const result = await this._getFromIndexedDB(key);
-                if (result !== null) {
-                    this._stats.hits.indexedDB++;
-                    
-                    // Promote to memory cache
-                    if (this.config.memory.enabled && (!layer || layer !== 'indexedDB')) {
-                        this._setToMemory(key, result.data, result.metadata);
-                    }
-                    
-                    return result.data;
-                }
-                this._stats.misses.indexedDB++;
-            } catch (error) {
-                console.warn('⚠️ IndexedDB get failed:', error.message);
-                this._stats.misses.indexedDB++;
-            }
+                localStorage.setItem(storageKey(key), JSON.stringify(entry));
+            } catch (e) { /* Silent */ }
+            
+            // Promote to memory
+            setToMemory(key, entry.data, entry.metadata);
+            
+            return entry.data;
+        } catch (e) {
+            // Corrupt entry - remove it
+            try {
+                localStorage.removeItem(storageKey(key));
+            } catch (e2) { /* Silent */ }
+            return null;
         }
-        
-        // Try localStorage
-        if ((!layer || layer === 'localStorage') && this.config.localStorage.enabled) {
-            const result = this._getFromLocalStorage(key);
-            if (result !== null) {
-                this._stats.hits.localStorage++;
-                return result;
-            }
-            this._stats.misses.localStorage++;
-        }
-        
-        return defaultValue;
     }
     
     /**
-     * Set a value in cache
+     * Set to localStorage
+     * @param {string} key
+     * @param {*} data
+     * @param {Object} metadata
+     * @returns {boolean} True if stored
+     */
+    function setToStorage(key, data, metadata) {
+        if (!config.storageEnabled) return false;
+        
+        try {
+            var entry = {
+                data: data,
+                metadata: metadata,
+                timestamp: Date.now(),
+            };
+            
+            var serialized = JSON.stringify(entry);
+            
+            // Check size (max ~100KB per entry)
+            if (serialized.length > 100 * 1024) {
+                log('warn', 'Item too large for localStorage: ' + key + ' (' + Math.round(serialized.length / 1024) + 'KB)');
+                return false;
+            }
+            
+            // Enforce max entries
+            enforceStorageLimit();
+            
+            localStorage.setItem(storageKey(key), serialized);
+            return true;
+        } catch (e) {
+            // Storage full - try cleanup
+            if (e.name === 'QuotaExceededError') {
+                cleanupStorage();
+                try {
+                    localStorage.setItem(storageKey(key), JSON.stringify({ data: data, metadata: metadata, timestamp: Date.now() }));
+                    return true;
+                } catch (e2) {
+                    log('error', 'Storage still full after cleanup');
+                }
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * Delete from localStorage
+     * @param {string} key
+     */
+    function deleteFromStorage(key) {
+        try {
+            localStorage.removeItem(storageKey(key));
+        } catch (e) { /* Silent */ }
+    }
+    
+    /**
+     * Enforce max storage entries
+     */
+    function enforceStorageLimit() {
+        try {
+            var keys = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf(config.storagePrefix) === 0) {
+                    keys.push(k);
+                }
+            }
+            
+            if (keys.length >= config.maxStorageEntries) {
+                // Remove oldest entries
+                var entries = [];
+                keys.forEach(function(k) {
+                    try {
+                        var entry = JSON.parse(localStorage.getItem(k));
+                        entries.push({ key: k, timestamp: entry.timestamp || 0 });
+                    } catch (e) {
+                        entries.push({ key: k, timestamp: 0 });
+                    }
+                });
+                
+                entries.sort(function(a, b) { return a.timestamp - b.timestamp; });
+                
+                // Remove oldest 25%
+                var removeCount = Math.ceil(entries.length * 0.25);
+                for (var j = 0; j < removeCount; j++) {
+                    localStorage.removeItem(entries[j].key);
+                    stats.evictions++;
+                }
+            }
+        } catch (e) { /* Silent */ }
+    }
+    
+    /**
+     * Cleanup expired storage entries
+     */
+    function cleanupStorage() {
+        try {
+            var now = Date.now();
+            var keysToRemove = [];
+            
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && key.indexOf(config.storagePrefix) === 0) {
+                    try {
+                        var entry = JSON.parse(localStorage.getItem(key));
+                        if (entry.metadata && entry.metadata.expiresAt && entry.metadata.expiresAt < now) {
+                            keysToRemove.push(key);
+                        }
+                    } catch (e) {
+                        keysToRemove.push(key); // Corrupt - remove
+                    }
+                }
+            }
+            
+            keysToRemove.forEach(function(k) {
+                localStorage.removeItem(k);
+                stats.expirations++;
+            });
+            
+            if (keysToRemove.length > 0) {
+                log('log', 'Storage cleanup: ' + keysToRemove.length + ' entries removed');
+            }
+        } catch (e) { /* Silent */ }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 6: CORE CACHE OPERATIONS
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Get a value from cache (memory → storage)
+     * @param {string} key - Cache key
+     * @param {*} [defaultValue=null] - Default if not found
+     * @returns {*|null} Cached value or defaultValue
+     */
+    function get(key, defaultValue) {
+        if (!key) return defaultValue !== undefined ? defaultValue : null;
+        
+        // Try memory first
+        var memResult = getFromMemory(key);
+        if (memResult !== undefined) {
+            return memResult;
+        }
+        
+        // Try storage
+        var storageResult = getFromStorage(key);
+        if (storageResult !== null) {
+            return storageResult;
+        }
+        
+        stats.misses++;
+        return defaultValue !== undefined ? defaultValue : null;
+    }
+    
+    /**
+     * Set a value in cache (memory + storage)
      * @param {string} key - Cache key
      * @param {*} value - Value to cache
-     * @param {Object} options - Set options
-     * @returns {Promise<boolean>} Success
-     * 
-     * @example
-     * await cache.set('leads:list', leads, { ttl: 5 * 60 * 1000 })
-     * await cache.set('user:profile', profile, { layers: ['memory', 'indexedDB'] })
+     * @param {Object} [options={}] - Cache options
+     * @param {number} [options.ttl] - Time-to-live in ms
+     * @param {string[]} [options.tags] - Tags for group invalidation
+     * @param {boolean} [options.persist=true] - Whether to store in localStorage
+     * @returns {boolean} True if stored successfully
      */
-    async set(key, value, options = {}) {
-        const {
-            ttl = null,
-            layers = null,           // Specific layers: ['memory', 'indexedDB', 'localStorage']
-            tags = [],               // Tags for group invalidation
-            compress = this.config.compression,
-            metadata = {}
-        } = options;
+    function set(key, value, options) {
+        if (!key) return false;
+        if (value === undefined || value === null) return false;
         
-        if (!key) {
-            console.warn('⚠️ Cache.set: key is required');
-            return false;
-        }
-        
-        if (value === undefined || value === null) {
-            console.warn('⚠️ Cache.set: value cannot be undefined or null');
-            return false;
-        }
-        
-        // Determine TTL
-        const effectiveTTL = ttl || this.config.memory.defaultTTL;
-        const expiresAt = Date.now() + effectiveTTL;
-        
-        // Build cache entry
-        const entry = {
-            data: value,
-            metadata: {
-                key,
-                timestamp: Date.now(),
-                ttl: effectiveTTL,
-                expiresAt,
-                tags,
-                size: this._calculateSize(value),
-                accessCount: 0,
-                ...metadata
-            }
+        var opts = options || {};
+        var ttl = opts.ttl || config.defaultTTL;
+        var metadata = {
+            key: key,
+            timestamp: Date.now(),
+            ttl: ttl,
+            expiresAt: Date.now() + ttl,
+            tags: opts.tags || [],
+            accessCount: 0,
         };
         
-        let success = false;
+        var success = setToMemory(key, value, metadata);
         
-        // Set in memory cache
-        if ((!layers || layers.includes('memory')) && this.config.memory.enabled) {
-            const memorySuccess = this._setToMemory(key, value, entry.metadata);
-            if (memorySuccess) success = true;
-            this._stats.sets.memory++;
-        }
-        
-        // Set in IndexedDB
-        if ((!layers || layers.includes('indexedDB')) && this.config.indexedDB.enabled && this._dbReady) {
-            try {
-                await this._setToIndexedDB(key, entry);
-                success = true;
-                this._stats.sets.indexedDB++;
-            } catch (error) {
-                console.warn('⚠️ IndexedDB set failed:', error.message);
-            }
-        }
-        
-        // Set in localStorage
-        if ((!layers || layers.includes('localStorage')) && this.config.localStorage.enabled) {
-            const localStorageSuccess = this._setToLocalStorage(key, value, entry.metadata);
-            if (localStorageSuccess) success = true;
-            this._stats.sets.localStorage++;
+        // Persist to storage (unless explicitly disabled)
+        if (opts.persist !== false) {
+            setToStorage(key, value, metadata);
         }
         
         return success;
@@ -345,88 +465,38 @@ class CacheManager {
     /**
      * Delete a value from cache
      * @param {string} key - Cache key
-     * @param {Object} options - Delete options
-     * @returns {Promise<boolean>} Success
+     * @returns {boolean} True if deleted
      */
-    async delete(key, options = {}) {
-        const { layers = null } = options;
+    function remove(key) {
+        if (!key) return false;
         
-        let deleted = false;
+        var existed = memoryCache.has(key);
+        deleteFromMemory(key);
+        deleteFromStorage(key);
         
-        // Delete from memory
-        if ((!layers || layers.includes('memory')) && this._memoryCache.has(key)) {
-            this._memoryCache.delete(key);
-            this._removeFromAccessOrder(key);
-            deleted = true;
-        }
-        
-        // Delete from IndexedDB
-        if ((!layers || layers.includes('indexedDB')) && this.config.indexedDB.enabled && this._dbReady) {
-            try {
-                await this._deleteFromIndexedDB(key);
-                deleted = true;
-            } catch (error) {
-                console.warn('⚠️ IndexedDB delete failed:', error.message);
-            }
-        }
-        
-        // Delete from localStorage
-        if ((!layers || layers.includes('localStorage')) && this.config.localStorage.enabled) {
-            this._deleteFromLocalStorage(key);
-            deleted = true;
-        }
-        
-        return deleted;
+        return existed;
     }
     
     /**
-     * Check if key exists in cache
-     * @param {string} key - Cache key
-     * @returns {Promise<boolean>}
+     * Check if key exists and is not expired
+     * @param {string} key
+     * @returns {boolean}
      */
-    async has(key) {
-        // Check memory
-        if (this._memoryCache.has(key)) {
-            const entry = this._memoryCache.get(key);
-            if (!this._isExpired(entry.metadata)) {
-                return true;
-            }
-        }
-        
-        // Check IndexedDB
-        if (this.config.indexedDB.enabled && this._dbReady) {
-            try {
-                const result = await this._getFromIndexedDB(key);
-                if (result !== null) return true;
-            } catch {}
-        }
-        
-        // Check localStorage
-        if (this.config.localStorage.enabled) {
-            const result = this._getFromLocalStorage(key);
-            if (result !== null) return true;
-        }
-        
-        return false;
+    function has(key) {
+        if (!key) return false;
+        return get(key, '__UNDEFINED_SENTINEL__') !== '__UNDEFINED_SENTINEL__';
     }
     
     /**
-     * Get or set (fetch if not cached)
+     * Get or set - fetch if not cached
      * @param {string} key - Cache key
-     * @param {Function} fetcher - Function to fetch data if not cached
-     * @param {Object} options - Cache options
+     * @param {Function} fetcher - Function to call if not cached
+     * @param {Object} [options] - Cache options (passed to set())
      * @returns {Promise<*>} Data from cache or fetcher
-     * 
-     * @example
-     * const leads = await cache.getOrSet('leads:list',
-     *     () => api.getDocuments('leads'),
-     *     { ttl: 5 * 60 * 1000 }
-     * )
      */
-    async getOrSet(key, fetcher, options = {}) {
-        // Try to get from cache first
-        const cached = await this.get(key, options);
-        
+    async function getOrSet(key, fetcher, options) {
+        // Try cache first
+        var cached = get(key);
         if (cached !== null && cached !== undefined) {
             return cached;
         }
@@ -436,851 +506,469 @@ class CacheManager {
             throw new Error('Cache.getOrSet: fetcher must be a function');
         }
         
-        const freshData = await fetcher();
-        
-        // Cache the fresh data
-        if (freshData !== null && freshData !== undefined) {
-            await this.set(key, freshData, options);
+        try {
+            var freshData = await fetcher();
+            
+            if (freshData !== null && freshData !== undefined) {
+                set(key, freshData, options);
+            }
+            
+            return freshData;
+        } catch (error) {
+            // Return stale cache if available (even if expired)
+            var stale = getFromStorage(key);
+            if (stale !== null) {
+                log('warn', 'Returning stale cache for: ' + key);
+                return stale;
+            }
+            throw error;
         }
-        
-        return freshData;
     }
-    
-    // ==========================================
-    // MEMORY CACHE (L1)
-    // ==========================================
+
+    // -------------------------------------------------------------------------
+    // SECTION 7: BULK OPERATIONS
+    // -------------------------------------------------------------------------
     
     /**
-     * Get from memory cache
-     * @private
+     * Get multiple keys at once
+     * @param {string[]} keys
+     * @returns {Object} { key: value } map
      */
-    _getFromMemory(key, updateAccessTime = true) {
-        const entry = this._memoryCache.get(key);
+    function getMany(keys) {
+        if (!Array.isArray(keys)) return {};
         
-        if (!entry) return undefined;
-        
-        // Check expiration
-        if (this._isExpired(entry.metadata)) {
-            this._memoryCache.delete(key);
-            this._removeFromAccessOrder(key);
-            this._stats.expirations++;
-            return undefined;
-        }
-        
-        // Update access order for LRU
-        if (updateAccessTime) {
-            this._updateAccessOrder(key);
-        }
-        
-        // Update access count
-        entry.metadata.accessCount++;
-        entry.metadata.lastAccessed = Date.now();
-        
-        return entry.data;
+        var result = {};
+        keys.forEach(function(key) {
+            result[key] = get(key);
+        });
+        return result;
     }
     
     /**
-     * Set to memory cache
-     * @private
+     * Set multiple entries at once
+     * @param {Object} entries - { key: value } or { key: { value, options } }
+     * @param {Object} [defaultOptions] - Default options for all entries
      */
-    _setToMemory(key, data, metadata) {
-        // Check size limit
-        const size = metadata.size || this._calculateSize(data);
+    function setMany(entries, defaultOptions) {
+        if (!entries || typeof entries !== 'object') return;
         
-        if (size > this.config.memory.maxItemSize) {
-            console.warn(`⚠️ Item too large for memory cache: ${key} (${this._formatSize(size)})`);
-            return false;
-        }
-        
-        // Enforce max entries (LRU eviction)
-        while (this._memoryCache.size >= this.config.memory.maxSize) {
-            const lruKey = this._memoryAccessOrder[0];
-            if (lruKey) {
-                this._memoryCache.delete(lruKey);
-                this._removeFromAccessOrder(lruKey);
-                this._stats.evictions++;
+        Object.keys(entries).forEach(function(key) {
+            var entry = entries[key];
+            if (entry && typeof entry === 'object' && 'value' in entry) {
+                set(key, entry.value, entry.options || defaultOptions);
             } else {
-                break;
-            }
-        }
-        
-        // Store in memory
-        this._memoryCache.set(key, {
-            data,
-            metadata: {
-                ...metadata,
-                size,
-                stored: Date.now()
+                set(key, entry, defaultOptions);
             }
         });
-        
-        // Update access order
-        this._updateAccessOrder(key);
-        
-        return true;
     }
     
     /**
-     * Update access order for LRU tracking
-     * @private
+     * Delete multiple keys at once
+     * @param {string[]} keys
      */
-    _updateAccessOrder(key) {
-        this._removeFromAccessOrder(key);
-        this._memoryAccessOrder.push(key);
+    function removeMany(keys) {
+        if (!Array.isArray(keys)) return;
+        keys.forEach(function(key) { remove(key); });
     }
+
+    // -------------------------------------------------------------------------
+    // SECTION 8: CACHE INVALIDATION
+    // -------------------------------------------------------------------------
     
     /**
-     * Remove key from access order
-     * @private
+     * Clear cache entries matching a pattern
+     * @param {string} [pattern] - Key pattern (supports * wildcard). If null, clears all.
      */
-    _removeFromAccessOrder(key) {
-        const index = this._memoryAccessOrder.indexOf(key);
-        if (index > -1) {
-            this._memoryAccessOrder.splice(index, 1);
-        }
-    }
-    
-    // ==========================================
-    // INDEXEDDB CACHE (L2)
-    // ==========================================
-    
-    /**
-     * Get from IndexedDB
-     * @private
-     */
-    async _getFromIndexedDB(key) {
-        return new Promise((resolve, reject) => {
-            if (!this._db || !this._dbReady) {
-                resolve(null);
-                return;
-            }
-            
-            const transaction = this._db.transaction(
-                [this.config.indexedDB.storeName],
-                'readonly'
-            );
-            
-            const store = transaction.objectStore(this.config.indexedDB.storeName);
-            const request = store.get(key);
-            
-            request.onsuccess = () => {
-                const result = request.result;
-                
-                if (!result) {
-                    resolve(null);
-                    return;
-                }
-                
-                // Check expiration
-                if (result.metadata && result.metadata.expiresAt < Date.now()) {
-                    this._deleteFromIndexedDB(key);
-                    this._stats.expirations++;
-                    resolve(null);
-                    return;
-                }
-                
-                // Update access count
-                result.metadata.accessCount = (result.metadata.accessCount || 0) + 1;
-                result.metadata.lastAccessed = Date.now();
-                
-                // Update in background
-                this._setToIndexedDB(key, result).catch(() => {});
-                
-                resolve(result);
-            };
-            
-            request.onerror = () => {
-                reject(new Error('IndexedDB get failed'));
-            };
-        });
-    }
-    
-    /**
-     * Set to IndexedDB
-     * @private
-     */
-    async _setToIndexedDB(key, entry) {
-        return new Promise((resolve, reject) => {
-            if (!this._db || !this._dbReady) {
-                resolve(false);
-                return;
-            }
-            
-            const transaction = this._db.transaction(
-                [this.config.indexedDB.storeName],
-                'readwrite'
-            );
-            
-            const store = transaction.objectStore(this.config.indexedDB.storeName);
-            
-            // Compress large entries
-            if (this.config.compression && entry.metadata.size > this.config.compressionThreshold) {
-                try {
-                    entry.data = this._compress(entry.data);
-                    entry.metadata.compressed = true;
-                } catch {}
-            }
-            
-            const request = store.put({
-                key,
-                data: entry.data,
-                metadata: entry.metadata,
-                timestamp: Date.now()
-            });
-            
-            request.onsuccess = () => resolve(true);
-            request.onerror = () => reject(new Error('IndexedDB set failed'));
-        });
-    }
-    
-    /**
-     * Delete from IndexedDB
-     * @private
-     */
-    async _deleteFromIndexedDB(key) {
-        return new Promise((resolve, reject) => {
-            if (!this._db || !this._dbReady) {
-                resolve(false);
-                return;
-            }
-            
-            const transaction = this._db.transaction(
-                [this.config.indexedDB.storeName],
-                'readwrite'
-            );
-            
-            const store = transaction.objectStore(this.config.indexedDB.storeName);
-            const request = store.delete(key);
-            
-            request.onsuccess = () => resolve(true);
-            request.onerror = () => reject(new Error('IndexedDB delete failed'));
-        });
-    }
-    
-    // ==========================================
-    // LOCALSTORAGE CACHE (L3)
-    // ==========================================
-    
-    /**
-     * Get from localStorage
-     * @private
-     */
-    _getFromLocalStorage(key) {
-        try {
-            const raw = localStorage.getItem(this._localStorageKey(key));
-            
-            if (!raw) return null;
-            
-            const entry = JSON.parse(raw);
-            
-            // Check expiration
-            if (entry.metadata && entry.metadata.expiresAt < Date.now()) {
-                this._deleteFromLocalStorage(key);
-                this._stats.expirations++;
-                return null;
-            }
-            
-            return entry.data;
-        } catch (error) {
-            return null;
-        }
-    }
-    
-    /**
-     * Set to localStorage
-     * @private
-     */
-    _setToLocalStorage(key, data, metadata) {
-        try {
-            const entry = {
-                data,
-                metadata,
-                timestamp: Date.now()
-            };
-            
-            const serialized = JSON.stringify(entry);
-            
-            // Check size limit
-            if (serialized.length > this.config.localStorage.maxSize) {
-                console.warn(`⚠️ Item too large for localStorage: ${key}`);
-                return false;
-            }
-            
-            // Check total localStorage usage
-            if (!this._hasLocalStorageSpace(serialized.length)) {
-                this._cleanLocalStorage();
-            }
-            
-            localStorage.setItem(this._localStorageKey(key), serialized);
-            return true;
-        } catch (error) {
-            console.warn('⚠️ localStorage set failed:', error.message);
-            return false;
-        }
-    }
-    
-    /**
-     * Delete from localStorage
-     * @private
-     */
-    _deleteFromLocalStorage(key) {
-        try {
-            localStorage.removeItem(this._localStorageKey(key));
-        } catch {}
-    }
-    
-    /**
-     * Generate localStorage key with prefix
-     * @private
-     */
-    _localStorageKey(key) {
-        return `11avatar_cache_${key}`;
-    }
-    
-    /**
-     * Check if localStorage has space
-     * @private
-     */
-    _hasLocalStorageSpace(neededBytes) {
-        try {
-            const testKey = '__storage_test__';
-            localStorage.setItem(testKey, '1');
-            localStorage.removeItem(testKey);
-            
-            // Estimate available space
-            const used = JSON.stringify(localStorage).length;
-            const maxSize = 5 * 1024 * 1024; // 5MB typical limit
-            
-            return (used + neededBytes) < maxSize;
-        } catch {
-            return false;
-        }
-    }
-    
-    /**
-     * Clean localStorage cache entries
-     * @private
-     */
-    _cleanLocalStorage() {
-        try {
-            const keysToRemove = [];
-            
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('11avatar_cache_')) {
-                    keysToRemove.push(key);
-                }
-            }
-            
-            // Sort by access time (if available) and remove oldest
-            keysToRemove.sort((a, b) => {
-                try {
-                    const entryA = JSON.parse(localStorage.getItem(a));
-                    const entryB = JSON.parse(localStorage.getItem(b));
-                    return (entryA.timestamp || 0) - (entryB.timestamp || 0);
-                } catch {
-                    return 0;
-                }
-            });
-            
-            // Remove oldest 50%
-            const removeCount = Math.ceil(keysToRemove.length / 2);
-            keysToRemove.slice(0, removeCount).forEach(key => {
-                localStorage.removeItem(key);
-                this._stats.evictions++;
-            });
-        } catch {}
-    }
-    
-    // ==========================================
-    // BULK OPERATIONS
-    // ==========================================
-    
-    /**
-     * Set multiple cache entries at once
-     * @param {Object} entries - { key: { value, options } } map
-     */
-    async setMany(entries) {
-        const promises = Object.entries(entries).map(([key, config]) => {
-            const value = config.value !== undefined ? config.value : config;
-            const options = config.options || {};
-            return this.set(key, value, options);
-        });
-        
-        return Promise.all(promises);
-    }
-    
-    /**
-     * Get multiple cache entries at once
-     * @param {string[]} keys - Array of cache keys
-     */
-    async getMany(keys) {
-        const promises = keys.map(key => this.get(key));
-        const results = await Promise.all(promises);
-        
-        return keys.reduce((map, key, index) => {
-            map[key] = results[index];
-            return map;
-        }, {});
-    }
-    
-    /**
-     * Delete multiple cache entries at once
-     * @param {string[]} keys - Array of cache keys
-     */
-    async deleteMany(keys) {
-        const promises = keys.map(key => this.delete(key));
-        return Promise.all(promises);
-    }
-    
-    /**
-     * Clear all cache entries matching a pattern
-     * @param {string} pattern - Key pattern (supports * wildcard)
-     * 
-     * @example
-     * await cache.clear('leads:*')    // Clear all lead caches
-     * await cache.clear('user:*')     // Clear all user caches
-     */
-    async clear(pattern = null) {
+    function clear(pattern) {
+        // Clear all
         if (!pattern) {
-            // Clear all
-            this._memoryCache.clear();
-            this._memoryAccessOrder = [];
-            
-            if (this.config.indexedDB.enabled && this._dbReady) {
-                await this._clearIndexedDB();
-            }
-            
-            this._clearLocalStorage();
-            
-            console.log('🗑️ All cache cleared');
+            var memSize = memoryCache.size;
+            memoryCache.clear();
+            accessOrder.length = 0;
+            clearAllStorage();
+            log('log', 'All cache cleared (' + memSize + ' memory entries)');
             return;
         }
         
-        const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        
-        // Clear memory
-        for (const key of this._memoryCache.keys()) {
-            if (regex.test(key)) {
-                this._memoryCache.delete(key);
-                this._removeFromAccessOrder(key);
-            }
-        }
-        
-        // Clear IndexedDB
-        if (this.config.indexedDB.enabled && this._dbReady) {
-            const allKeys = await this._getAllIndexedDBKeys();
-            for (const key of allKeys) {
-                if (regex.test(key)) {
-                    await this._deleteFromIndexedDB(key);
-                }
-            }
-        }
-        
-        // Clear localStorage
-        for (let i = localStorage.length - 1; i >= 0; i--) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('11avatar_cache_')) {
-                const cacheKey = key.replace('11avatar_cache_', '');
-                if (regex.test(cacheKey)) {
-                    localStorage.removeItem(key);
-                }
-            }
-        }
-        
-        console.log(`🗑️ Cache cleared for pattern: ${pattern}`);
-    }
-    
-    /**
-     * Clear by tags
-     * @param {string[]} tags - Tags to clear
-     */
-    async clearByTags(tags) {
-        if (!Array.isArray(tags) || tags.length === 0) return;
+        // Convert pattern to regex
+        var regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
         
         // Clear from memory
-        for (const [key, entry] of this._memoryCache.entries()) {
-            if (entry.metadata.tags && entry.metadata.tags.some(tag => tags.includes(tag))) {
-                this._memoryCache.delete(key);
-                this._removeFromAccessOrder(key);
-            }
-        }
+        var memKeys = [];
+        memoryCache.forEach(function(entry, key) {
+            if (regex.test(key)) memKeys.push(key);
+        });
+        memKeys.forEach(function(key) {
+            memoryCache.delete(key);
+            removeFromAccessOrder(key);
+        });
         
-        // Clear from IndexedDB
-        if (this.config.indexedDB.enabled && this._dbReady) {
-            const allEntries = await this._getAllIndexedDBEntries();
-            for (const entry of allEntries) {
-                if (entry.metadata.tags && entry.metadata.tags.some(tag => tags.includes(tag))) {
-                    await this._deleteFromIndexedDB(entry.key);
-                }
-            }
-        }
+        // Clear from storage
+        clearStorageByPattern(regex);
         
-        console.log(`🗑️ Cache cleared for tags: ${tags.join(', ')}`);
+        log('log', 'Cache cleared for pattern: ' + pattern + ' (' + memKeys.length + ' entries)');
     }
     
     /**
-     * Clear entire IndexedDB store
-     * @private
+     * Clear cache entries by tags
+     * @param {string[]} tags
      */
-    async _clearIndexedDB() {
-        return new Promise((resolve, reject) => {
-            if (!this._db || !this._dbReady) {
-                resolve();
-                return;
+    function clearByTags(tags) {
+        if (!Array.isArray(tags) || tags.length === 0) return;
+        
+        var memKeys = [];
+        memoryCache.forEach(function(entry, key) {
+            var entryTags = entry.metadata.tags || [];
+            if (tags.some(function(tag) { return entryTags.indexOf(tag) !== -1; })) {
+                memKeys.push(key);
             }
-            
-            const transaction = this._db.transaction(
-                [this.config.indexedDB.storeName],
-                'readwrite'
-            );
-            
-            const store = transaction.objectStore(this.config.indexedDB.storeName);
-            const request = store.clear();
-            
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(new Error('IndexedDB clear failed'));
         });
+        memKeys.forEach(function(key) {
+            memoryCache.delete(key);
+            removeFromAccessOrder(key);
+        });
+        
+        // Clear from storage
+        clearStorageByTags(tags);
+        
+        log('log', 'Cache cleared for tags: ' + tags.join(', ') + ' (' + memKeys.length + ' entries)');
     }
     
     /**
      * Clear all localStorage cache entries
-     * @private
      */
-    _clearLocalStorage() {
-        const keysToRemove = [];
-        
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('11avatar_cache_')) {
-                keysToRemove.push(key);
-            }
-        }
-        
-        keysToRemove.forEach(key => localStorage.removeItem(key));
-    }
-    
-    /**
-     * Get all IndexedDB keys
-     * @private
-     */
-    async _getAllIndexedDBKeys() {
-        return new Promise((resolve, reject) => {
-            if (!this._db || !this._dbReady) {
-                resolve([]);
-                return;
-            }
-            
-            const transaction = this._db.transaction(
-                [this.config.indexedDB.storeName],
-                'readonly'
-            );
-            
-            const store = transaction.objectStore(this.config.indexedDB.storeName);
-            const request = store.getAllKeys();
-            
-            request.onsuccess = () => resolve(request.result || []);
-            request.onerror = () => reject(new Error('IndexedDB getAllKeys failed'));
-        });
-    }
-    
-    /**
-     * Get all IndexedDB entries
-     * @private
-     */
-    async _getAllIndexedDBEntries() {
-        return new Promise((resolve, reject) => {
-            if (!this._db || !this._dbReady) {
-                resolve([]);
-                return;
-            }
-            
-            const transaction = this._db.transaction(
-                [this.config.indexedDB.storeName],
-                'readonly'
-            );
-            
-            const store = transaction.objectStore(this.config.indexedDB.storeName);
-            const request = store.getAll();
-            
-            request.onsuccess = () => resolve(request.result || []);
-            request.onerror = () => reject(new Error('IndexedDB getAll failed'));
-        });
-    }
-    
-    // ==========================================
-    // WARMING & PRELOADING
-    // ==========================================
-    
-    /**
-     * Warm the cache with frequently used data
-     * @param {Array} items - [{ key, fetcher, options }]
-     */
-    async warmUp(items) {
-        console.log(`🔥 Warming cache with ${items.length} items...`);
-        
-        const promises = items.map(async (item) => {
-            try {
-                const data = await item.fetcher();
-                await this.set(item.key, data, item.options || {});
-                console.log(`  ✅ ${item.key}`);
-            } catch (error) {
-                console.warn(`  ⚠️ Failed to warm ${item.key}:`, error.message);
-            }
-        });
-        
-        await Promise.allSettled(promises);
-        console.log('🔥 Cache warming complete');
-    }
-    
-    /**
-     * Preload cache entries that will be needed soon
-     * @param {string[]} keys - Keys to preload
-     */
-    async preload(keys) {
-        const promises = keys.map(key => this.get(key, { updateAccessTime: true }));
-        await Promise.allSettled(promises);
-    }
-    
-    // ==========================================
-    // MAINTENANCE
-    // ==========================================
-    
-    /**
-     * Run cache cleanup (remove expired entries)
-     * @private
-     */
-    async _cleanup() {
-        const now = Date.now();
-        let cleaned = 0;
-        
-        // Clean memory cache
-        for (const [key, entry] of this._memoryCache.entries()) {
-            if (this._isExpired(entry.metadata)) {
-                this._memoryCache.delete(key);
-                this._removeFromAccessOrder(key);
-                cleaned++;
-                this._stats.expirations++;
-            }
-        }
-        
-        // Clean IndexedDB
-        if (this.config.indexedDB.enabled && this._dbReady) {
-            try {
-                const entries = await this._getAllIndexedDBEntries();
-                for (const entry of entries) {
-                    if (entry.metadata && entry.metadata.expiresAt < now) {
-                        await this._deleteFromIndexedDB(entry.key);
-                        cleaned++;
-                        this._stats.expirations++;
-                    }
-                }
-            } catch {}
-        }
-        
-        // Clean localStorage
-        for (let i = localStorage.length - 1; i >= 0; i--) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('11avatar_cache_')) {
-                try {
-                    const entry = JSON.parse(localStorage.getItem(key));
-                    if (entry.metadata && entry.metadata.expiresAt < now) {
-                        localStorage.removeItem(key);
-                        cleaned++;
-                        this._stats.expirations++;
-                    }
-                } catch {
-                    localStorage.removeItem(key);
-                }
-            }
-        }
-        
-        this._stats.lastCleanup = new Date().toISOString();
-        
-        if (cleaned > 0) {
-            console.log(`🧹 Cache cleanup: ${cleaned} entries removed`);
-        }
-        
-        // Save stats
-        this._saveStats();
-    }
-    
-    /**
-     * Check if cache entry is expired
-     * @private
-     */
-    _isExpired(metadata) {
-        if (!metadata || !metadata.expiresAt) return false;
-        return metadata.expiresAt < Date.now();
-    }
-    
-    // ==========================================
-    // UTILITY METHODS
-    // ==========================================
-    
-    /**
-     * Calculate approximate size of a value in bytes
-     * @private
-     */
-    _calculateSize(value) {
+    function clearAllStorage() {
         try {
-            if (typeof value === 'string') {
-                return value.length * 2; // UTF-16
+            var keysToRemove = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && key.indexOf(config.storagePrefix) === 0) {
+                    keysToRemove.push(key);
+                }
             }
-            
-            if (value instanceof Blob) {
-                return value.size;
+            keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+        } catch (e) { /* Silent */ }
+    }
+    
+    /**
+     * Clear storage entries matching a regex pattern
+     * @param {RegExp} regex
+     */
+    function clearStorageByPattern(regex) {
+        try {
+            var keysToRemove = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && key.indexOf(config.storagePrefix) === 0) {
+                    var cacheKey = key.replace(config.storagePrefix, '');
+                    if (regex.test(cacheKey)) {
+                        keysToRemove.push(key);
+                    }
+                }
             }
-            
-            if (value instanceof ArrayBuffer) {
-                return value.byteLength;
+            keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+        } catch (e) { /* Silent */ }
+    }
+    
+    /**
+     * Clear storage entries by tags
+     * @param {string[]} tags
+     */
+    function clearStorageByTags(tags) {
+        try {
+            var keysToRemove = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && key.indexOf(config.storagePrefix) === 0) {
+                    try {
+                        var entry = JSON.parse(localStorage.getItem(key));
+                        var entryTags = (entry.metadata && entry.metadata.tags) || [];
+                        if (tags.some(function(tag) { return entryTags.indexOf(tag) !== -1; })) {
+                            keysToRemove.push(key);
+                        }
+                    } catch (e) {
+                        keysToRemove.push(key);
+                    }
+                }
             }
-            
-            // Estimate for objects
-            const serialized = JSON.stringify(value);
+            keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+        } catch (e) { /* Silent */ }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 9: MAINTENANCE
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Run periodic cleanup
+     */
+    function runCleanup() {
+        var now = Date.now();
+        var memCleaned = 0;
+        var storageCleaned = 0;
+        
+        // Clean expired from memory
+        var expiredMemKeys = [];
+        memoryCache.forEach(function(entry, key) {
+            if (isExpired(entry.metadata)) {
+                expiredMemKeys.push(key);
+            }
+        });
+        expiredMemKeys.forEach(function(key) {
+            memoryCache.delete(key);
+            removeFromAccessOrder(key);
+            stats.expirations++;
+            memCleaned++;
+        });
+        
+        // Clean expired from storage
+        try {
+            var keysToRemove = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && key.indexOf(config.storagePrefix) === 0) {
+                    try {
+                        var entry = JSON.parse(localStorage.getItem(key));
+                        if (entry.metadata && entry.metadata.expiresAt && entry.metadata.expiresAt < now) {
+                            keysToRemove.push(key);
+                        }
+                    } catch (e) {
+                        keysToRemove.push(key);
+                    }
+                }
+            }
+            keysToRemove.forEach(function(k) {
+                localStorage.removeItem(k);
+                stats.expirations++;
+                storageCleaned++;
+            });
+        } catch (e) { /* Silent */ }
+        
+        stats.lastCleanup = new Date().toISOString();
+        
+        if (memCleaned > 0 || storageCleaned > 0) {
+            log('log', 'Cleanup: ' + memCleaned + ' memory + ' + storageCleaned + ' storage entries removed');
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 10: UTILITY FUNCTIONS
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Estimate size of a value in bytes
+     * @param {*} value
+     * @returns {number}
+     */
+    function estimateSize(value) {
+        try {
+            if (typeof value === 'string') return value.length * 2;
+            if (value instanceof Blob) return value.size;
+            if (value instanceof ArrayBuffer) return value.byteLength;
+            var serialized = JSON.stringify(value);
             return serialized ? serialized.length * 2 : 0;
-        } catch {
+        } catch (e) {
             return 0;
         }
     }
     
     /**
-     * Compress data (simple string compression)
-     * @private
-     */
-    _compress(data) {
-        try {
-            const serialized = JSON.stringify(data);
-            // In production, use CompressionStream API or a library like lz-string
-            return serialized;
-        } catch {
-            return data;
-        }
-    }
-    
-    /**
-     * Format bytes to human readable string
-     * @private
-     */
-    _formatSize(bytes) {
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-    }
-    
-    /**
-     * Save statistics to localStorage
-     * @private
-     */
-    _saveStats() {
-        try {
-            localStorage.setItem('11avatar_cache_stats', JSON.stringify(this._stats));
-        } catch {}
-    }
-    
-    /**
-     * Load statistics from localStorage
-     * @private
-     */
-    _loadStats() {
-        try {
-            const saved = localStorage.getItem('11avatar_cache_stats');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                Object.assign(this._stats, parsed);
-            }
-        } catch {}
-    }
-    
-    /**
      * Get cache statistics
-     * @returns {Object} Cache statistics
+     * @returns {Object}
      */
-    getStats() {
-        const totalHits = this._stats.hits.memory + this._stats.hits.indexedDB + this._stats.hits.localStorage;
-        const totalMisses = this._stats.misses.memory + this._stats.misses.indexedDB + this._stats.misses.localStorage;
-        const totalRequests = totalHits + totalMisses;
-        
+    function getStats() {
+        var totalRequests = stats.hits + stats.misses;
         return {
-            layers: {
-                memory: {
-                    enabled: this.config.memory.enabled,
-                    entries: this._memoryCache.size,
-                    maxEntries: this.config.memory.maxSize
-                },
-                indexedDB: {
-                    enabled: this.config.indexedDB.enabled && this._dbReady
-                },
-                localStorage: {
-                    enabled: this.config.localStorage.enabled
-                }
-            },
-            performance: {
-                totalRequests,
-                totalHits,
-                totalMisses,
-                hitRate: totalRequests > 0 ? ((totalHits / totalRequests) * 100).toFixed(1) + '%' : '0%',
-                detailedHits: { ...this._stats.hits },
-                detailedMisses: { ...this._stats.misses }
-            },
-            maintenance: {
-                evictions: this._stats.evictions,
-                expirations: this._stats.expirations,
-                lastCleanup: this._stats.lastCleanup
-            }
+            memoryEntries: memoryCache.size,
+            memoryMax: config.maxMemoryEntries,
+            storageEntries: countStorageEntries(),
+            storageMax: config.maxStorageEntries,
+            hits: stats.hits,
+            misses: stats.misses,
+            sets: stats.sets,
+            evictions: stats.evictions,
+            expirations: stats.expirations,
+            hitRate: totalRequests > 0 ? ((stats.hits / totalRequests) * 100).toFixed(1) + '%' : '0%',
+            lastCleanup: stats.lastCleanup,
         };
     }
     
     /**
-     * Debug: Print cache state to console
+     * Count localStorage cache entries
+     * @returns {number}
      */
-    debug() {
-        console.group('💾 Cache Manager Debug');
-        console.log('Statistics:', this.getStats());
-        console.log('Memory Keys:', Array.from(this._memoryCache.keys()));
-        console.log('Access Order:', this._memoryAccessOrder.slice(-10));
-        console.groupEnd();
+    function countStorageEntries() {
+        try {
+            var count = 0;
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key && key.indexOf(config.storagePrefix) === 0) count++;
+            }
+            return count;
+        } catch (e) {
+            return 0;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 11: INITIALIZATION & DESTROY
+    // -------------------------------------------------------------------------
+    
+    /**
+     * Initialize the cache manager
+     * @returns {boolean}
+     */
+    function init() {
+        try {
+            if (isInitialized) return true;
+            
+            log('log', 'Initializing CacheManager v3.0.0...');
+            
+            // Load persisted stats
+            loadStats();
+            
+            // Start cleanup timer
+            if (cleanupTimer) clearInterval(cleanupTimer);
+            cleanupTimer = setInterval(runCleanup, config.cleanupInterval);
+            
+            // Run initial cleanup
+            runCleanup();
+            
+            isInitialized = true;
+            
+            log('log', 'CacheManager initialized. Memory: ' + memoryCache.size + ', Storage: ' + countStorageEntries());
+            
+            return true;
+        } catch (e) {
+            log('error', 'CacheManager init failed:', e);
+            isInitialized = true;
+            return false;
+        }
     }
     
     /**
-     * Destroy the cache manager
+     * Destroy and cleanup
      */
-    destroy() {
-        if (this._cleanupTimer) {
-            clearInterval(this._cleanupTimer);
-        }
+    function destroy() {
+        try {
+            if (cleanupTimer) {
+                clearInterval(cleanupTimer);
+                cleanupTimer = null;
+            }
+            
+            saveStats();
+            
+            memoryCache.clear();
+            accessOrder.length = 0;
+            isInitialized = false;
+            
+            log('log', 'CacheManager destroyed');
+        } catch (e) { /* Silent */ }
+    }
+    
+    /**
+     * Save stats to localStorage
+     */
+    function saveStats() {
+        try {
+            localStorage.setItem(config.storagePrefix + 'stats', JSON.stringify(stats));
+        } catch (e) { /* Silent */ }
+    }
+    
+    /**
+     * Load stats from localStorage
+     */
+    function loadStats() {
+        try {
+            var saved = localStorage.getItem(config.storagePrefix + 'stats');
+            if (saved) {
+                var parsed = JSON.parse(saved);
+                stats.hits = parsed.hits || 0;
+                stats.misses = parsed.misses || 0;
+                stats.sets = parsed.sets || 0;
+                stats.evictions = parsed.evictions || 0;
+                stats.expirations = parsed.expirations || 0;
+                stats.lastCleanup = parsed.lastCleanup || null;
+            }
+        } catch (e) { /* Silent */ }
+    }
+
+    // -------------------------------------------------------------------------
+    // SECTION 12: PUBLIC API
+    // -------------------------------------------------------------------------
+    
+    /** @type {Object} Public API */
+    const publicAPI = Object.freeze({
+        // Initialization
+        init: init,
+        destroy: destroy,
+        get isInitialized() { return isInitialized; },
         
-        this._saveStats();
-        this._memoryCache.clear();
-        this._memoryAccessOrder = [];
+        // Core operations
+        get: get,
+        set: set,
+        remove: remove,
+        has: has,
+        getOrSet: getOrSet,
         
-        if (this._db) {
-            this._db.close();
-            this._db = null;
-            this._dbReady = false;
-        }
+        // Bulk operations
+        getMany: getMany,
+        setMany: setMany,
+        removeMany: removeMany,
         
-        console.log('💾 Cache Manager destroyed');
+        // Invalidation
+        clear: clear,
+        clearByTags: clearByTags,
+        
+        // Maintenance
+        runCleanup: runCleanup,
+        
+        // Statistics
+        getStats: getStats,
+        
+        // Configuration
+        get config() { return Object.assign({}, config); },
+        updateConfig: function(newConfig) {
+            if (newConfig && typeof newConfig === 'object') {
+                Object.assign(config, newConfig);
+            }
+        },
+    });
+    
+    return publicAPI;
+    
+})(); // End of CacheManager IIFE
+
+// =============================================================================
+// AUTO-INITIALIZATION
+// =============================================================================
+
+if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            CacheManager.init();
+        });
+    } else {
+        CacheManager.init();
     }
 }
 
-// ==========================================
-// CREATE & EXPORT CACHE MANAGER INSTANCE
-// ==========================================
-const cacheManager = new CacheManager();
+// =============================================================================
+// EXPORTS
+// =============================================================================
 
-// Make available globally
-window.CacheManager = cacheManager;
-window.cache = cacheManager; // Convenience alias
+if (typeof window !== 'undefined') {
+    window.CacheManager = CacheManager;
+    window.cache = CacheManager; // Convenience alias
+    window.Global = window.Global || {};
+    window.Global.CacheManager = CacheManager;
+}
 
-// Export for module usage
-export default cacheManager;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CacheManager;
+}
 
-console.log('💾 Cache Manager ready');
-console.log('💾 Stats:', cacheManager.getStats().performance);
-
-// ==========================================
-// END OF CACHE MANAGER
-// ==========================================
-
-
+export {
+    CacheManager as default,
+    CacheManager,
+};

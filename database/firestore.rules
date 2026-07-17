@@ -1,14 +1,13 @@
 // ==========================================
 // 11 AVATAR DIGITAL HUB
-// Firestore Security Rules
-// Version: 2.0 Enterprise
+// Firestore Security Rules v3.0
 // ==========================================
 // Purpose:
-// - Role-based access control
-// - Data isolation per client
-// - Validation rules
-// - Rate limiting awareness
-// - Secure queries
+// - Role-based access control (8-tier RBAC)
+// - Multi-tenant data isolation per client
+// - Field-level validation rules
+// - Secure query enforcement
+// - Platform & client role separation
 // ==========================================
 
 rules_version = '2';
@@ -35,43 +34,58 @@ service cloud.firestore {
       return profile != null ? profile.role : null;
     }
     
-    // Get current user's client ID
+    // Get current user's client ID (tenant)
     function getUserClientId() {
       let profile = getUserProfile();
       return profile != null ? profile.clientId : null;
     }
     
-    // Get current user's permissions
+    // Get current user's permissions array
     function getUserPermissions() {
       let profile = getUserProfile();
       return profile != null ? profile.permissions : [];
     }
     
-    // Check if user is platform-level
+    // Check if user is platform-level (super_admin or admin)
     function isPlatformUser() {
       let role = getUserRole();
-      return role == 'platform_owner' || role == 'platform_super_admin' || role == 'admin';
+      return role == 'super_admin' || role == 'admin';
     }
     
-    // Check if user is client-level
-    function isClientUser() {
+    // Check if user is client/tenant-level
+    function isTenantUser() {
       let role = getUserRole();
-      return role == 'client_owner' || role == 'client_admin' || role == 'manager' || role == 'executive' || role == 'viewer';
+      return role != null && role != 'super_admin' && role != 'admin';
     }
     
-    // Check if user has specific permission
-    function hasPermission(permission) {
+    // Check if user has a specific permission
+    function hasPermission(perm) {
       let permissions = getUserPermissions();
-      return isPlatformUser() || 'all' in permissions || permission in permissions;
+      // Platform users have all access
+      if (isPlatformUser()) return true;
+      // Check if 'all' or '*' wildcard exists
+      if (permissions.hasAny(['all', '*'])) return true;
+      // Check specific permission
+      return permissions.hasAny([perm]);
     }
     
-    // Check if document belongs to user's client
-    function belongsToClient() {
+    // Check if document belongs to user's tenant/client
+    function belongsToTenant() {
       let userClientId = getUserClientId();
-      return userClientId == null || resource.data.clientId == userClientId;
+      // If user has no clientId, allow (platform user)
+      if (userClientId == null) return true;
+      // Check document's clientId matches user's
+      return resource.data.clientId == userClientId;
     }
     
-    // Check if incoming data has required fields
+    // Check if incoming write belongs to user's tenant
+    function writeBelongsToTenant() {
+      let userClientId = getUserClientId();
+      if (userClientId == null) return true;
+      return request.resource.data.clientId == userClientId;
+    }
+    
+    // Check if document has required fields
     function hasRequiredFields(required) {
       return required.hasAll(request.resource.data.keys());
     }
@@ -81,7 +95,7 @@ service cloud.firestore {
       return email.matches('^[^@]+@[^@]+\\.[^@]+$');
     }
     
-    // Validate mobile (10 digits, Indian)
+    // Validate Indian mobile number (10 digits, starts with 6-9)
     function isValidMobile(mobile) {
       return mobile.matches('^[6-9]\\d{9}$');
     }
@@ -91,37 +105,39 @@ service cloud.firestore {
       return date.matches('^\\d{4}-\\d{2}-\\d{2}$');
     }
     
+    // Validate role is one of the 8 allowed roles
+    function isValidRole(role) {
+      return role in ['super_admin', 'admin', 'manager', 'sales_lead', 'sales_executive', 'support_agent', 'accountant', 'viewer'];
+    }
+    
     // ==========================================
     // USERS COLLECTION
     // ==========================================
     match /users/{userId} {
       
-      // READ: Platform users can read all. Client users can read own profile.
+      // READ: Platform users can read all. Users can read own. Tenant users read same tenant.
       allow read: if isAuthenticated() && (
         isPlatformUser() || 
         request.auth.uid == userId ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
+        (isTenantUser() && resource.data.clientId == getUserClientId())
       );
       
-      // CREATE: Platform users can create any. New registration creates own.
+      // CREATE: Platform users create any. Self-registration allowed.
       allow create: if isAuthenticated() && (
         isPlatformUser() ||
         request.auth.uid == userId
       ) && hasRequiredFields(['email', 'role']) &&
-        request.resource.data.role in ['platform_owner', 'platform_super_admin', 'admin', 'client_owner', 'client_admin', 'manager', 'executive', 'viewer'];
+        isValidRole(request.resource.data.role);
       
-      // UPDATE: Platform users can update any. Users can update own profile (limited).
+      // UPDATE: Platform update any. Users update own (cannot change role).
       allow update: if isAuthenticated() && (
         isPlatformUser() ||
-        request.auth.uid == userId
-      ) && (
-        // Users cannot change their own role
-        request.auth.uid == userId && 
-        (!('role' in request.resource.data) || request.resource.data.role == resource.data.role)
+        (request.auth.uid == userId && 
+         (!('role' in request.resource.data) || request.resource.data.role == resource.data.role))
       );
       
-      // DELETE: Only platform_owner can delete users
-      allow delete: if isAuthenticated() && getUserRole() == 'platform_owner';
+      // DELETE: Only super_admin can delete users
+      allow delete: if isAuthenticated() && getUserRole() == 'super_admin';
     }
     
     // ==========================================
@@ -129,26 +145,21 @@ service cloud.firestore {
     // ==========================================
     match /leads/{leadId} {
       
-      // READ: Platform users see all. Client users see own client's leads.
       allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && (resource.data.clientId == getUserClientId() || resource.data.clientId == null))
+        isPlatformUser() || belongsToTenant()
       );
       
-      // CREATE: Authenticated users with leads:create permission
-      allow create: if isAuthenticated() && hasPermission('leads:create') && (
-        isPlatformUser() || request.resource.data.clientId == getUserClientId()
+      allow create: if isAuthenticated() && hasPermission('manage_leads') && (
+        isPlatformUser() || writeBelongsToTenant()
       ) && hasRequiredFields(['name', 'mobile']) &&
-        isValidMobile(request.resource.data.mobile);
+        (request.resource.data.mobile == null || isValidMobile(request.resource.data.mobile));
       
-      // UPDATE: Users with leads:edit permission
-      allow update: if isAuthenticated() && hasPermission('leads:edit') && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow update: if isAuthenticated() && hasPermission('manage_leads') && (
+        isPlatformUser() || belongsToTenant()
       );
       
-      // DELETE: Users with leads:delete permission
-      allow delete: if isAuthenticated() && hasPermission('leads:delete') && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow delete: if isAuthenticated() && hasPermission('manage_leads') && (
+        isPlatformUser() || belongsToTenant()
       );
     }
     
@@ -158,20 +169,41 @@ service cloud.firestore {
     match /clients/{clientId} {
       
       allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
+        isPlatformUser() || belongsToTenant()
       );
       
-      allow create: if isAuthenticated() && hasPermission('clients:create') && (
-        isPlatformUser() || request.resource.data.clientId == getUserClientId()
+      allow create: if isAuthenticated() && hasPermission('manage_clients') && (
+        isPlatformUser() || writeBelongsToTenant()
       ) && hasRequiredFields(['name']);
       
-      allow update: if isAuthenticated() && hasPermission('clients:edit') && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow update: if isAuthenticated() && hasPermission('manage_clients') && (
+        isPlatformUser() || belongsToTenant()
       );
       
-      allow delete: if isAuthenticated() && hasPermission('clients:delete') && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow delete: if isAuthenticated() && hasPermission('manage_clients') && (
+        isPlatformUser() || belongsToTenant()
+      );
+    }
+    
+    // ==========================================
+    // DEALS / PIPELINE COLLECTION
+    // ==========================================
+    match /deals/{dealId} {
+      
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
+      allow create: if isAuthenticated() && hasPermission('manage_deals') && (
+        isPlatformUser() || writeBelongsToTenant()
+      ) && hasRequiredFields(['name', 'stage']);
+      
+      allow update: if isAuthenticated() && hasPermission('manage_deals') && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
+      allow delete: if isAuthenticated() && hasPermission('manage_deals') && (
+        isPlatformUser() || belongsToTenant()
       );
     }
     
@@ -181,22 +213,21 @@ service cloud.firestore {
     match /revenue/{entryId} {
       
       allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
+        isPlatformUser() || belongsToTenant()
       );
       
-      allow create: if isAuthenticated() && hasPermission('revenue:add') && (
-        isPlatformUser() || request.resource.data.clientId == getUserClientId()
+      allow create: if isAuthenticated() && hasPermission('manage_revenue') && (
+        isPlatformUser() || writeBelongsToTenant()
       ) && hasRequiredFields(['client', 'amount', 'date']) &&
         request.resource.data.amount > 0 &&
         isValidDate(request.resource.data.date);
       
-      allow update: if isAuthenticated() && hasPermission('revenue:edit') && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow update: if isAuthenticated() && hasPermission('manage_revenue') && (
+        isPlatformUser() || belongsToTenant()
       );
       
-      allow delete: if isAuthenticated() && hasPermission('revenue:delete') && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow delete: if isAuthenticated() && hasPermission('manage_revenue') && (
+        isPlatformUser() || belongsToTenant()
       );
     }
     
@@ -206,56 +237,15 @@ service cloud.firestore {
     match /projects/{projectId} {
       
       allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
+        isPlatformUser() || belongsToTenant()
       );
       
-      allow create: if isAuthenticated() && (
-        isPlatformUser() || request.resource.data.clientId == getUserClientId()
+      allow create: if isAuthenticated() && hasPermission('manage_projects') && (
+        isPlatformUser() || writeBelongsToTenant()
       ) && hasRequiredFields(['name']);
       
-      allow update: if isAuthenticated() && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
-      );
-      
-      allow delete: if isAuthenticated() && isPlatformUser();
-    }
-    
-    // ==========================================
-    // RETAINERS COLLECTION
-    // ==========================================
-    match /retainers/{retainerId} {
-      
-      allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
-      );
-      
-      allow create: if isAuthenticated() && (
-        isPlatformUser() || request.resource.data.clientId == getUserClientId()
-      );
-      
-      allow update: if isAuthenticated() && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
-      );
-      
-      allow delete: if isAuthenticated() && isPlatformUser();
-    }
-    
-    // ==========================================
-    // INVOICES COLLECTION
-    // ==========================================
-    match /invoices/{invoiceId} {
-      
-      allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
-      );
-      
-      allow create: if isAuthenticated() && hasRequiredFields(['number', 'client', 'amount']);
-      
-      allow update: if isAuthenticated() && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+      allow update: if isAuthenticated() && hasPermission('manage_projects') && (
+        isPlatformUser() || belongsToTenant()
       );
       
       allow delete: if isAuthenticated() && isPlatformUser();
@@ -267,8 +257,7 @@ service cloud.firestore {
     match /tasks/{taskId} {
       
       allow read: if isAuthenticated() && (
-        isPlatformUser() ||
-        (isClientUser() && resource.data.clientId == getUserClientId())
+        isPlatformUser() || belongsToTenant()
       );
       
       allow create: if isAuthenticated() && hasRequiredFields(['title']);
@@ -279,58 +268,62 @@ service cloud.firestore {
     }
     
     // ==========================================
-    // APPOINTMENTS COLLECTION
+    // INVOICES COLLECTION
     // ==========================================
-    match /appointments/{appointmentId} {
+    match /invoices/{invoiceId} {
       
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && hasRequiredFields(['title', 'with', 'date', 'time']);
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
+      allow create: if isAuthenticated() && hasPermission('manage_invoices') && (
+        isPlatformUser() || writeBelongsToTenant()
+      ) && hasRequiredFields(['number', 'client', 'amount']);
+      
+      allow update: if isAuthenticated() && hasPermission('manage_invoices') && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
+      allow delete: if isAuthenticated() && isPlatformUser();
     }
     
     // ==========================================
-    // CAMPAIGNS COLLECTION
+    // PAYMENTS COLLECTION
     // ==========================================
-    match /campaigns/{campaignId} {
+    match /payments/{paymentId} {
       
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && hasRequiredFields(['name']);
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
+      allow create: if isAuthenticated() && hasPermission('manage_payments') && (
+        isPlatformUser() || writeBelongsToTenant()
+      );
+      
+      allow update: if isAuthenticated() && hasPermission('manage_payments') && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
+      allow delete: if isAuthenticated() && isPlatformUser();
     }
     
     // ==========================================
-    // TRAININGS COLLECTION
+    // RETAINERS COLLECTION
     // ==========================================
-    match /trainings/{trainingId} {
+    match /retainers/{retainerId} {
       
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && hasRequiredFields(['name', 'attendee']);
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
-    }
-    
-    // ==========================================
-    // REFERRALS COLLECTION
-    // ==========================================
-    match /referrals/{referralId} {
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
       
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && hasRequiredFields(['clientName', 'name', 'mobile']) &&
-        isValidMobile(request.resource.data.mobile);
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
-    }
-    
-    // ==========================================
-    // HISTORY COLLECTION
-    // ==========================================
-    match /history/{entryId} {
+      allow create: if isAuthenticated() && (
+        isPlatformUser() || writeBelongsToTenant()
+      );
       
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && isPlatformUser();
+      allow update: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      
       allow delete: if isAuthenticated() && isPlatformUser();
     }
     
@@ -348,33 +341,35 @@ service cloud.firestore {
     }
     
     // ==========================================
-    // SETTINGS COLLECTION
-    // ==========================================
-    match /settings/{settingId} {
-      
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && isPlatformUser();
-      allow update: if isAuthenticated() && isPlatformUser();
-      allow delete: if isAuthenticated() && getUserRole() == 'platform_owner';
-    }
-    
-    // ==========================================
-    // BACKUPS COLLECTION
-    // ==========================================
-    match /backups/{backupId} {
-      
-      allow read: if isAuthenticated() && isPlatformUser();
-      allow create: if isAuthenticated() && isPlatformUser();
-      allow delete: if isAuthenticated() && getUserRole() == 'platform_owner';
-    }
-    
-    // ==========================================
     // ACTIVITY LOGS COLLECTION
     // ==========================================
     match /activityLogs/{logId} {
       
       allow read: if isAuthenticated() && isPlatformUser();
       allow create: if isAuthenticated();
+      allow delete: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // ERROR LOGS COLLECTION
+    // ==========================================
+    match /error_logs/{logId} {
+      
+      allow read: if isAuthenticated() && isPlatformUser();
+      allow create: if isAuthenticated();
+      allow delete: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // HISTORY COLLECTION
+    // ==========================================
+    match /history/{entryId} {
+      
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && isPlatformUser();
       allow delete: if isAuthenticated() && isPlatformUser();
     }
     
@@ -389,13 +384,43 @@ service cloud.firestore {
     }
     
     // ==========================================
-    // CHAT MESSAGES COLLECTION
+    // WHATSAPP CHATS COLLECTION
     // ==========================================
-    match /chatMessages/{messageId} {
+    match /whatsapp_chats/{chatId} {
       
       allow read: if isAuthenticated();
       allow create: if isAuthenticated() && request.resource.data.senderId == request.auth.uid;
       allow delete: if isAuthenticated() && resource.data.senderId == request.auth.uid;
+    }
+    
+    // ==========================================
+    // SETTINGS COLLECTION
+    // ==========================================
+    match /settings/{settingId} {
+      
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isPlatformUser();
+      allow update: if isAuthenticated() && isPlatformUser();
+      allow delete: if isAuthenticated() && getUserRole() == 'super_admin';
+    }
+    
+    // ==========================================
+    // BACKUPS COLLECTION
+    // ==========================================
+    match /backups/{backupId} {
+      
+      allow read: if isAuthenticated() && isPlatformUser();
+      allow create: if isAuthenticated() && isPlatformUser();
+      allow delete: if isAuthenticated() && getUserRole() == 'super_admin';
+    }
+    
+    // ==========================================
+    // REPORTS COLLECTION
+    // ==========================================
+    match /reports/{reportId} {
+      
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isPlatformUser();
     }
     
     // ==========================================
@@ -416,10 +441,23 @@ service cloud.firestore {
     match /subscriptions/{subscriptionId} {
       
       allow read: if isAuthenticated() && (
-        isPlatformUser() || resource.data.clientId == getUserClientId()
+        isPlatformUser() || belongsToTenant()
       );
       allow create: if isAuthenticated() && isPlatformUser();
       allow update: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // TENANTS COLLECTION
+    // ==========================================
+    match /tenants/{tenantId} {
+      
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || resource.data.id == getUserClientId()
+      );
+      allow create: if isAuthenticated() && isPlatformUser();
+      allow update: if isAuthenticated() && isPlatformUser();
+      allow delete: if isAuthenticated() && getUserRole() == 'super_admin';
     }
     
     // ==========================================
@@ -428,14 +466,93 @@ service cloud.firestore {
     match /roles/{roleId} {
       
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && getUserRole() == 'platform_owner';
+      allow write: if isAuthenticated() && getUserRole() == 'super_admin';
     }
     
     // ==========================================
-    // GLOBAL RULES
+    // EMAIL TEMPLATES COLLECTION
     // ==========================================
+    match /email_templates/{templateId} {
+      
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPlatformUser();
+    }
     
-    // Deny all other access
+    // ==========================================
+    // SMS TEMPLATES COLLECTION
+    // ==========================================
+    match /sms_templates/{templateId} {
+      
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // WORKFLOWS COLLECTION
+    // ==========================================
+    match /workflows/{workflowId} {
+      
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // INTEGRATIONS COLLECTION
+    // ==========================================
+    match /integrations/{integrationId} {
+      
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // WEBHOOKS COLLECTION
+    // ==========================================
+    match /webhooks/{webhookId} {
+      
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPlatformUser();
+    }
+    
+    // ==========================================
+    // FILES COLLECTION
+    // ==========================================
+    match /files/{fileId} {
+      
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      allow create: if isAuthenticated();
+      allow delete: if isAuthenticated() && (
+        isPlatformUser() || (belongsToTenant() && resource.data.uploadedBy == request.auth.uid)
+      );
+    }
+    
+    // ==========================================
+    // AUDIT LOGS COLLECTION
+    // ==========================================
+    match /audit_logs/{logId} {
+      
+      allow read: if isAuthenticated() && isPlatformUser();
+      allow create: if isAuthenticated();
+      allow delete: if isAuthenticated() && getUserRole() == 'super_admin';
+    }
+    
+    // ==========================================
+    // GST RECORDS COLLECTION
+    // ==========================================
+    match /gst_records/{recordId} {
+      
+      allow read: if isAuthenticated() && (
+        isPlatformUser() || belongsToTenant()
+      );
+      allow create: if isAuthenticated() && hasPermission('manage_gst');
+      allow update: if isAuthenticated() && hasPermission('manage_gst');
+    }
+    
+    // ==========================================
+    // GLOBAL DENY RULE
+    // ==========================================
     match /{document=**} {
       allow read, write: if false;
     }

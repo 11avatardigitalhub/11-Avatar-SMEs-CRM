@@ -1,105 +1,186 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="public">
+<html lang="en-IN" data-theme="public">
 <head>
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - Login Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- SEO & Indexing -->
+    <meta name="description" content="Sign in to 11 Avatar Digital Hub - India's #1 Revenue Operating System for SMEs. Access your CRM dashboard, manage leads, pipeline, and revenue." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="copyright" content="© 2024-2026 11 Avatar Digital Hub. All Rights Reserved." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Login - 11 Avatar Digital Hub | Master Revenue CRM" />
+    <meta property="og:description" content="Sign in to your CRM dashboard. Manage leads, pipeline, revenue, and more. India's trusted SME platform." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/login.html" />
+    <meta property="og:image" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Login - 11 Avatar Digital Hub" />
+    <meta name="twitter:description" content="Sign in to your CRM dashboard. India's #1 Revenue OS for SMEs." />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/login.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#0A0A0A" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="Sign in to 11 Avatar Digital Hub - India's #1 Revenue Operating System. Access your CRM dashboard." />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="apple-mobile-web-app-title" content="AvatarCRM Login" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png" />
     
-    <meta property="og:title" content="Login - 11 Avatar Digital Hub" />
-
-    <meta property="og:description" content="Sign in to your CRM dashboard. Manage leads, pipeline, revenue, and more." />
-    
-    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/login" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/svg+xml" href="assets/images/logo-icon.svg" />
-    <link rel="apple-touch-icon" href="assets/images/icons/icon-192.png" />
-
-    
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://avatar-wa-dual-crm.firebaseapp.com" />
+    <link rel="preconnect" href="https://www.gstatic.com" />
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://avatar-wa-dual-crm.firebaseapp.com" />
+    <link rel="dns-prefetch" href="https://www.gstatic.com" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/auth.css" />
     
-
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.gstatic.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://*.gstatic.com https://*.firebaseapp.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://*.cloudfunctions.net wss://*.firebaseapp.com; frame-src 'self' https://*.firebaseapp.com;" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
     <title>Login - 11 Avatar Digital Hub | Master Revenue CRM</title>
-
     
+    <!-- Anti-flicker: Hide body until CSS loaded -->
     <style>
-        body{opacity:0;transition:opacity 0.3s ease}
-        body.loaded{opacity:1}
-        .login-container{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%)}
-        .login-card{width:100%;max-width:460px;background:rgba(26,26,26,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px 32px;box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.05)}
-        .login-card:hover{border-color:rgba(212,175,55,0.2);transition:border-color 0.3s ease}
-        .input-group{position:relative;margin-bottom:20px}
-        .input-group input{width:100%;background:#1E1E1E;border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 16px;padding-left:48px;font-size:1rem;color:#FFFFFF;transition:all 0.3s ease;min-height:52px;outline:none}
-        .input-group input:focus{border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,0.1);background:#242424}
-        .input-group input.input-error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
-
-        .input-group .input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#888;pointer-events:none;transition:color 0.3s ease}
-        .input-group input:focus+.input-icon,.input-group input:focus~.input-icon{color:#D4AF37}
-        .input-group .toggle-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;cursor:pointer;font-size:1.2rem;padding:8px;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center}
-
-        .input-group .toggle-password:hover{color:#D4AF37}
-        .field-error{color:#EF4444;font-size:0.8rem;margin-top:6px;display:flex;align-items:center;gap:6px;animation:fadeUp 0.2s ease}
-        .divider{display:flex;align-items:center;gap:16px;margin:24px 0;color:#666;font-size:0.85rem}
-        .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-6px)}20%,40%,60%,80%{transform:translateX(6px)}}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.2);border-top-color:#D4AF37;border-radius:50%;animation:spin 0.6s linear infinite;display:inline-block}
-        @media(max-width:480px){.login-card{padding:28px 20px}}
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card" role="main" aria-label="Login form">
+    
+    <!-- ==========================================
+         SKIP NAVIGATION LINK (Accessibility)
+         ========================================== -->
+    <a href="#login-form" class="skip-link" aria-label="Skip to login form">
+        Skip to Login Form
+    </a>
+    
+    <!-- ==========================================
+         MAIN LOGIN CONTAINER
+         ========================================== -->
+    <main class="auth-container" role="main" aria-labelledby="login-heading">
+        
+        <!-- ==========================================
+             LOGIN CARD
+             ========================================== -->
+        <section class="auth-card login-card" aria-label="Login form card">
             
-
-            <!-- Logo & Brand -->
-            <div style="text-align:center;margin-bottom:32px">
-                <a href="/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:8px" aria-label="11 Avatar Home">
-
-                    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-                        <rect width="44" height="44" rx="12" fill="#D4AF37"/>
-                        <text x="22" y="29" text-anchor="middle" fill="#0A0A0A" font-size="17" font-weight="800" font-family="Inter, sans-serif">11A</text>
+            <!-- ==========================================
+                 BRAND HEADER
+                 ========================================== -->
+            <header class="auth-header">
+                <a href="index.html" class="auth-logo" aria-label="11 Avatar Digital Hub - Home">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true" role="img">
+                        <rect width="48" height="48" rx="14" fill="url(#goldGradient)" />
+                        <defs>
+                            <linearGradient id="goldGradient" x1="0" y1="0" x2="48" y2="48">
+                                <stop offset="0%" stop-color="#FFD700" />
+                                <stop offset="100%" stop-color="#E6C200" />
+                            </linearGradient>
+                        </defs>
+                        <text x="24" y="32" text-anchor="middle" fill="#0A0A0A" font-size="18" font-weight="800" font-family="Inter, sans-serif">11A</text>
                     </svg>
-                    <span style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;color:#D4AF37">11 Avatar Hub</span>
+                    <span class="auth-logo-text">11 Avatar Hub</span>
                 </a>
-                <h1 style="font-size:1.6rem;font-weight:700;color:#FFFFFF;margin-bottom:4px">Welcome Back 👋</h1>
-                <p style="color:#888;font-size:0.95rem">Sign in to access your CRM dashboard</p>
+                <h1 id="login-heading" class="auth-title">Welcome Back 👋</h1>
+                <p class="auth-subtitle">Sign in to access your CRM dashboard</p>
+            </header>
+            
+            <!-- ==========================================
+                 SESSION EXPIRED / LOGOUT NOTIFICATION
+                 ========================================== -->
+            <div id="login-notification" role="status" aria-live="polite" aria-atomic="true" style="display:none;"></div>
+            
+            <!-- ==========================================
+                 ERROR MESSAGE CONTAINER
+                 ========================================== -->
+            <div id="login-error" class="auth-error" role="alert" aria-live="assertive" aria-atomic="true">
+                <span id="login-error-message"></span>
             </div>
             
-
-            <!-- Error Message Container -->
-            <div id="login-error" role="alert" aria-live="polite" style="display:none;background:rgba(239,68,68,0.08);border-left:3px solid #EF4444;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#EF4444;font-size:0.9rem"></div>
+            <!-- ==========================================
+                 LOCKOUT WARNING CONTAINER
+                 ========================================== -->
+            <div id="login-lockout" class="auth-error" role="alert" aria-live="assertive" style="display:none;border-left-color:#F59E0B;background:rgba(245,158,11,0.08);color:#F59E0B;">
+                <span id="login-lockout-message"></span>
+                <span id="login-lockout-timer" style="font-weight:700;"></span>
+            </div>
             
-            <!-- Login Form -->
-            <form id="login-form" novalidate autocomplete="on">
+            <!-- ==========================================
+                 LOGIN FORM
+                 ========================================== -->
+            <form id="login-form" class="auth-form" novalidate autocomplete="on" method="POST" aria-label="Login form">
                 
-                <!-- Email Field -->
+                <!-- Hidden CSRF Protection Token -->
+                <input type="hidden" id="login-csrf" name="csrf_token" value="" />
+                
+                <!-- ==========================================
+                     EMAIL FIELD
+                     ========================================== -->
                 <div class="input-group">
-                    <span class="input-icon" aria-hidden="true">📧</span>
+                    <span class="input-icon" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path d="M22 4L12 13L2 4" />
+                        </svg>
+                    </span>
                     <input 
                         type="email" 
                         id="login-email" 
                         name="email" 
                         placeholder="Email address" 
                         autocomplete="email"
+                        inputmode="email"
                         required 
                         aria-required="true"
                         aria-label="Email address"
+                        aria-describedby="login-email-error"
+                        maxlength="254"
                     />
+                    <div id="login-email-error" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 
-                <!-- Password Field -->
+                <!-- ==========================================
+                     PASSWORD FIELD
+                     ========================================== -->
                 <div class="input-group">
-                    <span class="input-icon" aria-hidden="true">🔒</span>
+                    <span class="input-icon" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" />
+                            <path d="M7 11V7a5 5 0 0110 0v4" />
+                            <circle cx="12" cy="16" r="1" />
+                        </svg>
+                    </span>
                     <input 
                         type="password" 
                         id="login-password" 
@@ -109,303 +190,278 @@
                         required 
                         aria-required="true"
                         aria-label="Password"
+                        aria-describedby="login-password-error"
                         minlength="6"
+                        maxlength="128"
                     />
-                    <button type="button" class="toggle-password" id="password-toggle" aria-label="Toggle password visibility" title="Show password">
-                        👁️
+                    <button 
+                        type="button" 
+                        class="password-toggle" 
+                        id="password-toggle" 
+                        aria-label="Show password"
+                        title="Toggle password visibility"
+                        tabindex="0"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
                     </button>
+                    <div id="login-password-error" class="field-error" role="alert" aria-live="polite"></div>
                 </div>
                 
-                <!-- Remember Me & Forgot Password -->
-
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:8px">
-                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#CCC;font-size:0.9rem;min-height:44px">
-                        <input type="checkbox" id="login-remember" style="width:18px;height:18px;accent-color:#D4AF37;min-height:auto" />
+                <!-- ==========================================
+                     REMEMBER ME & FORGOT PASSWORD
+                     ========================================== -->
+                <div class="auth-options-row">
+                    <label class="remember-me" for="login-remember">
+                        <input 
+                            type="checkbox" 
+                            id="login-remember" 
+                            name="remember_me" 
+                            value="1"
+                            aria-label="Remember me on this device"
+                        />
                         <span>Remember me</span>
                     </label>
-
-                    <a href="#/forgot-password" style="color:#D4AF37;font-size:0.9rem;font-weight:500;text-decoration:none;padding:8px 0">Forgot password?</a>
+                    <a href="forgot-password.html" class="forgot-link" aria-label="Forgot your password? Reset it here.">
+                        Forgot password?
+                    </a>
                 </div>
                 
-                <!-- Submit Button -->
+                <!-- ==========================================
+                     SUBMIT BUTTON
+                     ========================================== -->
                 <button 
                     type="submit" 
                     id="login-submit" 
-                    class="btn btn-primary btn-block btn-lg"
-                    style="font-size:1.05rem;min-height:52px;width:100%"
+                    class="auth-submit-btn"
                     aria-busy="false"
+                    aria-label="Sign in to your account"
                 >
-
-                    <span id="login-submit-text">Sign In</span>
-                    <span id="login-spinner" class="spinner" style="display:none" aria-hidden="true"></span>
+                    <span class="btn-text">Sign In</span>
+                    <span class="spinner" aria-hidden="true"></span>
                 </button>
                 
-
-                <!-- Divider -->
-                <div class="divider">or continue with</div>
+                <!-- ==========================================
+                     DIVIDER
+                     ========================================== -->
+                <div class="auth-divider" aria-hidden="true">or continue with</div>
                 
-                <!-- Google Login -->
+                <!-- ==========================================
+                     GOOGLE LOGIN BUTTON
+                     ========================================== -->
                 <button 
                     type="button" 
                     id="login-google" 
-                    class="btn btn-outline btn-block"
-                    style="min-height:52px;width:100%;font-size:0.95rem;gap:10px;border-color:rgba(255,255,255,0.12)"
+                    class="google-btn"
+                    aria-label="Sign in with Google"
                 >
-
-                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
-                    Sign in with Google
+                    <span>Sign in with Google</span>
                 </button>
                 
             </form>
             
-
-            <!-- Register Link -->
-            <p style="text-align:center;margin-top:24px;color:#888;font-size:0.9rem">
-                Don't have an account? 
-                <a href="#/register" style="color:#D4AF37;font-weight:600;text-decoration:none;padding:8px 0">Create free account →</a>
-            </p>
+            <!-- ==========================================
+                 FOOTER LINKS
+                 ========================================== -->
+            <footer class="auth-footer">
+                <p>
+                    Don't have an account? 
+                    <a href="register.html" aria-label="Create a new account">Create free account →</a>
+                </p>
+                <a href="index.html" class="auth-back-link" aria-label="Back to home page">← Back to Home</a>
+            </footer>
             
-            <!-- Back to Home -->
-            <p style="text-align:center;margin-top:12px">
-                <a href="/" style="color:#666;font-size:0.85rem;text-decoration:none;padding:8px 0">← Back to Home</a>
-
-            </p>
-        </div>
+            <!-- ==========================================
+                 SECURITY NOTE
+                 ========================================== -->
+            <div class="security-note" aria-label="Security information">
+                <span class="note-icon" aria-hidden="true">🔒</span>
+                <p class="note-text">
+                    Your data is protected with <strong>256-bit encryption</strong>. 
+                    By signing in, you agree to our 
+                    <a href="terms.html" aria-label="Terms of Service">Terms</a> and 
+                    <a href="privacy.html" aria-label="Privacy Policy">Privacy Policy</a>.
+                </p>
+            </div>
+            
+        </section>
+        
+    </main>
+    
+    <!-- ==========================================
+         LOADING OVERLAY (Hidden by default)
+         ========================================== -->
+    <div id="login-loading-overlay" class="loading-overlay" role="alert" aria-busy="true" aria-label="Signing in, please wait" style="display:none;">
+        <div class="loading-spinner-large" aria-hidden="true"></div>
+        <p class="loading-text">Signing you in securely...</p>
     </div>
     
-
-    <!-- Firebase SDKs -->
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
+    
+    <!-- Firebase SDKs (Compat mode for broader browser support) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     
-    <!-- App Scripts -->
-    
+    <!-- Application Core -->
+    <script src="src/js/config/constants.js"></script>
     <script src="src/js/config/firebase.js"></script>
+    <script src="src/js/auth/auth.js"></script>
+    <script src="src/js/auth/login.js"></script>
     
-    
-    
+    <!-- ==========================================
+         INLINE INITIALIZATION (Minimal bootstrap)
+         ========================================== -->
     <script>
-        // ==========================================
-        // ADDITIONAL LOGIN PAGE LOGIC
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.classList.add('loaded');
+        /**
+         * @fileoverview Login Page Bootstrap
+         * @description Minimal inline script to initialize login page components.
+         *              Heavy logic resides in src/js/auth/login.js (LoginController).
+         * @version 3.0.0
+         */
+        'use strict';
+        
+        (function() {
             
-            const form = document.getElementById('login-form');
-            const emailInput = document.getElementById('login-email');
-            const passwordInput = document.getElementById('login-password');
-            const submitBtn = document.getElementById('login-submit');
-            const submitText = document.getElementById('login-submit-text');
-            const submitSpinner = document.getElementById('login-spinner');
-            const errorContainer = document.getElementById('login-error');
-            const googleBtn = document.getElementById('login-google');
-            const toggleBtn = document.getElementById('password-toggle');
-            
-            let isSubmitting = false;
-            
-            // Password visibility toggle
-            toggleBtn?.addEventListener('click', function() {
-                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                this.textContent = type === 'password' ? '👁️' : '🙈';
-                this.setAttribute('aria-label', type === 'password' ? 'Show password' : 'Hide password');
-            });
-            
-            // Show error message
-            function showError(message) {
-                if (errorContainer) {
-                    errorContainer.textContent = message;
-
-                    errorContainer.style.display = 'block';
-                    errorContainer.style.animation = 'none';
-                    errorContainer.offsetHeight;
-                    errorContainer.style.animation = 'fadeUp 0.3s ease';
-                }
-            }
-            
-
-            // Hide error message
-            function hideError() {
-                if (errorContainer) {
-                    errorContainer.style.display = 'none';
-                }
-            }
-            
-            // Clear field errors
-            function clearFieldErrors() {
-                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-                document.querySelectorAll('.field-error').forEach(el => el.remove());
-            }
-            
-            // Show field error
-            function showFieldError(input, message) {
-                input.classList.add('input-error');
-                input.setAttribute('aria-invalid', 'true');
-                
-                const existing = input.parentElement.querySelector('.field-error');
-                if (existing) existing.remove();
-                
-                const errorEl = document.createElement('div');
-
-                errorEl.className = 'field-error';
-                errorEl.textContent = '⚠️ ' + message;
-                input.parentElement.appendChild(errorEl);
-            }
-            
-
-            // Set loading state
-            function setLoading(loading) {
-                isSubmitting = loading;
-                
-                if (loading) {
-                    submitBtn.disabled = true;
-                    submitBtn.setAttribute('aria-busy', 'true');
-                    submitText.style.display = 'none';
-                    submitSpinner.style.display = 'inline-block';
-                    googleBtn.disabled = true;
-                    emailInput.disabled = true;
-                    passwordInput.disabled = true;
-                } else {
-                    submitBtn.disabled = false;
-                    submitBtn.removeAttribute('aria-busy');
-                    submitText.style.display = '';
-                    submitSpinner.style.display = 'none';
-                    googleBtn.disabled = false;
-                    emailInput.disabled = false;
-                    passwordInput.disabled = false;
-                }
-            }
-            
-            // Form submission
-            form?.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-
-                if (isSubmitting) return;
-                
-                hideError();
-                clearFieldErrors();
-                
-
-                const email = emailInput.value.trim();
-                const password = passwordInput.value;
-                const rememberMe = document.getElementById('login-remember')?.checked || false;
-                
-                // Validate
-                let hasError = false;
-
-                
-                if (!email) {
-                    showFieldError(emailInput, 'Email is required');
-                    hasError = true;
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    showFieldError(emailInput, 'Invalid email format');
-                    hasError = true;
-                }
-                
-                if (!password) {
-                    showFieldError(passwordInput, 'Password is required');
-                    hasError = true;
-                }
-                
-                if (hasError) return;
-                
-
-                // Attempt login
-                setLoading(true);
-                
+            /**
+             * Generate CSRF token for form protection
+             * @returns {string} Random token
+             */
+            function generateCSRFToken() {
                 try {
-                    if (window.auth && window.auth.login) {
-                        await window.auth.login({ email, password, rememberMe });
-                    } else {
-                        // Direct Firebase login fallback
-                        const persistence = rememberMe 
-                            ? firebase.auth.Auth.Persistence.LOCAL 
-                            : firebase.auth.Auth.Persistence.SESSION;
-                        await firebase.auth().setPersistence(persistence);
-                        await firebase.auth().signInWithEmailAndPassword(email, password);
-                    }
-                    
-                    // Success - redirect to dashboard
-                    window.location.href = '#/dashboard';
-                    
+                    const array = new Uint32Array(8);
+                    crypto.getRandomValues(array);
+                    return Array.from(array, function(dec) {
+                        return ('0' + dec.toString(16)).slice(-8);
+                    }).join('');
                 } catch (error) {
-                    console.error('Login error:', error);
-                    
-                    const errorMessages = {
-                        'auth/user-not-found': 'No account found with this email',
-                        'auth/wrong-password': 'Incorrect password',
-                        'auth/invalid-credential': 'Invalid email or password',
-                        'auth/too-many-requests': 'Too many attempts. Try again later',
-                        'auth/network-request-failed': 'Network error. Check your connection'
-                    };
-                    
-                    showError(errorMessages[error.code] || error.message || 'Login failed');
-                    
-                    // Shake form
-                    document.querySelector('.login-card').style.animation = 'shake 0.5s ease';
-                    setTimeout(() => {
-                        document.querySelector('.login-card').style.animation = '';
-                    }, 500);
-                    
-                } finally {
-                    setLoading(false);
+                    return Date.now().toString(36) + Math.random().toString(36).substr(2);
                 }
-            });
-            
-            // Google login
-            googleBtn?.addEventListener('click', async function() {
-                if (isSubmitting) return;
-                
-                hideError();
-                setLoading(true);
-                
-                try {
-                    if (window.auth && window.auth.loginWithGoogle) {
-                        await window.auth.loginWithGoogle();
-                    } else {
-                        const provider = new firebase.auth.GoogleAuthProvider();
-                        await firebase.auth().signInWithPopup(provider);
-                    }
-                    
-                    window.location.href = '#/dashboard';
-                    
-                } catch (error) {
-                    if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-                        showError('Google login failed. Please try again.');
-                    }
-                } finally {
-                    setLoading(false);
-                }
-            });
-            
-            // Check for redirect reason
-            const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
-            const reason = params.get('reason');
-
-            
-            if (reason === 'session_expired') {
-                showError('Your session expired. Please login again.');
-            } else if (reason === 'logout') {
-
-                const successEl = document.createElement('div');
-                successEl.style.cssText = 'background:rgba(16,185,129,0.08);border-left:3px solid #10B981;border-radius:8px;padding:12px 16px;margin-bottom:20px;color:#10B981;font-size:0.9rem';
-                successEl.textContent = '✅ Logged out successfully';
-                form?.parentNode.insertBefore(successEl, form);
-                setTimeout(() => successEl.remove(), 5000);
             }
             
-            // Focus email field
-            setTimeout(() => emailInput?.focus(), 600);
+            /**
+             * Parse URL parameters from hash fragment
+             * @returns {URLSearchParams} Parsed parameters
+             */
+            function getHashParams() {
+                try {
+                    var hash = window.location.hash;
+                    var queryIndex = hash.indexOf('?');
+                    if (queryIndex > -1) {
+                        return new URLSearchParams(hash.substring(queryIndex + 1));
+                    }
+                    return new URLSearchParams();
+                } catch (error) {
+                    return new URLSearchParams();
+                }
+            }
             
-            console.log('✅ Login page ready');
-        });
+            /**
+             * Show notification message (success/info)
+             * @param {string} message - Message to display
+             * @param {string} type - 'success' or 'info'
+             */
+            function showNotification(message, type) {
+                var notification = document.getElementById('login-notification');
+                if (!notification) return;
+                
+                var isSuccess = type === 'success';
+                notification.style.display = 'block';
+                notification.style.background = isSuccess 
+                    ? 'rgba(16,185,129,0.08)' 
+                    : 'rgba(59,130,246,0.08)';
+                notification.style.borderLeftColor = isSuccess ? '#10B981' : '#3B82F6';
+                notification.style.color = isSuccess ? '#10B981' : '#3B82F6';
+                notification.style.borderRadius = '10px';
+                notification.style.padding = '14px 18px';
+                notification.style.marginBottom = '24px';
+                notification.style.borderLeft = '4px solid';
+                notification.style.animation = 'fadeInUp 0.3s ease';
+                notification.textContent = message;
+                
+                // Auto-hide after 8 seconds
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 8000);
+            }
+            
+            // -----------------------------------------------------------------
+            // DOM READY HANDLER
+            // -----------------------------------------------------------------
+            function onDOMReady() {
+                // Remove anti-flicker
+                document.body.classList.add('loaded');
+                
+                // Set CSRF token
+                var csrfInput = document.getElementById('login-csrf');
+                if (csrfInput) {
+                    csrfInput.value = generateCSRFToken();
+                }
+                
+                // Check for redirect reasons in URL hash
+                var params = getHashParams();
+                var reason = params.get('reason');
+                
+                if (reason === 'session_expired') {
+                    setTimeout(function() {
+                        var errorContainer = document.getElementById('login-error');
+                        var errorMessage = document.getElementById('login-error-message');
+                        if (errorContainer && errorMessage) {
+                            errorMessage.textContent = '⏰ Your session has expired. Please sign in again to continue.';
+                            errorContainer.classList.add('show');
+                        }
+                    }, 400);
+                } else if (reason === 'logout') {
+                    setTimeout(function() {
+                        showNotification('✅ You have been logged out successfully.', 'success');
+                    }, 400);
+                } else if (reason === 'password_reset') {
+                    setTimeout(function() {
+                        showNotification('✅ Your password has been reset successfully. Please sign in with your new password.', 'success');
+                    }, 400);
+                } else if (reason === 'email_verified') {
+                    setTimeout(function() {
+                        showNotification('✅ Your email has been verified. You can now sign in.', 'success');
+                    }, 400);
+                }
+                
+                // Focus email field after animations
+                var emailInput = document.getElementById('login-email');
+                if (emailInput) {
+                    setTimeout(function() {
+                        emailInput.focus();
+                    }, 700);
+                }
+                
+                // Log initialization
+                if (window.Constants && window.Constants.APP && window.Constants.APP.DEBUG) {
+                    console.log(
+                        '%c[Login Page] %cReady %cv' + window.Constants.APP.VERSION,
+                        'color: #FFD700; font-weight: bold;',
+                        'color: #10B981;',
+                        'color: #888;'
+                    );
+                }
+            }
+            
+            // Execute when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', onDOMReady);
+            } else {
+                onDOMReady();
+            }
+            
+        })();
     </script>
+    
 </body>
 </html>
-

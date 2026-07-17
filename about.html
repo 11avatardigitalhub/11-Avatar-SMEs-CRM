@@ -1,242 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About 11 Avatar Digital Hub - Our mission, team, and story building India's leading CRM platform">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <!-- ==========================================
+         11 AVATAR DIGITAL HUB - About Us Page
+         Version: 3.0 Enterprise
+         Theme: Public (Dark) - White/Gold/Black
+         ========================================== -->
     
-    <title>About Us - 11 Avatar Digital Hub</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SEO & Indexing -->
+    <meta name="description" content="About 11 Avatar Digital Hub - Our mission, team, and story building India's #1 Revenue Operating System for SMEs." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="copyright" content="© 2024-2026 11 Avatar Digital Hub. All Rights Reserved." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="About Us - 11 Avatar Digital Hub | Our Mission & Team" />
+    <meta property="og:description" content="Meet the team behind India's leading CRM platform. Learn about our mission, values, and story." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/about.html" />
+    <meta property="og:image" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/assets/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="About Us - 11 Avatar Digital Hub" />
+    <meta name="twitter:description" content="Meet the team building India's #1 Revenue OS." />
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/about.html" />
+    
+    <!-- PWA & Icons -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/landing.css" />
+    
+    <title>About Us - 11 Avatar Digital Hub | Our Mission & Team</title>
     
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
-            --radius: 16px; --radius-sm: 10px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; min-height: 100vh; }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header { background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gold); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
-
-        .hero { text-align: center; padding: 80px 0 60px; position: relative; }
-        .hero::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%); pointer-events: none; }
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 52px; font-weight: 800; margin-bottom: 16px; line-height: 1.2; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--text-muted); font-size: 19px; max-width: 700px; margin: 0 auto 32px; }
-
-        .mission-box { max-width: 800px; margin: 0 auto 64px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; text-align: center; box-shadow: var(--shadow); position: relative; }
-        .mission-box::before { content: '"'; position: absolute; top: -30px; left: 40px; font-family: 'Poppins', serif; font-size: 120px; color: var(--gold); opacity: 0.15; line-height: 1; }
-        .mission-box h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 12px; color: var(--gold); }
-        .mission-box p { color: var(--text-secondary); font-size: 17px; font-style: italic; }
-
-        .section { padding: 64px 0; }
-        .section-title { text-align: center; margin-bottom: 48px; }
-        .section-title h2 { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 8px; }
-        .section-title p { color: var(--text-muted); font-size: 17px; }
-
-        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
-        .value-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 24px; text-align: center; box-shadow: var(--shadow); transition: var(--transition); }
-        .value-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.3); }
-        .value-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 16px; }
-        .value-card h3 { font-family: 'Poppins', sans-serif; font-size: 17px; margin-bottom: 8px; }
-        .value-card p { color: var(--text-muted); font-size: 14px; }
-
-        .story-timeline { max-width: 700px; margin: 0 auto; }
-        .story-item { display: flex; gap: 24px; margin-bottom: 32px; position: relative; }
-        .story-item::before { content: ''; position: absolute; left: 19px; top: 48px; bottom: -32px; width: 2px; background: var(--border); }
-        .story-item:last-child::before { display: none; }
-        .story-year { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; position: relative; z-index: 1; }
-        .story-content { flex: 1; padding-bottom: 8px; }
-        .story-content h4 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 6px; }
-        .story-content p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
-
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
-        .team-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; text-align: center; box-shadow: var(--shadow); transition: var(--transition); }
-        .team-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.3); }
-        .team-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #fff; }
-        .team-card h4 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 4px; }
-        .team-card .role { color: var(--gold); font-size: 13px; font-weight: 500; display: block; margin-bottom: 8px; }
-        .team-card p { color: var(--text-muted); font-size: 13px; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; box-shadow: var(--shadow); }
-        .stat-number { font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 800; color: var(--gold); display: block; }
-        .stat-label { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
-
-        .cta-section { text-align: center; padding: 64px 0; }
-        .cta-section h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; }
-        .cta-section p { color: var(--text-muted); margin-bottom: 24px; }
-        .cta-section .btn-large { display: inline-block; padding: 16px 40px; background: var(--gold); color: #000; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 16px; transition: var(--transition); }
-        .cta-section .btn-large:hover { background: var(--gold-dark); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); margin-top: 40px; }
-        footer p { color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
+        
+        .about-hero { text-align: center; padding: 80px 0 60px; position: relative; }
+        .about-hero::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%); pointer-events: none; }
+        .about-hero h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; margin-bottom: 16px; line-height: 1.2; background: linear-gradient(135deg, #E8C95A, #B8960F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .about-hero p { color: #888; font-size: clamp(1rem, 2vw, 1.2rem); max-width: 700px; margin: 0 auto 32px; }
+        
+        .mission-card { max-width: 800px; margin: 0 auto 64px; background: rgba(26,26,26,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 40px; text-align: center; position: relative; }
+        .mission-card::before { content: '"'; position: absolute; top: -30px; left: 40px; font-family: 'Poppins', serif; font-size: 120px; color: #D4AF37; opacity: 0.1; line-height: 1; }
+        .mission-card h2 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 12px; color: #D4AF37; }
+        .mission-card p { color: #CCC; font-size: 17px; font-style: italic; line-height: 1.8; }
+        
+        .about-section { padding: 64px 0; }
+        .about-section-title { text-align: center; margin-bottom: 48px; }
+        .about-section-title h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.8rem, 3vw, 2.25rem); font-weight: 700; margin-bottom: 8px; color: #fff; }
+        .about-section-title p { color: #888; font-size: 17px; }
+        
+        .about-values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+        .about-value-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 32px 24px; text-align: center; transition: all 0.3s ease; }
+        .about-value-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.3); }
+        .about-value-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 16px; }
+        .about-value-card h3 { font-family: 'Poppins', sans-serif; font-size: 17px; margin-bottom: 8px; color: #fff; }
+        .about-value-card p { color: #888; font-size: 14px; line-height: 1.6; }
+        
+        .about-timeline { max-width: 700px; margin: 0 auto; }
+        .about-timeline-item { display: flex; gap: 24px; margin-bottom: 32px; position: relative; }
+        .about-timeline-item::before { content: ''; position: absolute; left: 19px; top: 48px; bottom: -32px; width: 2px; background: rgba(255,255,255,0.08); }
+        .about-timeline-item:last-child::before { display: none; }
+        .about-timeline-year { width: 40px; height: 40px; border-radius: 50%; background: #D4AF37; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; position: relative; z-index: 1; }
+        .about-timeline-content h4 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 6px; color: #D4AF37; }
+        .about-timeline-content p { color: #888; font-size: 14px; line-height: 1.6; }
+        
+        .about-team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+        .about-team-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px 20px; text-align: center; transition: all 0.3s ease; }
+        .about-team-card:hover { transform: translateY(-4px); border-color: rgba(212,175,55,0.3); }
+        .about-team-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #fff; }
+        .about-team-card h4 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 4px; color: #fff; }
+        .about-team-role { color: #D4AF37; font-size: 13px; font-weight: 500; display: block; margin-bottom: 8px; }
+        .about-team-card p { color: #888; font-size: 13px; }
+        
+        .about-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
+        .about-stat-card { background: rgba(26,26,26,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px; text-align: center; }
+        .about-stat-number { font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 800; color: #D4AF37; display: block; }
+        .about-stat-label { font-size: 14px; color: #888; margin-top: 4px; }
+        
+        .about-cta { text-align: center; padding: 64px 0; }
+        .about-cta h2 { font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 12px; color: #fff; }
+        .about-cta p { color: #888; margin-bottom: 24px; }
+        
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            .hero { padding: 48px 0 40px; }
-            .hero h1 { font-size: 34px; }
-            .section-title h2 { font-size: 28px; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-            .mission-box { padding: 28px 20px; }
-            .story-item { gap: 16px; }
+            .about-hero { padding: 48px 0 40px; }
+            .mission-card { padding: 28px 20px; }
+            .about-timeline-item { gap: 16px; }
         }
         @media (max-width: 480px) {
-            .hero h1 { font-size: 28px; }
-            .values-grid { grid-template-columns: 1fr; }
-            .team-grid { grid-template-columns: 1fr 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .about-values-grid { grid-template-columns: 1fr; }
+            .about-team-grid { grid-template-columns: 1fr 1fr; }
+            .about-stats-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
+    
     <a href="#main-content" class="skip-link">Skip to About Us</a>
-
+    
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect width="36" height="36" rx="10" fill="#D4AF37"/>
+                <text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text>
+            </svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/about.html" class="active">About</a>
-            <a href="/careers.html">Careers</a>
-            <a href="/login.html">Login</a>
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main id="main-content" role="main">
-        <div class="container">
+    
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+    <main id="main-content" class="main-content" role="main">
+        <div class="container" style="max-width:1100px">
+            
             <!-- Hero -->
-            <section class="hero">
+            <section class="about-hero">
                 <h1>Empowering Indian<br>Businesses with Digital CRM</h1>
                 <p>We're on a mission to make enterprise-grade CRM accessible, affordable, and effortless for businesses of all sizes across India.</p>
             </section>
-
+            
             <!-- Mission -->
-            <div class="mission-box">
+            <div class="mission-card">
                 <h2>Our Mission</h2>
                 <p>"To democratize business management technology by providing a unified, intelligent platform that combines CRM, invoicing, communication, and analytics into one seamless experience — built specifically for Indian businesses."</p>
             </div>
-
+            
             <!-- Stats -->
             <section>
-                <div class="stats-grid">
-                    <div class="stat-card"><span class="stat-number">10K+</span><span class="stat-label">Active Businesses</span></div>
-                    <div class="stat-card"><span class="stat-number">₹500Cr+</span><span class="stat-label">Invoices Generated</span></div>
-                    <div class="stat-card"><span class="stat-number">50+</span><span class="stat-label">Team Members</span></div>
-                    <div class="stat-card"><span class="stat-number">99.9%</span><span class="stat-label">Uptime SLA</span></div>
+                <div class="about-stats-grid">
+                    <div class="about-stat-card"><span class="about-stat-number">10K+</span><span class="about-stat-label">Active Businesses</span></div>
+                    <div class="about-stat-card"><span class="about-stat-number">₹500Cr+</span><span class="about-stat-label">Invoices Generated</span></div>
+                    <div class="about-stat-card"><span class="about-stat-number">50+</span><span class="about-stat-label">Team Members</span></div>
+                    <div class="about-stat-card"><span class="about-stat-number">99.9%</span><span class="about-stat-label">Uptime SLA</span></div>
                 </div>
             </section>
-
+            
             <!-- Our Story -->
-            <section class="section">
-                <div class="section-title"><h2>Our Story</h2><p>From a simple idea to India's fastest-growing CRM platform</p></div>
-                <div class="story-timeline">
-                    <div class="story-item">
-                        <div class="story-year">2024</div>
-                        <div class="story-content"><h4>The Beginning</h4><p>Founded in Mumbai with a vision to simplify CRM for Indian SMEs. Started with a 3-person team building the core platform.</p></div>
+            <section class="about-section">
+                <div class="about-section-title"><h2>Our Story</h2><p>From a simple idea to India's fastest-growing CRM platform</p></div>
+                <div class="about-timeline">
+                    <div class="about-timeline-item">
+                        <div class="about-timeline-year">2024</div>
+                        <div class="about-timeline-content"><h4>The Beginning</h4><p>Founded in Mumbai with a vision to simplify CRM for Indian SMEs. Started with a 3-person team building the core platform.</p></div>
                     </div>
-                    <div class="story-item">
-                        <div class="story-year">2025</div>
-                        <div class="story-content"><h4>Platform Launch</h4><p>Launched v1.0 with lead management, invoicing, and WhatsApp integration. Reached 1,000 users within 6 months.</p></div>
+                    <div class="about-timeline-item">
+                        <div class="about-timeline-year">2025</div>
+                        <div class="about-timeline-content"><h4>Platform Launch</h4><p>Launched v1.0 with lead management, invoicing, and WhatsApp integration. Reached 1,000 users within 6 months.</p></div>
                     </div>
-                    <div class="story-item">
-                        <div class="story-year">2026</div>
-                        <div class="story-content"><h4>Enterprise 2.0</h4><p>Complete platform rewrite with 15+ modules, multi-tenant architecture, and enterprise features. Crossed 10,000 active businesses.</p></div>
+                    <div class="about-timeline-item">
+                        <div class="about-timeline-year">2026</div>
+                        <div class="about-timeline-content"><h4>Enterprise 2.0</h4><p>Complete platform rewrite with 15+ modules, multi-tenant architecture, and enterprise features. Crossed 10,000 active businesses.</p></div>
                     </div>
                 </div>
             </section>
-
+            
             <!-- Values -->
-            <section class="section">
-                <div class="section-title"><h2>Our Values</h2><p>What drives every decision we make</p></div>
-                <div class="values-grid">
-                    <div class="value-card">
-                        <div class="value-icon" style="background:rgba(212,175,55,0.12);color:var(--gold);"><i class="fas fa-shield-alt"></i></div>
+            <section class="about-section">
+                <div class="about-section-title"><h2>Our Values</h2><p>What drives every decision we make</p></div>
+                <div class="about-values-grid">
+                    <div class="about-value-card">
+                        <div class="about-value-icon" style="background:rgba(212,175,55,0.12);color:#D4AF37;">🛡️</div>
                         <h3>Trust First</h3><p>We earn trust through transparency, data security, and reliable service. Our customers' data is sacred.</p>
                     </div>
-                    <div class="value-card">
-                        <div class="value-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;"><i class="fas fa-bolt"></i></div>
+                    <div class="about-value-card">
+                        <div class="about-value-icon" style="background:rgba(59,130,246,0.12);color:#3B82F6;">⚡</div>
                         <h3>Move Fast</h3><p>We ship features rapidly, iterate based on real feedback, and never let perfection be the enemy of progress.</p>
                     </div>
-                    <div class="value-card">
-                        <div class="value-icon" style="background:rgba(16,185,129,0.12);color:#10B981;"><i class="fas fa-users"></i></div>
+                    <div class="about-value-card">
+                        <div class="about-value-icon" style="background:rgba(16,185,129,0.12);color:#10B981;">👥</div>
                         <h3>Customer Obsessed</h3><p>Every feature starts with "How does this help our users?" We measure success by their success.</p>
                     </div>
-                    <div class="value-card">
-                        <div class="value-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;"><i class="fas fa-lightbulb"></i></div>
+                    <div class="about-value-card">
+                        <div class="about-value-icon" style="background:rgba(139,92,246,0.12);color:#8B5CF6;">💡</div>
                         <h3>Innovate Boldly</h3><p>We embrace new technology, experiment fearlessly, and build solutions that didn't exist before.</p>
                     </div>
                 </div>
             </section>
-
+            
             <!-- Team -->
-            <section class="section">
-                <div class="section-title"><h2>Leadership Team</h2><p>Meet the people building your CRM</p></div>
-                <div class="team-grid">
-                    <div class="team-card">
-                        <div class="team-avatar" style="background:linear-gradient(135deg,#D4AF37,#B8960F);">RS</div>
-                        <h4>Rahul Sharma</h4><span class="role">Founder & CEO</span><p>IIT Bombay. Ex-Microsoft. 12 years in SaaS.</p>
+            <section class="about-section">
+                <div class="about-section-title"><h2>Leadership Team</h2><p>Meet the people building your CRM</p></div>
+                <div class="about-team-grid">
+                    <div class="about-team-card">
+                        <div class="about-team-avatar" style="background:linear-gradient(135deg,#D4AF37,#B8960F);">RS</div>
+                        <h4>Rahul Sharma</h4><span class="about-team-role">Founder & CEO</span><p>IIT Bombay. Ex-Microsoft. 12 years in SaaS.</p>
                     </div>
-                    <div class="team-card">
-                        <div class="team-avatar" style="background:linear-gradient(135deg,#3B82F6,#2563EB);">AP</div>
-                        <h4>Ananya Patel</h4><span class="role">CTO</span><p>Ex-Google. Full-stack architect. Open source contributor.</p>
+                    <div class="about-team-card">
+                        <div class="about-team-avatar" style="background:linear-gradient(135deg,#3B82F6,#2563EB);">AP</div>
+                        <h4>Ananya Patel</h4><span class="about-team-role">CTO</span><p>Ex-Google. Full-stack architect. Open source contributor.</p>
                     </div>
-                    <div class="team-card">
-                        <div class="team-avatar" style="background:linear-gradient(135deg,#10B981,#059669);">VK</div>
-                        <h4>Vikram Kumar</h4><span class="role">Head of Product</span><p>IIM Ahmedabad. 8 years in B2B product management.</p>
+                    <div class="about-team-card">
+                        <div class="about-team-avatar" style="background:linear-gradient(135deg,#10B981,#059669);">VK</div>
+                        <h4>Vikram Kumar</h4><span class="about-team-role">Head of Product</span><p>IIM Ahmedabad. 8 years in B2B product management.</p>
                     </div>
-                    <div class="team-card">
-                        <div class="team-avatar" style="background:linear-gradient(135deg,#EC4899,#DB2777);">PS</div>
-                        <h4>Priya Singh</h4><span class="role">VP Engineering</span><p>NIT Trichy. Ex-Flipkart. Distributed systems expert.</p>
+                    <div class="about-team-card">
+                        <div class="about-team-avatar" style="background:linear-gradient(135deg,#EC4899,#DB2777);">PS</div>
+                        <h4>Priya Singh</h4><span class="about-team-role">VP Engineering</span><p>NIT Trichy. Ex-Flipkart. Distributed systems expert.</p>
                     </div>
-                    <div class="team-card">
-                        <div class="team-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706);">MD</div>
-                        <h4>Mohan Das</h4><span class="role">Head of Sales</span><p>15 years in enterprise SaaS sales across India.</p>
+                    <div class="about-team-card">
+                        <div class="about-team-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706);">MD</div>
+                        <h4>Mohan Das</h4><span class="about-team-role">Head of Sales</span><p>15 years in enterprise SaaS sales across India.</p>
                     </div>
-                    <div class="team-card">
-                        <div class="team-avatar" style="background:linear-gradient(135deg,#6366F1,#4F46E5);">NK</div>
-                        <h4>Neha Kapoor</h4><span class="role">Head of Design</span><p>NID Ahmedabad. Passionate about UX and design systems.</p>
+                    <div class="about-team-card">
+                        <div class="about-team-avatar" style="background:linear-gradient(135deg,#6366F1,#4F46E5);">NK</div>
+                        <h4>Neha Kapoor</h4><span class="about-team-role">Head of Design</span><p>NID Ahmedabad. Passionate about UX and design systems.</p>
                     </div>
                 </div>
             </section>
-
+            
             <!-- CTA -->
-            <section class="cta-section">
+            <section class="about-cta">
                 <h2>Ready to Grow with Us?</h2>
                 <p>Join 10,000+ businesses already using 11 Avatar Digital Hub.</p>
-                <a href="/register.html" class="btn-large"><i class="fas fa-rocket"></i> Start Free Trial</a>
+                <a href="register.html" class="btn btn-primary btn-lg">🚀 Start Free Forever</a>
             </section>
+            
         </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved. | Built with ❤️ in India</p>
-        <p><a href="/about.html">About</a> | <a href="/careers.html">Careers</a> | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a></p>
+    
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:#888;font-size:14px">© <span id="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved. | 🇮🇳 Made with ❤️ in India</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="about.html" style="color:#D4AF37;text-decoration:none;font-size:14px">About</a>
+                    <a href="careers.html" class="footer-link">Careers</a>
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" class="footer-link">Privacy</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </nav>
+            </div>
+        </div>
     </footer>
+    
+    <!-- ==========================================
+         SCRIPTS
+         ========================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            var yearEl = document.getElementById('current-year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+        });
+    </script>
+    
 </body>
 </html>
-
-

@@ -1,100 +1,63 @@
 {
   "name": "11avatar-crm",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "11 Avatar Digital Hub - India's #1 Revenue Operating System for SMEs. Complete CRM with Lead Management, Pipeline, Revenue Tracking, GST Invoices, WhatsApp Integration, and Multi-Tenant RBAC.",
-  "main": "src/js/core/app.js",
+  "main": "index.html",
   "scripts": {
     "start": "serve .",
     "dev": "serve . -l 3000",
-    "build": "echo 'No build step required - static HTML/JS/CSS'",
+    "build": "echo 'Static multi-page app - no build step required'",
     "test": "jest --config jest.config.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "echo 'Linting complete'",
-    "lint:fix": "echo 'Lint fix complete'",
-    "deploy": "npm run deploy:frontend && npm run deploy:backend && npm run deploy:worker",
-    "deploy:frontend": "echo 'Deploying to GitHub Pages...' && git push origin main",
-    "deploy:backend": "cd functions && npm run deploy",
-    "deploy:worker": "cd workers/11avatar-api && wrangler deploy",
-    "deploy:firebase": "firebase deploy --only firestore:rules,firestore:indexes,functions,storage",
+    "lint": "prettier --check 'src/**/*.{js,css,html}'",
+    "lint:fix": "prettier --write 'src/**/*.{js,css,html}'",
+    "deploy": "git push origin main",
+    "deploy:firebase": "firebase deploy --only hosting,firestore:rules,firestore:indexes,functions",
     "deploy:rules": "firebase deploy --only firestore:rules",
     "deploy:indexes": "firebase deploy --only firestore:indexes",
     "deploy:functions": "firebase deploy --only functions",
     "seed": "node scripts/seed-data.js",
-    "backup": "node scripts/backup.js",
-    "clean": "rm -rf .wrangler/ .firebase/ node_modules/",
-    "setup": "npm install && cd functions && npm install && cd ../workers/11avatar-api && npm install",
-    "generate-icons": "node scripts/generate-icons.js",
-
     "audit": "lighthouse https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/ --output html --output-path ./reports/lighthouse.html",
-
     "format": "prettier --write '**/*.{js,html,css,json,md}'",
     "format:check": "prettier --check '**/*.{js,html,css,json,md}'"
   },
   "repository": {
     "type": "git",
-
     "url": "git+https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git"
-
   },
   "keywords": [
-    "crm",
-    "indian-crm",
-    "sme-crm",
-    "revenue-management",
-    "lead-management",
-    "pipeline-management",
-    "gst-invoices",
-    "whatsapp-business-api",
-    "sales-crm",
-    "pwa",
-    "firebase",
-    "cloudflare-workers",
-    "multi-tenant",
-    "rbac",
-    "indian-business",
-    "free-crm",
-    "open-source-crm",
-    "msme",
-    "small-business",
-    "revenue-operating-system"
+    "crm", "indian-crm", "sme-crm", "revenue-management",
+    "lead-management", "pipeline-management", "gst-invoices",
+    "whatsapp-business-api", "sales-crm", "pwa", "firebase",
+    "multi-tenant", "rbac", "indian-business", "free-crm",
+    "msme", "small-business", "revenue-operating-system"
   ],
   "author": {
     "name": "11 Avatar Digital Hub",
-    "email": "11avatardigitalhub@gmail.com",
-
+    "email": "info@11avatardigitalhub.cloud",
     "url": "https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"
-
   },
   "contributors": [
     {
       "name": "11 Avatar Team",
-      "email": "11avatardigitalhub@gmail.com"
+      "email": "info@11avatardigitalhub.cloud"
     }
   ],
   "license": "GPL-3.0",
   "bugs": {
-
     "url": "https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/issues",
-    "email": "11avatardigitalhub@gmail.com"
+    "email": "support@11avatardigitalhub.cloud"
   },
   "homepage": "https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/",
-
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11",
-    "Chrome >= 80",
-    "Firefox >= 75",
-    "Safari >= 13",
-    "Edge >= 80",
-    "Android >= 8",
-    "iOS >= 13"
+    "> 1%", "last 2 versions", "not dead", "not ie 11",
+    "Chrome >= 80", "Firefox >= 75", "Safari >= 13",
+    "Edge >= 80", "Android >= 8", "iOS >= 13"
   ],
   "devDependencies": {
     "jest": "^29.7.0",
@@ -107,57 +70,27 @@
     "firebase": "^10.7.0",
     "firebase-admin": "^12.0.0",
     "firebase-functions": "^4.6.0",
-    "firebase-tools": "^13.0.0",
-    "wrangler": "^3.22.0"
+    "firebase-tools": "^13.0.0"
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "roots": [
-      "<rootDir>/tests"
-    ],
-    "testMatch": [
-      "**/*.test.js",
-      "**/*.spec.js"
-    ],
-    "collectCoverageFrom": [
-      "src/js/**/*.js",
-      "!src/js/config/firebase.js",
-      "!**/node_modules/**"
-    ],
+    "roots": ["<rootDir>/tests"],
+    "testMatch": ["**/*.test.js", "**/*.spec.js"],
+    "collectCoverageFrom": ["src/js/**/*.js", "!src/js/config/firebase.js", "!**/node_modules/**"],
     "coverageThreshold": {
-      "global": {
-        "branches": 60,
-        "functions": 65,
-        "lines": 70,
-        "statements": 70
-      }
+      "global": { "branches": 60, "functions": 65, "lines": 70, "statements": 70 }
     },
-    "setupFilesAfterSetup": [
-      "<rootDir>/tests/setup.js"
-    ],
+    "setupFilesAfterFramework": ["<rootDir>/tests/setup.js"],
     "verbose": true,
-    "coverageReporters": [
-      "text",
-      "text-summary",
-      "html",
-      "lcov"
-    ]
+    "coverageReporters": ["text", "text-summary", "html", "lcov"]
   },
   "prettier": {
-    "semi": true,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "printWidth": 100,
-    "bracketSpacing": true,
-    "arrowParens": "always",
-    "endOfLine": "lf"
+    "semi": true, "singleQuote": true, "tabWidth": 2,
+    "trailingComma": "es5", "printWidth": 100,
+    "bracketSpacing": true, "arrowParens": "always", "endOfLine": "lf"
   },
   "funding": {
     "type": "individual",
     "url": "https://github.com/sponsors/11avatardigitalhub"
-  },
-  "engines-strict": true
+  }
 }
-
-

@@ -1,144 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN" data-theme="public">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="11 Avatar Digital Hub - Privacy Policy & Data Protection">
-    <meta name="theme-color" content="#D4AF37">
-    <meta name="robots" content="index, follow">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="11 Avatar Digital Hub Privacy Policy - How we collect, use, and protect your personal data. GDPR, DPDP Act & CCPA compliant." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="11 Avatar Digital Hub" />
+    <meta name="theme-color" content="#0A0A0A" />
+    
+    <meta property="og:title" content="Privacy Policy - 11 Avatar Digital Hub" />
+    <meta property="og:description" content="How we collect, use, and protect your personal information." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/privacy.html" />
+    <meta property="og:site_name" content="11 Avatar Digital Hub" />
+    
+    <link rel="canonical" href="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/privacy.html" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/main.css" />
     
     <title>Privacy Policy - 11 Avatar Digital Hub</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
-        :root {
-            --gold: #D4AF37; --gold-light: #E8C95A; --gold-dark: #B8960F;
-            --bg: #0A0A0A; --bg-card: #1A1A1A; --text: #FFFFFF;
-            --text-secondary: #CCCCCC; --text-muted: #888888;
-            --border: rgba(255,255,255,0.08); --shadow: 0 4px 24px rgba(0,0,0,0.3);
-            --radius: 16px; --radius-sm: 10px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
-            line-height: 1.7; font-size: 16px; min-height: 100vh;
-        }
-        .skip-link { position: absolute; top: -100px; left: 16px; background: var(--gold); color: #000; padding: 12px 20px; z-index: 1000; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none; transition: top 0.3s; }
-        .skip-link:focus { top: 0; }
-
-        .header {
-            background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--gold); padding: 0 32px;
-            position: sticky; top: 0; z-index: 100; display: flex;
-            align-items: center; justify-content: space-between; height: 72px;
-        }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
-        .header-logo img { height: 38px; }
-        .header-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
-        .header-nav { display: flex; gap: 8px; }
-        .header-nav a { padding: 10px 20px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 15px; transition: var(--transition); }
-        .header-nav a:hover, .header-nav a.active { background: var(--gold); color: #000; }
-
-        .container { max-width: 900px; margin: 0 auto; padding: 48px 32px 80px; }
-
-        .page-header { text-align: center; margin-bottom: 48px; }
-        .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .page-header p { color: var(--text-muted); font-size: 17px; }
-        .last-updated { display: inline-block; margin-top: 12px; padding: 6px 16px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; font-size: 13px; color: var(--gold-light); }
-
-        .content-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-        }
-        .content-card h2 {
-            font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 600;
-            color: var(--gold); margin: 36px 0 16px; padding-top: 24px;
-            border-top: 1px solid var(--border);
-        }
-        .content-card h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
-        .content-card h3 { font-size: 18px; font-weight: 600; margin: 20px 0 10px; color: var(--text-secondary); }
-        .content-card p { margin-bottom: 14px; color: var(--text-secondary); }
-        .content-card ul, .content-card ol { margin: 12px 0 20px 24px; color: var(--text-secondary); }
-        .content-card li { margin-bottom: 8px; }
-        .content-card strong { color: var(--text); }
-        .content-card a { color: var(--gold-light); text-decoration: underline; transition: var(--transition); }
-        .content-card a:hover { color: var(--gold); }
-
-        .info-box {
-            background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2);
-            border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0;
-            display: flex; gap: 14px; align-items: flex-start;
-        }
-        .info-box i { color: var(--gold); font-size: 20px; margin-top: 2px; flex-shrink: 0; }
-        .info-box p { margin: 0; color: var(--text-secondary); font-size: 15px; }
-
-        .data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
-        .data-table th { color: var(--gold); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .data-table td { color: var(--text-secondary); }
-
-        .toc { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 32px; }
-        .toc h3 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 12px; color: var(--gold); }
-        .toc ol { margin: 0; padding-left: 20px; }
-        .toc li { margin-bottom: 6px; }
-        .toc a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: var(--transition); }
-        .toc a:hover { color: var(--gold-light); }
-
-        footer { text-align: center; padding: 32px; border-top: 1px solid var(--border); margin-top: 60px; }
-        footer p { color: var(--text-muted); font-size: 14px; }
-        footer a { color: var(--gold-light); text-decoration: none; }
-
+        body { opacity: 0; transition: opacity 0.35s ease; }
+        body.loaded { opacity: 1; }
+        
+        .legal-container { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+        .legal-header { text-align: center; margin-bottom: 48px; }
+        .legal-header h1 { font-family: 'Poppins', sans-serif; font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, #E8C95A, #B8960F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .legal-header p { color: #888; font-size: 17px; }
+        .legal-updated { display: inline-block; margin-top: 12px; padding: 6px 16px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; font-size: 13px; color: #E8C95A; }
+        
+        .legal-card { background: rgba(26,26,26,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 40px; }
+        .legal-card h2 { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 600; color: #D4AF37; margin: 36px 0 16px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .legal-card h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+        .legal-card h3 { font-size: 18px; font-weight: 600; margin: 20px 0 10px; color: #CCC; }
+        .legal-card p { margin-bottom: 14px; color: #CCC; line-height: 1.8; }
+        .legal-card ul, .legal-card ol { margin: 12px 0 20px 24px; color: #CCC; }
+        .legal-card li { margin-bottom: 8px; }
+        .legal-card strong { color: #fff; }
+        .legal-card a { color: #E8C95A; text-decoration: underline; }
+        .legal-card a:hover { color: #D4AF37; }
+        
+        .legal-info-box { background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2); border-radius: 12px; padding: 20px 24px; margin: 24px 0; display: flex; gap: 14px; align-items: flex-start; }
+        .legal-info-box .info-icon { color: #D4AF37; font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .legal-info-box p { margin: 0; font-size: 15px; }
+        
+        .legal-toc { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+        .legal-toc h3 { font-family: 'Poppins', sans-serif; font-size: 16px; margin-bottom: 12px; color: #D4AF37; }
+        .legal-toc ol { margin: 0; padding-left: 20px; }
+        .legal-toc li { margin-bottom: 6px; }
+        .legal-toc a { color: #CCC; text-decoration: none; font-size: 14px; }
+        .legal-toc a:hover { color: #E8C95A; }
+        
+        .legal-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .legal-table th, .legal-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
+        .legal-table th { color: #D4AF37; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .legal-table td { color: #CCC; }
+        
         @media (max-width: 768px) {
-            .container { padding: 24px 16px 60px; }
-            .page-header h1 { font-size: 30px; }
-            .content-card { padding: 24px 20px; }
-            .content-card h2 { font-size: 20px; }
-            .header { padding: 0 16px; height: 64px; }
-            .header-logo span { font-size: 17px; }
-            .data-table { font-size: 12px; }
-            .data-table th, .data-table td { padding: 8px 10px; }
-        }
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 26px; }
-            .content-card { padding: 18px 14px; border-radius: 12px; }
+            .legal-container { padding: 24px 16px 60px; }
+            .legal-card { padding: 24px 20px; }
+            .legal-card h2 { font-size: 20px; }
+            .legal-table { font-size: 12px; }
+            .legal-table th, .legal-table td { padding: 8px 10px; }
         }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to Privacy Policy</a>
-
+    
     <header class="header" role="banner">
-        <a href="/" class="header-logo" aria-label="11 Avatar Digital Hub Home">
-            <img src="/assets/logo.png" alt="" width="38" height="38" loading="lazy">
-            <span>11 Avatar</span>
+        <a href="index.html" class="header-brand" aria-label="11 Avatar Digital Hub - Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#D4AF37"/><text x="18" y="24" text-anchor="middle" fill="#0A0A0A" font-size="14" font-weight="800" font-family="Inter, sans-serif">11A</text></svg>
+            <span>11 Avatar Hub</span>
         </a>
         <nav class="header-nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/login.html">Login</a>
-            <a href="/privacy.html" class="active">Privacy</a>
+            <a href="index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="privacy.html" class="active">Privacy</a>
         </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+        </div>
     </header>
-
-    <main class="container" id="main-content" role="main">
-        <div class="page-header">
+    
+    <main class="legal-container" id="main-content" role="main">
+        <div class="legal-header">
             <h1>Privacy Policy</h1>
             <p>How we collect, use, and protect your personal information</p>
-            <span class="last-updated"><i class="fas fa-calendar-alt"></i> Last Updated: July 16, 2026</span>
+            <span class="legal-updated">📅 Last Updated: July 16, 2026</span>
         </div>
-
-        <nav class="toc" aria-label="Table of Contents">
-            <h3><i class="fas fa-list"></i> Table of Contents</h3>
+        
+        <nav class="legal-toc" aria-label="Table of Contents">
+            <h3>📋 Table of Contents</h3>
             <ol>
                 <li><a href="#introduction">Introduction</a></li>
                 <li><a href="#information">Information We Collect</a></li>
                 <li><a href="#usage">How We Use Your Information</a></li>
                 <li><a href="#sharing">Information Sharing & Disclosure</a></li>
-                <li><a href="#cookies">Cookies & Tracking Technologies</a></li>
+                <li><a href="#cookies">Cookies & Tracking</a></li>
                 <li><a href="#storage">Data Storage & Security</a></li>
                 <li><a href="#retention">Data Retention</a></li>
                 <li><a href="#rights">Your Data Protection Rights</a></li>
@@ -148,224 +117,174 @@
                 <li><a href="#contact">Contact Us</a></li>
             </ol>
         </nav>
-
-        <div class="content-card">
-            <div class="info-box">
-                <i class="fas fa-shield-alt"></i>
+        
+        <div class="legal-card">
+            <div class="legal-info-box">
+                <span class="info-icon">🛡️</span>
                 <p>Your privacy is critically important to us. This Privacy Policy explains how <strong>11 Avatar Digital Hub</strong> collects, uses, discloses, and safeguards your information when you use our Service.</p>
             </div>
-
-            <!-- Section 1 -->
+            
             <section id="introduction">
                 <h2>1. Introduction</h2>
-                <p><strong>11 Avatar Digital Hub</strong> ("we", "our", or "us") is committed to protecting the privacy of all individuals who use our Customer Relationship Management (CRM) platform. This Privacy Policy applies to all information collected through our website (<a href="https://11avatardigitalhub.cloud">https://11avatardigitalhub.cloud</a>), web applications, mobile applications, APIs, and related services (collectively, the "Service").</p>
-                <p>By using the Service, you consent to the data practices described in this policy. If you do not agree, please discontinue use of the Service immediately.</p>
-                <p>This policy is compliant with applicable data protection regulations including:</p>
+                <p><strong>11 Avatar Digital Hub</strong> ("we", "our", or "us") is committed to protecting the privacy of all individuals who use our CRM platform. This Privacy Policy applies to all information collected through our website, web applications, APIs, and related services (collectively, the "Service").</p>
+                <p>By using the Service, you consent to the data practices described in this policy. This policy is compliant with:</p>
                 <ul>
                     <li>India's <strong>Digital Personal Data Protection Act, 2023</strong> (DPDP Act)</li>
                     <li>EU <strong>General Data Protection Regulation</strong> (GDPR)</li>
                     <li>California <strong>Consumer Privacy Act</strong> (CCPA)</li>
-                    <li><strong>Information Technology Act, 2000</strong> (India) and its amendments</li>
+                    <li><strong>Information Technology Act, 2000</strong> (India)</li>
                 </ul>
             </section>
-
-            <!-- Section 2 -->
+            
             <section id="information">
                 <h2>2. Information We Collect</h2>
-                
                 <h3>2.1 Information You Provide Directly</h3>
-                <table class="data-table" role="table" aria-label="Personal information collected">
-                    <thead>
-                        <tr><th>Category</th><th>Examples</th><th>Purpose</th></tr>
-                    </thead>
+                <table class="legal-table" role="table" aria-label="Personal information collected">
+                    <thead><tr><th>Category</th><th>Examples</th><th>Purpose</th></tr></thead>
                     <tbody>
-                        <tr><td>Account Information</td><td>Name, email address, phone number, company name, profile picture</td><td>Account creation, authentication, communication</td></tr>
-                        <tr><td>Billing Information</td><td>Credit/debit card details, UPI ID, billing address, GSTIN</td><td>Payment processing, invoicing, tax compliance</td></tr>
-                        <tr><td>Business Data</td><td>Client details, leads, deals, invoices, tasks, project data</td><td>CRM functionality, reporting, analytics</td></tr>
-                        <tr><td>Communication Data</td><td>WhatsApp messages, emails, SMS content, call logs</td><td>Communication services, customer support</td></tr>
-                        <tr><td>Support Data</td><td>Support tickets, chat logs, feedback</td><td>Customer support, service improvement</td></tr>
+                        <tr><td>Account Information</td><td>Name, email, phone, company name</td><td>Account creation, authentication</td></tr>
+                        <tr><td>Billing Information</td><td>Card details, UPI ID, GSTIN</td><td>Payment processing, invoicing</td></tr>
+                        <tr><td>Business Data</td><td>Leads, clients, deals, invoices</td><td>CRM functionality, analytics</td></tr>
+                        <tr><td>Communication Data</td><td>WhatsApp messages, emails, SMS</td><td>Communication services</td></tr>
+                        <tr><td>Support Data</td><td>Support tickets, chat logs</td><td>Customer support</td></tr>
                     </tbody>
                 </table>
-
+                
                 <h3>2.2 Information Collected Automatically</h3>
-                <table class="data-table" role="table" aria-label="Automatically collected information">
-                    <thead>
-                        <tr><th>Category</th><th>Examples</th><th>Purpose</th></tr>
-                    </thead>
+                <table class="legal-table" role="table" aria-label="Automatically collected information">
+                    <thead><tr><th>Category</th><th>Examples</th></tr></thead>
                     <tbody>
-                        <tr><td>Usage Data</td><td>Pages visited, features used, time spent, click patterns</td><td>Analytics, UX improvement</td></tr>
-                        <tr><td>Device Data</td><td>IP address, browser type, OS, device type, screen resolution</td><td>Security, compatibility optimization</td></tr>
-                        <tr><td>Location Data</td><td>Approximate location derived from IP address</td><td>Regional settings, compliance, analytics</td></tr>
-                        <tr><td>Cookie Data</td><td>Session tokens, preferences, analytics identifiers</td><td>Authentication, personalization, analytics</td></tr>
+                        <tr><td>Usage Data</td><td>Pages visited, features used, time spent</td></tr>
+                        <tr><td>Device Data</td><td>IP address, browser type, OS, device type</td></tr>
+                        <tr><td>Location Data</td><td>Approximate location from IP address</td></tr>
+                        <tr><td>Cookie Data</td><td>Session tokens, preferences</td></tr>
                     </tbody>
                 </table>
-
-                <h3>2.3 Information from Third-Party Integrations</h3>
-                <p>When you connect third-party services (Google Calendar, WhatsApp via CloudWA, Slack, payment gateways, etc.), we may receive information from those services as authorized by you. This may include calendar events, messages, payment statuses, and profile information.</p>
             </section>
-
-            <!-- Section 3 -->
-            <section id="usage">
-                <h2>3. How We Use Your Information</h2>
-                <p>We use the collected information for the following purposes:</p>
+            
+            <section id="usage"><h2>3. How We Use Your Information</h2>
                 <ul>
-                    <li><strong>Service Delivery:</strong> To provide, maintain, and improve the CRM platform and all its features.</li>
-                    <li><strong>Authentication & Security:</strong> To verify identity, manage access, detect and prevent fraud and unauthorized access.</li>
-                    <li><strong>Communication:</strong> To send transactional notifications (invoices, payment receipts, OTP), service updates, and support responses.</li>
-                    <li><strong>Personalization:</strong> To customize your experience, remember preferences, and provide relevant feature suggestions.</li>
-                    <li><strong>Analytics:</strong> To analyze usage patterns, monitor performance, and improve the Service based on aggregated data.</li>
-                    <li><strong>Legal Compliance:</strong> To comply with applicable laws, regulations, legal processes, and enforceable governmental requests.</li>
-                    <li><strong>Billing:</strong> To process payments, generate GST-compliant invoices, and manage subscriptions.</li>
-                </ul>
-                <p>We do not use your data for automated decision-making or profiling that produces legal effects concerning you.</p>
-            </section>
-
-            <!-- Section 4 -->
-            <section id="sharing">
-                <h2>4. Information Sharing & Disclosure</h2>
-                <p>We do not sell, rent, or trade your personal information to third parties. We may share information only in the following circumstances:</p>
-                <ul>
-                    <li><strong>Service Providers:</strong> With trusted third-party vendors who assist us in operating the Service (cloud hosting - Firebase/Google Cloud, payment processing - Razorpay/Stripe, email delivery - SendGrid, SMS - MSG91, WhatsApp - CloudWA). All providers are bound by data processing agreements.</li>
-                    <li><strong>Legal Requirements:</strong> When required by law, court order, or governmental regulation, or to protect our rights, property, or safety.</li>
-                    <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets, your information may be transferred as a business asset.</li>
-                    <li><strong>With Your Consent:</strong> With your explicit consent, we may share information for purposes not covered by this policy.</li>
-                    <li><strong>Aggregated/Anonymized Data:</strong> We may share aggregated, non-personally identifiable data for analytics, research, or marketing purposes.</li>
+                    <li><strong>Service Delivery:</strong> To provide, maintain, and improve the CRM platform.</li>
+                    <li><strong>Authentication & Security:</strong> Verify identity, detect fraud.</li>
+                    <li><strong>Communication:</strong> Transactional notifications, support responses.</li>
+                    <li><strong>Personalization:</strong> Customize experience, remember preferences.</li>
+                    <li><strong>Analytics:</strong> Analyze usage, monitor performance.</li>
+                    <li><strong>Legal Compliance:</strong> Comply with applicable laws.</li>
+                    <li><strong>Billing:</strong> Process payments, generate GST invoices.</li>
                 </ul>
             </section>
-
-            <!-- Section 5 -->
-            <section id="cookies">
-                <h2>5. Cookies & Tracking Technologies</h2>
-                <p>We use cookies and similar tracking technologies to enhance your experience. Cookies are small text files stored on your device.</p>
-                <table class="data-table" role="table" aria-label="Cookie types">
+            
+            <section id="sharing"><h2>4. Information Sharing & Disclosure</h2>
+                <p>We do not sell, rent, or trade your personal information. We may share with:</p>
+                <ul>
+                    <li><strong>Service Providers:</strong> Firebase/Google Cloud, Razorpay/Stripe, SendGrid, MSG91, CloudWA.</li>
+                    <li><strong>Legal Requirements:</strong> When required by law.</li>
+                    <li><strong>Business Transfers:</strong> Merger, acquisition, or sale of assets.</li>
+                    <li><strong>With Your Consent:</strong> Explicit consent for other purposes.</li>
+                    <li><strong>Aggregated Data:</strong> Non-personally identifiable data for analytics.</li>
+                </ul>
+            </section>
+            
+            <section id="cookies"><h2>5. Cookies & Tracking</h2>
+                <table class="legal-table" role="table" aria-label="Cookie types">
                     <thead><tr><th>Type</th><th>Purpose</th><th>Duration</th></tr></thead>
                     <tbody>
-                        <tr><td>Essential Cookies</td><td>Authentication, session management, security</td><td>Session / Persistent</td></tr>
-                        <tr><td>Preference Cookies</td><td>Language, theme, layout preferences</td><td>Persistent (1 year)</td></tr>
-                        <tr><td>Analytics Cookies</td><td>Usage analytics, performance monitoring</td><td>Persistent (2 years)</td></tr>
-                        <tr><td>Functional Cookies</td><td>Feature usage, recent items, search history</td><td>Persistent (30 days)</td></tr>
+                        <tr><td>Essential Cookies</td><td>Authentication, session management</td><td>Session / Persistent</td></tr>
+                        <tr><td>Preference Cookies</td><td>Language, theme, layout</td><td>Persistent (1 year)</td></tr>
+                        <tr><td>Analytics Cookies</td><td>Usage analytics</td><td>Persistent (2 years)</td></tr>
+                        <tr><td>Functional Cookies</td><td>Feature usage, recent items</td><td>Persistent (30 days)</td></tr>
                     </tbody>
                 </table>
-                <p>You can control cookies through your browser settings. Disabling essential cookies may affect Service functionality. We also use email tracking pixels to measure email engagement (opens, clicks) with your consent.</p>
             </section>
-
-            <!-- Section 6 -->
-            <section id="storage">
-                <h2>6. Data Storage & Security</h2>
-                <h3>6.1 Storage Infrastructure</h3>
-                <p>Your data is stored on <strong>Google Cloud Platform (GCP)</strong> servers located in <strong>Mumbai, India</strong> (asia-south1 region). We use <strong>Firebase/Firestore</strong> for primary data storage and <strong>Cloud Storage</strong> for file storage.</p>
-
-                <h3>6.2 Security Measures</h3>
-                <p>We implement industry-standard security measures to protect your data:</p>
+            
+            <section id="storage"><h2>6. Data Storage & Security</h2>
+                <p>Data is stored on <strong>Google Cloud Platform</strong> servers in <strong>Mumbai, India</strong> (asia-south1). Security measures include:</p>
                 <ul>
-                    <li><strong>Encryption at Rest:</strong> AES-256 encryption for all stored data.</li>
-                    <li><strong>Encryption in Transit:</strong> TLS 1.3 for all data transmission.</li>
-                    <li><strong>Access Controls:</strong> Multi-tenant isolation, 8-level RBAC, API key authentication.</li>
-                    <li><strong>Audit Logging:</strong> Comprehensive audit trails for all data access and modifications.</li>
-                    <li><strong>Regular Backups:</strong> Automated daily backups with 30-day retention.</li>
-                    <li><strong>Security Audits:</strong> Regular vulnerability assessments and penetration testing.</li>
-                    <li><strong>2FA Support:</strong> Two-factor authentication available for all user accounts.</li>
+                    <li><strong>Encryption at Rest:</strong> AES-256</li>
+                    <li><strong>Encryption in Transit:</strong> TLS 1.3</li>
+                    <li><strong>Access Controls:</strong> Multi-tenant isolation, 8-level RBAC</li>
+                    <li><strong>Audit Logging:</strong> Comprehensive audit trails</li>
+                    <li><strong>Regular Backups:</strong> Automated daily backups, 30-day retention</li>
+                    <li><strong>2FA Support:</strong> Two-factor authentication</li>
                 </ul>
-
-                <p>Despite these measures, no method of electronic storage or transmission is 100% secure. We cannot guarantee absolute security of your data.</p>
             </section>
-
-            <!-- Section 7 -->
-            <section id="retention">
-                <h2>7. Data Retention</h2>
-                <p>We retain your personal information only for as long as necessary to fulfill the purposes outlined in this policy:</p>
+            
+            <section id="retention"><h2>7. Data Retention</h2>
                 <ul>
-                    <li><strong>Account Data:</strong> Retained while your account is active. Deleted 90 days after account termination.</li>
-                    <li><strong>Business Data:</strong> Retained as per your subscription. Export available for 30 days post-termination.</li>
-                    <li><strong>Transaction Data:</strong> Retained for 7 years as required by Indian tax laws (GST/Income Tax).</li>
-                    <li><strong>Communication Logs:</strong> Retained for 1 year for audit and support purposes.</li>
-                    <li><strong>Analytics Data:</strong> Retained in aggregated form indefinitely; raw data deleted after 90 days.</li>
-                    <li><strong>Backups:</strong> Retained for 30 days (daily), 12 weeks (weekly full backups).</li>
+                    <li><strong>Account Data:</strong> While account active + 90 days post-termination.</li>
+                    <li><strong>Business Data:</strong> As per subscription. Export available 30 days post-termination.</li>
+                    <li><strong>Transaction Data:</strong> 7 years (Indian tax law requirement).</li>
+                    <li><strong>Communication Logs:</strong> 1 year for audit purposes.</li>
+                    <li><strong>Backups:</strong> Daily 30 days, weekly 12 weeks.</li>
                 </ul>
-                <p>After the retention period, data is permanently deleted using secure deletion methods.</p>
             </section>
-
-            <!-- Section 8 -->
-            <section id="rights">
-                <h2>8. Your Data Protection Rights</h2>
-                <p>Depending on your jurisdiction, you may have the following rights regarding your personal data:</p>
-                <table class="data-table" role="table" aria-label="Data protection rights">
-                    <thead><tr><th>Right</th><th>Description</th><th>How to Exercise</th></tr></thead>
+            
+            <section id="rights"><h2>8. Your Data Protection Rights</h2>
+                <table class="legal-table" role="table" aria-label="Data protection rights">
+                    <thead><tr><th>Right</th><th>Description</th></tr></thead>
                     <tbody>
-                        <tr><td>Right to Access</td><td>Request a copy of your personal data</td><td>Settings → Export Data or contact DPO</td></tr>
-                        <tr><td>Right to Rectification</td><td>Correct inaccurate or incomplete data</td><td>Edit profile in account settings</td></tr>
-                        <tr><td>Right to Erasure</td><td>Request deletion of your personal data ("Right to be Forgotten")</td><td>Settings → Delete Account or contact DPO</td></tr>
-                        <tr><td>Right to Portability</td><td>Receive your data in a structured, machine-readable format</td><td>Settings → Export Data (JSON/CSV/PDF)</td></tr>
-                        <tr><td>Right to Restrict Processing</td><td>Limit how we use your data</td><td>Contact DPO with specific request</td></tr>
-                        <tr><td>Right to Object</td><td>Object to processing based on legitimate interests</td><td>Contact DPO with specific objection</td></tr>
-                        <tr><td>Right to Withdraw Consent</td><td>Withdraw previously given consent</td><td>Notification preferences or contact DPO</td></tr>
+                        <tr><td>Right to Access</td><td>Request a copy of your personal data</td></tr>
+                        <tr><td>Right to Rectification</td><td>Correct inaccurate or incomplete data</td></tr>
+                        <tr><td>Right to Erasure</td><td>Request deletion ("Right to be Forgotten")</td></tr>
+                        <tr><td>Right to Portability</td><td>Receive data in structured format</td></tr>
+                        <tr><td>Right to Restrict Processing</td><td>Limit how we use your data</td></tr>
+                        <tr><td>Right to Object</td><td>Object to processing</td></tr>
+                        <tr><td>Right to Withdraw Consent</td><td>Withdraw previously given consent</td></tr>
                     </tbody>
                 </table>
-                <p>To exercise any of these rights, contact our Data Protection Officer at <a href="mailto:dpo@11avatardigitalhub.cloud">dpo@11avatardigitalhub.cloud</a>. We will respond within 30 days as required by law.</p>
+                <p>Contact: <a href="mailto:support@11avatardigitalhub.cloud">support@11avatardigitalhub.cloud</a></p>
             </section>
-
-            <!-- Section 9 -->
-            <section id="children">
-                <h2>9. Children's Privacy</h2>
-                <p>The Service is not intended for individuals under the age of <strong>18 years</strong>. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will take steps to delete such information immediately. If you believe a child has provided us with personal data, please contact us.</p>
+            
+            <section id="children"><h2>9. Children's Privacy</h2>
+                <p>The Service is not intended for individuals under <strong>18 years</strong>. We do not knowingly collect personal information from children.</p>
             </section>
-
-            <!-- Section 10 -->
-            <section id="international">
-                <h2>10. International Data Transfers</h2>
-                <p>Your data is primarily stored and processed in <strong>India</strong>. If you access the Service from outside India, your data may be transferred to and processed in India. By using the Service, you consent to such transfer.</p>
-                <p>For users in the EU/EEA, we ensure adequate safeguards through Standard Contractual Clauses (SCCs) and Data Processing Agreements (DPAs) with all sub-processors.</p>
+            
+            <section id="international"><h2>10. International Data Transfers</h2>
+                <p>Data is primarily stored and processed in <strong>India</strong>. For EU/EEA users, we ensure adequate safeguards through Standard Contractual Clauses.</p>
             </section>
-
-            <!-- Section 11 -->
-            <section id="changes">
-                <h2>11. Changes to This Privacy Policy</h2>
-                <p>We may update this Privacy Policy from time to time. We will notify you of any material changes by:</p>
-                <ul>
-                    <li>Posting the updated policy on this page with a revised "Last Updated" date.</li>
-                    <li>Sending an email notification to the primary email address on your account (for material changes).</li>
-                    <li>Displaying an in-app notification for significant policy updates.</li>
-                </ul>
-                <p>Your continued use of the Service after such modifications constitutes acceptance of the updated policy.</p>
+            
+            <section id="changes"><h2>11. Changes to This Policy</h2>
+                <p>We will notify you of material changes by posting the updated policy, sending email notification, and displaying in-app notification.</p>
             </section>
-
-            <!-- Section 12 -->
-            <section id="contact">
-                <h2>12. Contact Us</h2>
-                <p>If you have questions about this Privacy Policy or wish to exercise your data rights, contact us:</p>
-                <div class="info-box">
-                    <i class="fas fa-envelope"></i>
+            
+            <section id="contact"><h2>12. Contact Us</h2>
+                <div class="legal-info-box">
+                    <span class="info-icon">📧</span>
                     <div>
-                        <p><strong>Data Protection Officer (DPO):</strong> <a href="mailto:support@11avatardigitalhub.cloud">support@11avatardigitalhub.cloud</a></p>
-                        <p><strong>General Inquiries:</strong> <a href="mailto:privacy@11avatardigitalhub.cloud">privacy@11avatardigitalhub.cloud</a></p>
+                        <p><strong>Data Protection Officer:</strong> <a href="mailto:support@11avatardigitalhub.cloud">support@11avatardigitalhub.cloud</a></p>
+                        <p><strong>General Inquiries:</strong> <a href="mailto:info@11avatardigitalhub.cloud">info@11avatardigitalhub.cloud</a></p>
                         <p><strong>Address:</strong> 11 Avatar Digital Hub, Mumbai, Maharashtra, India</p>
-                        <p><strong>Grievance Officer:</strong> Mr. Rahul Sharma, <a href="mailto:grievance@11avatardigitalhub.cloud">grievance@11avatardigitalhub.cloud</a></p>
                     </div>
                 </div>
-                <p>If you believe your data protection rights have been violated, you have the right to lodge a complaint with your local data protection supervisory authority.</p>
             </section>
         </div>
     </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2026 11 Avatar Digital Hub. All rights reserved.</p>
-        <p>
-            <a href="/terms.html">Terms of Service</a> &nbsp;|&nbsp; 
-            <a href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp; 
-            <a href="/support.html">Support</a>
-        </p>
+    
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding:20px 0">
+                <span style="color:#888;font-size:14px">© <span class="current-year">2026</span> 11 Avatar Digital Hub. All rights reserved.</span>
+                <nav aria-label="Footer links" style="display:flex;gap:16px;flex-wrap:wrap">
+                    <a href="terms.html" class="footer-link">Terms</a>
+                    <a href="privacy.html" style="color:#D4AF37;text-decoration:none;font-size:14px">Privacy</a>
+                    <a href="refund.html" class="footer-link">Refund</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </nav>
+            </div>
+        </div>
     </footer>
-
+    
     <script>
-        document.querySelectorAll('a[href^="#"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+            document.querySelectorAll('.current-year').forEach(function(el) { el.textContent = new Date().getFullYear(); });
+            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    var target = document.querySelector(this.getAttribute('href'));
+                    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+                });
             });
         });
-        console.log('Privacy Policy loaded - 11 Avatar Digital Hub');
     </script>
 </body>
 </html>
-
-
