@@ -73,7 +73,7 @@ text
 
 ## 📁 Project Structure
 
-lead2revenue/
+11-Avatar-SMEs-CRM/
 
 ├── public/ # Public-facing static pages (Dark Theme)
 │ ├── index.html # Landing page

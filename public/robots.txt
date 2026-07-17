@@ -200,8 +200,8 @@ Crawl-delay: 10
 # ==========================================
 # SITEMAP LOCATION
 # ==========================================
-Sitemap: https://11avatardigitalhub.github.io/lead2revenue/sitemap.xml
-Sitemap: https://11avatardigitalhub.github.io/lead2revenue/public/sitemap.xml
+Sitemap: https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/sitemap.xml
+Sitemap: https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/public/sitemap.xml
 
 # ==========================================
 # END OF ROBOTS.TXT

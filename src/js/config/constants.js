@@ -29,7 +29,7 @@ const APP = {
     author: '11 Avatar Digital Hub',
     email: '11avatardigitalhub@gmail.com',
 
-    website: 'https://11avatardigitalhub.github.io/lead2revenue',
+    website: 'https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/',
 
     apiEndpoint: 'https://11avatar-api.11avatardigitalhub.workers.dev',
     copyright: `© ${new Date().getFullYear()} 11 Avatar Digital Hub. All rights reserved.`

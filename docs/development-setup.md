@@ -141,41 +141,41 @@ Clone the Repository
 bash
 # Using HTTPS (recommended for most users)
 
-git clone https://github.com/11avatardigitalhub/lead2revenue.git
-cd lead2revenue
+git clone https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
+cd 11-Avatar-SMEs-CRM
 
 # Using SSH (if you have SSH keys configured)
-git clone git@github.com:11avatardigitalhub/lead2revenue.git
-cd lead2revenue
+git clone git@github.com:11avatardigitalhub/11-Avatar-SMEs-CRM.git
+cd 11-Avatar-SMEs-CRM
 
 # Using GitHub CLI
-gh repo clone 11avatardigitalhub/lead2revenue
-cd lead2revenue
+gh repo clone 11avatardigitalhub/11-Avatar-SMEs-CRM
+cd 11-Avatar-SMEs-CRM
 Fork the Repository (for contributors)
 bash
-# 1. Fork via GitHub UI: https://github.com/11avatardigitalhub/lead2revenue/fork
+# 1. Fork via GitHub UI: https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/fork
 
 # 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/lead2revenue.git
-cd lead2revenue
+git clone https://github.com/YOUR_USERNAME/11-Avatar-SMEs-CRM.git
+cd 11-Avatar-SMEs-CRM
 
 # 3. Add upstream remote
-git remote add upstream https://github.com/11avatardigitalhub/lead2revenue.git
+git remote add upstream https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
 
 
 # 4. Verify remotes
 git remote -v
 # Should show:
 
-# origin    https://github.com/YOUR_USERNAME/lead2revenue.git
-# upstream  https://github.com/11avatardigitalhub/lead2revenue.git
+# origin    https://github.com/YOUR_USERNAME/11-Avatar-SMEs-CRM.git
+# upstream  https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
 
 📦 Installing Dependencies
 Main Project Dependencies
 bash
 # Navigate to project root
 
-cd lead2revenue
+cd 11-Avatar-SMEs-CRM
 
 
 # Install all dependencies (including dev dependencies)
@@ -292,7 +292,7 @@ npm start
 📁 Project Structure for Development
 text
 
-lead2revenue/
+11-Avatar-SMEs-CRM/
 
 ├── public/                    # Static public files
 │   ├── index.html             # Landing page

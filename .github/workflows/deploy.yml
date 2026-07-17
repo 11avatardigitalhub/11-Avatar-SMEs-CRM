@@ -348,7 +348,7 @@ jobs:
         if: needs.deploy-pages.result == 'success'
         run: |
           echo "Checking GitHub Pages..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://11avatardigitalhub.github.io/lead2revenue/ 2>/dev/null || echo "000")
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/ 2>/dev/null || echo "000")
           if [ "$response" = "200" ] || [ "$response" = "301" ] || [ "$response" = "302" ]; then
             echo "  ✅ GitHub Pages: OK ($response)"
           else
@@ -401,7 +401,7 @@ jobs:
       - name: ✅ Deployment Complete
         run: |
           echo "🎉 CI/CD Pipeline Complete!"
-          echo "🌐 Frontend: https://11avatardigitalhub.github.io/lead2revenue/"
+          echo "🌐 Frontend: https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"
           echo "☁️ API: https://11avatar-api.11avatardigitalhub.workers.dev"
           echo "🔥 Console: https://console.firebase.google.com/project/avatar-wa-dual-crm"
 

@@ -124,7 +124,7 @@ Contact **support@11avatardigitalhub.cloud** to apply.
 ### Q11: How do I create an account?
 **A:** 
 
-1. Visit **https://11avatardigitalhub.github.io/lead2revenue/**
+1. Visit **https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/**
 
 2. Click **"Get Started Free"**
 3. Enter your name, email, phone, company name, and password
@@ -590,7 +590,7 @@ Contact us:
 - **Email:** support@11avatardigitalhub.cloud
 - **Website:** https://11avatardigitalhub.cloud
 
-- **GitHub:** https://github.com/11avatardigitalhub/lead2revenue
+- **GitHub:** https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM
 
 
 ---

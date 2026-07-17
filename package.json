@@ -26,7 +26,7 @@
     "setup": "npm install && cd functions && npm install && cd ../workers/11avatar-api && npm install",
     "generate-icons": "node scripts/generate-icons.js",
 
-    "audit": "lighthouse https://11avatardigitalhub.github.io/lead2revenue/ --output html --output-path ./reports/lighthouse.html",
+    "audit": "lighthouse https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/ --output html --output-path ./reports/lighthouse.html",
 
     "format": "prettier --write '**/*.{js,html,css,json,md}'",
     "format:check": "prettier --check '**/*.{js,html,css,json,md}'"
@@ -34,7 +34,7 @@
   "repository": {
     "type": "git",
 
-    "url": "git+https://github.com/11avatardigitalhub/lead2revenue.git"
+    "url": "git+https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git"
 
   },
   "keywords": [
@@ -63,7 +63,7 @@
     "name": "11 Avatar Digital Hub",
     "email": "11avatardigitalhub@gmail.com",
 
-    "url": "https://11avatardigitalhub.github.io/lead2revenue/"
+    "url": "https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"
 
   },
   "contributors": [
@@ -75,10 +75,10 @@
   "license": "GPL-3.0",
   "bugs": {
 
-    "url": "https://github.com/11avatardigitalhub/lead2revenue/issues",
+    "url": "https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/issues",
     "email": "11avatardigitalhub@gmail.com"
   },
-  "homepage": "https://11avatardigitalhub.github.io/lead2revenue/",
+  "homepage": "https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/",
 
   "engines": {
     "node": ">=18.0.0",

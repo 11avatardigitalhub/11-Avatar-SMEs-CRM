@@ -23,7 +23,7 @@ import { Toast } from '../components/toast.js';
 /**
  * WhatsApp Integration Module
 
- * Seamless bridge between Lead2Revenue CRM and CloudWA SaaS
+ * Seamless bridge between 11-Avatar-SMEs-CRM CRM and CloudWA SaaS
 
  * Unified messaging, template management, automation workflows
  */

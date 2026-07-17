@@ -15,7 +15,7 @@
  */
 const E2E_CONFIG = {
 
-    baseURL: 'https://11avatardigitalhub.github.io/lead2revenue',
+    baseURL: 'https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM',
 
     apiBaseURL: 'https://11avatar-api.11avatardigitalhub.workers.dev',
     timeout: 30000,

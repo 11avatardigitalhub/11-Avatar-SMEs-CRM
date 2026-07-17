@@ -18,7 +18,7 @@ set -euo pipefail
 # Project Information
 PROJECT_NAME="11-avatar-digital-hub-staging"
 PROJECT_ID="avatar-wa-dual-crm"
-REPO_URL="https://github.com/11avatardigitalhub/lead2revenue.git"
+REPO_URL="https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git"
 STAGING_BRANCH="develop"
 DEPLOY_TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 
@@ -55,7 +55,7 @@ PREVIEW_CHANNEL="staging"
 PREVIEW_EXPIRE_DAYS=7
 
 # Health Check Configuration
-HEALTH_CHECK_URL="https://11avatardigitalhub.github.io/lead2revenue/"
+HEALTH_CHECK_URL="https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/"
 HEALTH_CHECK_RETRIES=5
 HEALTH_CHECK_INTERVAL=3
 HEALTH_CHECK_TIMEOUT=60

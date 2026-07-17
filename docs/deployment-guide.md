@@ -19,7 +19,7 @@ This guide covers the complete deployment process for **11 Avatar Digital Hub** 
 | Component | Platform | URL |
 |-----------|----------|-----|
 
-| **Frontend (SPA)** | Firebase Hosting + GitHub Pages | `https://11avatardigitalhub.github.io/lead2revenue/` |
+| **Frontend (SPA)** | Firebase Hosting + GitHub Pages | `https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/` |
 
 | **API Gateway** | Cloudflare Workers | `https://11avatar-api.11avatardigitalhub.workers.dev` |
 | **Backend Functions** | Firebase Cloud Functions | `avatar-wa-dual-crm` |
@@ -33,7 +33,7 @@ This guide covers the complete deployment process for **11 Avatar Digital Hub** 
 
 ### Required Accounts & Access
 
-- [ ] GitHub repository admin access (`lead2revenue`)
+- [ ] GitHub repository admin access (`11-Avatar-SMEs-CRM`)
 
 - [ ] Firebase project owner access (`avatar-wa-dual-crm`)
 - [ ] Cloudflare account with Workers enabled
@@ -64,7 +64,7 @@ gh auth login
 🌍 Environment Overview
 Environment	Branch	URL	Purpose
 
-Production	main	https://11avatardigitalhub.github.io/lead2revenue/	Live customer-facing
+Production	main	https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/	Live customer-facing
 
 Staging	develop	Firebase Preview Channel	Pre-production testing
 Development	feature/*	Local (localhost:5000)	Active development
@@ -129,7 +129,7 @@ Step 4: Post-Deployment Verification
 bash
 # 1. Health check
 
-curl -I https://11avatardigitalhub.github.io/lead2revenue/
+curl -I https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/
 
 
 # 2. API health check
@@ -179,8 +179,8 @@ Local Development Setup
 bash
 # 1. Clone repository
 
-git clone https://github.com/11avatardigitalhub/lead2revenue.git
-cd lead2revenue
+git clone https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
+cd 11-Avatar-SMEs-CRM
 
 
 # 2. Install all dependencies
@@ -309,7 +309,7 @@ Health Check Endpoints
 bash
 # Frontend
 
-curl -I https://11avatardigitalhub.github.io/lead2revenue/
+curl -I https://11avatardigitalhub.github.io/11-Avatar-SMEs-CRM/
 
 
 # API

@@ -59,14 +59,14 @@ Before contributing, ensure you have the following installed:
 ```bash
 # 1. Fork the repository
 
-# Visit: https://github.com/11avatardigitalhub/lead2revenue/fork
+# Visit: https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/fork
 
 # 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/lead2revenue.git
-cd lead2revenue
+git clone https://github.com/YOUR_USERNAME/11-Avatar-SMEs-CRM.git
+cd 11-Avatar-SMEs-CRM
 
 # 3. Add upstream remote
-git remote add upstream https://github.com/11avatardigitalhub/lead2revenue.git
+git remote add upstream https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM.git
 
 
 # 4. Install dependencies
@@ -86,7 +86,7 @@ npm test
 Project Structure Overview
 text
 
-lead2revenue/
+11-Avatar-SMEs-CRM/
 
 ├── public/          # Public pages (Dark Theme)
 ├── src/
@@ -154,7 +154,7 @@ git push origin feature/my-awesome-feature
 
 # 8. Create a Pull Request
 
-# Visit: https://github.com/11avatardigitalhub/lead2revenue/compare
+# Visit: https://github.com/11avatardigitalhub/11-Avatar-SMEs-CRM/compare
 
 Commit Message Convention
 We follow Conventional Commits specification:
